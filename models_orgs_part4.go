@@ -5,55 +5,6 @@ package sdk
 
 import "encoding/json"
 
-func (u *CustomPropertySetPayloadDefaultValue) UnmarshalJSON(data []byte) error {
-	*u = CustomPropertySetPayloadDefaultValue{}
-	var refusal error
-	var s string
-	if err := json.Unmarshal(data, &s); err == nil {
-		u.String = &s
-		return nil
-	}
-	var listofstring []string
-	if err := json.Unmarshal(data, &listofstring); err == nil && isNonEmptyCustomPropertySetPayloadDefaultValueListOfString(listofstring) {
-		u.ListOfString = &listofstring
-		return nil
-	} else if _, refused := err.(*SdkValidationError); refused && refusal == nil {
-		refusal = err
-	}
-	return refusal
-}
-
-func (u CustomPropertySetPayloadDefaultValue) MarshalJSON() ([]byte, error) {
-	if u.String != nil {
-		return json.Marshal(u.String)
-	}
-	if u.ListOfString != nil {
-		return json.Marshal(u.ListOfString)
-	}
-	return []byte("null"), nil
-}
-
-func isNonEmptyCustomPropertySetPayloadDefaultValueListOfString(v []string) bool {
-	b, _ := json.Marshal(v)
-	return string(b) != "{}" && string(b) != "null"
-}
-
-// UnmarshalCustomPropertySetPayloadDefaultValue converts an untyped value to CustomPropertySetPayloadDefaultValue.
-func UnmarshalCustomPropertySetPayloadDefaultValue(v any) CustomPropertySetPayloadDefaultValue {
-	b, _ := json.Marshal(v)
-	var result CustomPropertySetPayloadDefaultValue
-	_ = json.Unmarshal(b, &result)
-	return result
-}
-
-// CustomPropertySetPayloadValuesEditableByEnum Who can edit the values of the property
-type CustomPropertySetPayloadValuesEditableByEnum string
-
-const (
-	CustomPropertySetPayloadValuesEditableByEnumOrgActors        CustomPropertySetPayloadValuesEditableByEnum = "org_actors"
-	CustomPropertySetPayloadValuesEditableByEnumOrgAndRepoActors CustomPropertySetPayloadValuesEditableByEnum = "org_and_repo_actors"
-)
-
 // OrgRepoCustomPropertyValues List of custom property values for a repository
 type OrgRepoCustomPropertyValues struct {
 	// RepositoryId Required `integer` value serialized in the `repository_id` wire field.

@@ -488,7 +488,7 @@ type OrgsCustomPropertiesForReposCreateOrUpdateOrganizationDefinitionParams stru
 	CustomPropertyName    string
 	ValueType             string
 	Required              *bool
-	DefaultValue          *any
+	DefaultValue          *NullableValue[[]string]
 	Description           *NullableValue[string]
 	AllowedValues         *NullableValue[[]string]
 	ValuesEditableBy      *NullableValue[string]
