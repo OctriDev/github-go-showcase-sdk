@@ -621,7 +621,7 @@ type CustomPropertySetPayload struct {
 	// Required Whether the property is required.
 	Required *bool `json:"required,omitempty"`
 	// DefaultValue Default value of the property
-	DefaultValue *NullableValue[CustomPropertySetPayloadDefaultValue] `json:"default_value,omitempty"`
+	DefaultValue *NullableValue[[]string] `json:"default_value,omitempty"`
 	// Description Short description of the property
 	Description *NullableValue[string] `json:"description,omitempty"`
 	// AllowedValues An ordered list of the allowed values of the property.
@@ -651,7 +651,7 @@ func (value *CustomPropertySetPayload) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	if raw, ok := rawFields["default_value"]; ok && bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
-		value.DefaultValue = &NullableValue[CustomPropertySetPayloadDefaultValue]{}
+		value.DefaultValue = &NullableValue[[]string]{}
 	}
 	if raw, ok := rawFields["description"]; ok && bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
 		value.Description = &NullableValue[string]{}
@@ -683,8 +683,10 @@ const (
 	CustomPropertySetPayloadValueTypeEnumUrl          CustomPropertySetPayloadValueTypeEnum = "url"
 )
 
-// CustomPropertySetPayloadDefaultValue represents a union type.
-type CustomPropertySetPayloadDefaultValue struct {
-	String       *string
-	ListOfString *[]string
-}
+// CustomPropertySetPayloadValuesEditableByEnum Who can edit the values of the property
+type CustomPropertySetPayloadValuesEditableByEnum string
+
+const (
+	CustomPropertySetPayloadValuesEditableByEnumOrgActors        CustomPropertySetPayloadValuesEditableByEnum = "org_actors"
+	CustomPropertySetPayloadValuesEditableByEnumOrgAndRepoActors CustomPropertySetPayloadValuesEditableByEnum = "org_and_repo_actors"
+)
