@@ -706,3 +706,14 @@ const (
 
 // WebhookPullRequestReviewRequestedVariant0PullRequestAuthorAssociationEnum How the author is associated with the repository.
 type WebhookPullRequestReviewRequestedVariant0PullRequestAuthorAssociationEnum string
+
+const (
+	WebhookPullRequestReviewRequestedVariant0PullRequestAuthorAssociationEnumCollaborator         WebhookPullRequestReviewRequestedVariant0PullRequestAuthorAssociationEnum = "COLLABORATOR"
+	WebhookPullRequestReviewRequestedVariant0PullRequestAuthorAssociationEnumContributor          WebhookPullRequestReviewRequestedVariant0PullRequestAuthorAssociationEnum = "CONTRIBUTOR"
+	WebhookPullRequestReviewRequestedVariant0PullRequestAuthorAssociationEnumFirstTimer           WebhookPullRequestReviewRequestedVariant0PullRequestAuthorAssociationEnum = "FIRST_TIMER"
+	WebhookPullRequestReviewRequestedVariant0PullRequestAuthorAssociationEnumFirstTimeContributor WebhookPullRequestReviewRequestedVariant0PullRequestAuthorAssociationEnum = "FIRST_TIME_CONTRIBUTOR"
+	WebhookPullRequestReviewRequestedVariant0PullRequestAuthorAssociationEnumMannequin            WebhookPullRequestReviewRequestedVariant0PullRequestAuthorAssociationEnum = "MANNEQUIN"
+	WebhookPullRequestReviewRequestedVariant0PullRequestAuthorAssociationEnumMember               WebhookPullRequestReviewRequestedVariant0PullRequestAuthorAssociationEnum = "MEMBER"
+	WebhookPullRequestReviewRequestedVariant0PullRequestAuthorAssociationEnumNone                 WebhookPullRequestReviewRequestedVariant0PullRequestAuthorAssociationEnum = "NONE"
+	WebhookPullRequestReviewRequestedVariant0PullRequestAuthorAssociationEnumOwner                WebhookPullRequestReviewRequestedVariant0PullRequestAuthorAssociationEnum = "OWNER"
+)

@@ -8,263 +8,6 @@ import (
 	"encoding/json"
 )
 
-type SearchCodeResponse struct {
-	TotalCount        int64                  `json:"total_count"`
-	IncompleteResults bool                   `json:"incomplete_results"`
-	Items             []CodeSearchResultItem `json:"items"`
-}
-
-func (value *SearchCodeResponse) UnmarshalJSON(data []byte) error {
-	type SearchCodeResponseAlias SearchCodeResponse
-	var decoded SearchCodeResponseAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = SearchCodeResponse(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"total_count", "incomplete_results", "items"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"total_count", "incomplete_results", "items"}); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewSearchCodeResponse returns a validated SearchCodeResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewSearchCodeResponse(fields SearchCodeResponse) (*SearchCodeResponse, error) {
-	return ConstructModel(fields)
-}
-
-type SearchCommitsResponse struct {
-	TotalCount        int64                    `json:"total_count"`
-	IncompleteResults bool                     `json:"incomplete_results"`
-	Items             []CommitSearchResultItem `json:"items"`
-}
-
-func (value *SearchCommitsResponse) UnmarshalJSON(data []byte) error {
-	type SearchCommitsResponseAlias SearchCommitsResponse
-	var decoded SearchCommitsResponseAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = SearchCommitsResponse(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"total_count", "incomplete_results", "items"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"total_count", "incomplete_results", "items"}); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewSearchCommitsResponse returns a validated SearchCommitsResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewSearchCommitsResponse(fields SearchCommitsResponse) (*SearchCommitsResponse, error) {
-	return ConstructModel(fields)
-}
-
-type SearchIssuesAndPullRequestsResponse struct {
-	TotalCount        int64                   `json:"total_count"`
-	IncompleteResults bool                    `json:"incomplete_results"`
-	Items             []IssueSearchResultItem `json:"items"`
-	// SearchType The type of search that was performed. Possible values are `lexical`, `semantic`, or `hybrid`.
-	SearchType SearchIssuesAndPullRequestsResponseSearchTypeEnum `json:"search_type"`
-	// LexicalFallbackReason When a semantic or hybrid search falls back to lexical search, this field contains the reasons for the fallback. Only present when a fallback occurred.
-	LexicalFallbackReason []SearchIssuesAndPullRequestsResponseLexicalFallbackReasonEnum `json:"lexical_fallback_reason,omitempty"`
-}
-
-func (value *SearchIssuesAndPullRequestsResponse) UnmarshalJSON(data []byte) error {
-	type SearchIssuesAndPullRequestsResponseAlias SearchIssuesAndPullRequestsResponse
-	var decoded SearchIssuesAndPullRequestsResponseAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = SearchIssuesAndPullRequestsResponse(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"total_count", "incomplete_results", "items", "search_type"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"total_count", "incomplete_results", "items", "search_type"}); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewSearchIssuesAndPullRequestsResponse returns a validated SearchIssuesAndPullRequestsResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewSearchIssuesAndPullRequestsResponse(fields SearchIssuesAndPullRequestsResponse) (*SearchIssuesAndPullRequestsResponse, error) {
-	return ConstructModel(fields)
-}
-
-// SearchIssuesAndPullRequestsResponseSearchTypeEnum The type of search that was performed. Possible values are `lexical`, `semantic`, or `hybrid`.
-type SearchIssuesAndPullRequestsResponseSearchTypeEnum string
-
-const (
-	SearchIssuesAndPullRequestsResponseSearchTypeEnumLexical  SearchIssuesAndPullRequestsResponseSearchTypeEnum = "lexical"
-	SearchIssuesAndPullRequestsResponseSearchTypeEnumSemantic SearchIssuesAndPullRequestsResponseSearchTypeEnum = "semantic"
-	SearchIssuesAndPullRequestsResponseSearchTypeEnumHybrid   SearchIssuesAndPullRequestsResponseSearchTypeEnum = "hybrid"
-)
-
-type SearchIssuesAndPullRequestsResponseLexicalFallbackReasonEnum string
-
-const (
-	SearchIssuesAndPullRequestsResponseLexicalFallbackReasonEnumNoTextTerms                    SearchIssuesAndPullRequestsResponseLexicalFallbackReasonEnum = "no_text_terms"
-	SearchIssuesAndPullRequestsResponseLexicalFallbackReasonEnumQuotedText                     SearchIssuesAndPullRequestsResponseLexicalFallbackReasonEnum = "quoted_text"
-	SearchIssuesAndPullRequestsResponseLexicalFallbackReasonEnumNonIssueTarget                 SearchIssuesAndPullRequestsResponseLexicalFallbackReasonEnum = "non_issue_target"
-	SearchIssuesAndPullRequestsResponseLexicalFallbackReasonEnumOrBooleanNotSupported          SearchIssuesAndPullRequestsResponseLexicalFallbackReasonEnum = "or_boolean_not_supported"
-	SearchIssuesAndPullRequestsResponseLexicalFallbackReasonEnumNoAccessibleRepos              SearchIssuesAndPullRequestsResponseLexicalFallbackReasonEnum = "no_accessible_repos"
-	SearchIssuesAndPullRequestsResponseLexicalFallbackReasonEnumServerError                    SearchIssuesAndPullRequestsResponseLexicalFallbackReasonEnum = "server_error"
-	SearchIssuesAndPullRequestsResponseLexicalFallbackReasonEnumOnlyNonSemanticFieldsRequested SearchIssuesAndPullRequestsResponseLexicalFallbackReasonEnum = "only_non_semantic_fields_requested"
-	SearchIssuesAndPullRequestsResponseLexicalFallbackReasonEnumServiceUnavailable             SearchIssuesAndPullRequestsResponseLexicalFallbackReasonEnum = "service_unavailable"
-)
-
-type SearchLabelsResponse struct {
-	TotalCount        int64                   `json:"total_count"`
-	IncompleteResults bool                    `json:"incomplete_results"`
-	Items             []LabelSearchResultItem `json:"items"`
-}
-
-func (value *SearchLabelsResponse) UnmarshalJSON(data []byte) error {
-	type SearchLabelsResponseAlias SearchLabelsResponse
-	var decoded SearchLabelsResponseAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = SearchLabelsResponse(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"total_count", "incomplete_results", "items"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"total_count", "incomplete_results", "items"}); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewSearchLabelsResponse returns a validated SearchLabelsResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewSearchLabelsResponse(fields SearchLabelsResponse) (*SearchLabelsResponse, error) {
-	return ConstructModel(fields)
-}
-
-type SearchReposResponse struct {
-	TotalCount        int64                  `json:"total_count"`
-	IncompleteResults bool                   `json:"incomplete_results"`
-	Items             []RepoSearchResultItem `json:"items"`
-}
-
-func (value *SearchReposResponse) UnmarshalJSON(data []byte) error {
-	type SearchReposResponseAlias SearchReposResponse
-	var decoded SearchReposResponseAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = SearchReposResponse(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"total_count", "incomplete_results", "items"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"total_count", "incomplete_results", "items"}); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewSearchReposResponse returns a validated SearchReposResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewSearchReposResponse(fields SearchReposResponse) (*SearchReposResponse, error) {
-	return ConstructModel(fields)
-}
-
-type SearchTopicsResponse struct {
-	TotalCount        int64                   `json:"total_count"`
-	IncompleteResults bool                    `json:"incomplete_results"`
-	Items             []TopicSearchResultItem `json:"items"`
-}
-
-func (value *SearchTopicsResponse) UnmarshalJSON(data []byte) error {
-	type SearchTopicsResponseAlias SearchTopicsResponse
-	var decoded SearchTopicsResponseAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = SearchTopicsResponse(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"total_count", "incomplete_results", "items"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"total_count", "incomplete_results", "items"}); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewSearchTopicsResponse returns a validated SearchTopicsResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewSearchTopicsResponse(fields SearchTopicsResponse) (*SearchTopicsResponse, error) {
-	return ConstructModel(fields)
-}
-
-type SearchUsersResponse struct {
-	TotalCount        int64                  `json:"total_count"`
-	IncompleteResults bool                   `json:"incomplete_results"`
-	Items             []UserSearchResultItem `json:"items"`
-}
-
-func (value *SearchUsersResponse) UnmarshalJSON(data []byte) error {
-	type SearchUsersResponseAlias SearchUsersResponse
-	var decoded SearchUsersResponseAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = SearchUsersResponse(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"total_count", "incomplete_results", "items"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"total_count", "incomplete_results", "items"}); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewSearchUsersResponse returns a validated SearchUsersResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewSearchUsersResponse(fields SearchUsersResponse) (*SearchUsersResponse, error) {
-	return ConstructModel(fields)
-}
-
 type SearchCodeParams struct {
 	Q       string
 	Sort    *string
@@ -680,4 +423,261 @@ func SearchUsers(ctx context.Context, clientConfig ClientConfig, params SearchUs
 		return nil, err
 	}
 	return &resp.Data, nil
+}
+
+type SearchCodeResponse struct {
+	TotalCount        int64                  `json:"total_count"`
+	IncompleteResults bool                   `json:"incomplete_results"`
+	Items             []CodeSearchResultItem `json:"items"`
+}
+
+func (value *SearchCodeResponse) UnmarshalJSON(data []byte) error {
+	type SearchCodeResponseAlias SearchCodeResponse
+	var decoded SearchCodeResponseAlias
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		return err
+	}
+	*value = SearchCodeResponse(decoded)
+	var rawFields map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawFields); err != nil {
+		return err
+	}
+	if err := ValidateRequired(rawFields, []string{"total_count", "incomplete_results", "items"}); err != nil {
+		return err
+	}
+	if err := ValidateNotNull(rawFields, []string{"total_count", "incomplete_results", "items"}); err != nil {
+		return err
+	}
+	return nil
+}
+
+// NewSearchCodeResponse returns a validated SearchCodeResponse built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewSearchCodeResponse(fields SearchCodeResponse) (*SearchCodeResponse, error) {
+	return ConstructModel(fields)
+}
+
+type SearchCommitsResponse struct {
+	TotalCount        int64                    `json:"total_count"`
+	IncompleteResults bool                     `json:"incomplete_results"`
+	Items             []CommitSearchResultItem `json:"items"`
+}
+
+func (value *SearchCommitsResponse) UnmarshalJSON(data []byte) error {
+	type SearchCommitsResponseAlias SearchCommitsResponse
+	var decoded SearchCommitsResponseAlias
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		return err
+	}
+	*value = SearchCommitsResponse(decoded)
+	var rawFields map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawFields); err != nil {
+		return err
+	}
+	if err := ValidateRequired(rawFields, []string{"total_count", "incomplete_results", "items"}); err != nil {
+		return err
+	}
+	if err := ValidateNotNull(rawFields, []string{"total_count", "incomplete_results", "items"}); err != nil {
+		return err
+	}
+	return nil
+}
+
+// NewSearchCommitsResponse returns a validated SearchCommitsResponse built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewSearchCommitsResponse(fields SearchCommitsResponse) (*SearchCommitsResponse, error) {
+	return ConstructModel(fields)
+}
+
+type SearchIssuesAndPullRequestsResponse struct {
+	TotalCount        int64                   `json:"total_count"`
+	IncompleteResults bool                    `json:"incomplete_results"`
+	Items             []IssueSearchResultItem `json:"items"`
+	// SearchType The type of search that was performed. Possible values are `lexical`, `semantic`, or `hybrid`.
+	SearchType SearchIssuesAndPullRequestsResponseSearchTypeEnum `json:"search_type"`
+	// LexicalFallbackReason When a semantic or hybrid search falls back to lexical search, this field contains the reasons for the fallback. Only present when a fallback occurred.
+	LexicalFallbackReason []SearchIssuesAndPullRequestsResponseLexicalFallbackReasonEnum `json:"lexical_fallback_reason,omitempty"`
+}
+
+func (value *SearchIssuesAndPullRequestsResponse) UnmarshalJSON(data []byte) error {
+	type SearchIssuesAndPullRequestsResponseAlias SearchIssuesAndPullRequestsResponse
+	var decoded SearchIssuesAndPullRequestsResponseAlias
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		return err
+	}
+	*value = SearchIssuesAndPullRequestsResponse(decoded)
+	var rawFields map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawFields); err != nil {
+		return err
+	}
+	if err := ValidateRequired(rawFields, []string{"total_count", "incomplete_results", "items", "search_type"}); err != nil {
+		return err
+	}
+	if err := ValidateNotNull(rawFields, []string{"total_count", "incomplete_results", "items", "search_type"}); err != nil {
+		return err
+	}
+	return nil
+}
+
+// NewSearchIssuesAndPullRequestsResponse returns a validated SearchIssuesAndPullRequestsResponse built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewSearchIssuesAndPullRequestsResponse(fields SearchIssuesAndPullRequestsResponse) (*SearchIssuesAndPullRequestsResponse, error) {
+	return ConstructModel(fields)
+}
+
+// SearchIssuesAndPullRequestsResponseSearchTypeEnum The type of search that was performed. Possible values are `lexical`, `semantic`, or `hybrid`.
+type SearchIssuesAndPullRequestsResponseSearchTypeEnum string
+
+const (
+	SearchIssuesAndPullRequestsResponseSearchTypeEnumLexical  SearchIssuesAndPullRequestsResponseSearchTypeEnum = "lexical"
+	SearchIssuesAndPullRequestsResponseSearchTypeEnumSemantic SearchIssuesAndPullRequestsResponseSearchTypeEnum = "semantic"
+	SearchIssuesAndPullRequestsResponseSearchTypeEnumHybrid   SearchIssuesAndPullRequestsResponseSearchTypeEnum = "hybrid"
+)
+
+type SearchIssuesAndPullRequestsResponseLexicalFallbackReasonEnum string
+
+const (
+	SearchIssuesAndPullRequestsResponseLexicalFallbackReasonEnumNoTextTerms                    SearchIssuesAndPullRequestsResponseLexicalFallbackReasonEnum = "no_text_terms"
+	SearchIssuesAndPullRequestsResponseLexicalFallbackReasonEnumQuotedText                     SearchIssuesAndPullRequestsResponseLexicalFallbackReasonEnum = "quoted_text"
+	SearchIssuesAndPullRequestsResponseLexicalFallbackReasonEnumNonIssueTarget                 SearchIssuesAndPullRequestsResponseLexicalFallbackReasonEnum = "non_issue_target"
+	SearchIssuesAndPullRequestsResponseLexicalFallbackReasonEnumOrBooleanNotSupported          SearchIssuesAndPullRequestsResponseLexicalFallbackReasonEnum = "or_boolean_not_supported"
+	SearchIssuesAndPullRequestsResponseLexicalFallbackReasonEnumNoAccessibleRepos              SearchIssuesAndPullRequestsResponseLexicalFallbackReasonEnum = "no_accessible_repos"
+	SearchIssuesAndPullRequestsResponseLexicalFallbackReasonEnumServerError                    SearchIssuesAndPullRequestsResponseLexicalFallbackReasonEnum = "server_error"
+	SearchIssuesAndPullRequestsResponseLexicalFallbackReasonEnumOnlyNonSemanticFieldsRequested SearchIssuesAndPullRequestsResponseLexicalFallbackReasonEnum = "only_non_semantic_fields_requested"
+	SearchIssuesAndPullRequestsResponseLexicalFallbackReasonEnumServiceUnavailable             SearchIssuesAndPullRequestsResponseLexicalFallbackReasonEnum = "service_unavailable"
+)
+
+type SearchLabelsResponse struct {
+	TotalCount        int64                   `json:"total_count"`
+	IncompleteResults bool                    `json:"incomplete_results"`
+	Items             []LabelSearchResultItem `json:"items"`
+}
+
+func (value *SearchLabelsResponse) UnmarshalJSON(data []byte) error {
+	type SearchLabelsResponseAlias SearchLabelsResponse
+	var decoded SearchLabelsResponseAlias
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		return err
+	}
+	*value = SearchLabelsResponse(decoded)
+	var rawFields map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawFields); err != nil {
+		return err
+	}
+	if err := ValidateRequired(rawFields, []string{"total_count", "incomplete_results", "items"}); err != nil {
+		return err
+	}
+	if err := ValidateNotNull(rawFields, []string{"total_count", "incomplete_results", "items"}); err != nil {
+		return err
+	}
+	return nil
+}
+
+// NewSearchLabelsResponse returns a validated SearchLabelsResponse built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewSearchLabelsResponse(fields SearchLabelsResponse) (*SearchLabelsResponse, error) {
+	return ConstructModel(fields)
+}
+
+type SearchReposResponse struct {
+	TotalCount        int64                  `json:"total_count"`
+	IncompleteResults bool                   `json:"incomplete_results"`
+	Items             []RepoSearchResultItem `json:"items"`
+}
+
+func (value *SearchReposResponse) UnmarshalJSON(data []byte) error {
+	type SearchReposResponseAlias SearchReposResponse
+	var decoded SearchReposResponseAlias
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		return err
+	}
+	*value = SearchReposResponse(decoded)
+	var rawFields map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawFields); err != nil {
+		return err
+	}
+	if err := ValidateRequired(rawFields, []string{"total_count", "incomplete_results", "items"}); err != nil {
+		return err
+	}
+	if err := ValidateNotNull(rawFields, []string{"total_count", "incomplete_results", "items"}); err != nil {
+		return err
+	}
+	return nil
+}
+
+// NewSearchReposResponse returns a validated SearchReposResponse built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewSearchReposResponse(fields SearchReposResponse) (*SearchReposResponse, error) {
+	return ConstructModel(fields)
+}
+
+type SearchTopicsResponse struct {
+	TotalCount        int64                   `json:"total_count"`
+	IncompleteResults bool                    `json:"incomplete_results"`
+	Items             []TopicSearchResultItem `json:"items"`
+}
+
+func (value *SearchTopicsResponse) UnmarshalJSON(data []byte) error {
+	type SearchTopicsResponseAlias SearchTopicsResponse
+	var decoded SearchTopicsResponseAlias
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		return err
+	}
+	*value = SearchTopicsResponse(decoded)
+	var rawFields map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawFields); err != nil {
+		return err
+	}
+	if err := ValidateRequired(rawFields, []string{"total_count", "incomplete_results", "items"}); err != nil {
+		return err
+	}
+	if err := ValidateNotNull(rawFields, []string{"total_count", "incomplete_results", "items"}); err != nil {
+		return err
+	}
+	return nil
+}
+
+// NewSearchTopicsResponse returns a validated SearchTopicsResponse built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewSearchTopicsResponse(fields SearchTopicsResponse) (*SearchTopicsResponse, error) {
+	return ConstructModel(fields)
+}
+
+type SearchUsersResponse struct {
+	TotalCount        int64                  `json:"total_count"`
+	IncompleteResults bool                   `json:"incomplete_results"`
+	Items             []UserSearchResultItem `json:"items"`
+}
+
+func (value *SearchUsersResponse) UnmarshalJSON(data []byte) error {
+	type SearchUsersResponseAlias SearchUsersResponse
+	var decoded SearchUsersResponseAlias
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		return err
+	}
+	*value = SearchUsersResponse(decoded)
+	var rawFields map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawFields); err != nil {
+		return err
+	}
+	if err := ValidateRequired(rawFields, []string{"total_count", "incomplete_results", "items"}); err != nil {
+		return err
+	}
+	if err := ValidateNotNull(rawFields, []string{"total_count", "incomplete_results", "items"}); err != nil {
+		return err
+	}
+	return nil
+}
+
+// NewSearchUsersResponse returns a validated SearchUsersResponse built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewSearchUsersResponse(fields SearchUsersResponse) (*SearchUsersResponse, error) {
+	return ConstructModel(fields)
 }

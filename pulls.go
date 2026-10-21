@@ -5,365 +5,8 @@ package sdk
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 )
-
-type PullsCreateReviewComments struct {
-	// Path The relative path to the file that necessitates a review comment.
-	Path string `json:"path"`
-	// Position The position in the diff where you want to add a review comment. Note this value is not the same as the line number in the file. The `position` value equals the number of lines down from the first "@@" hunk header in the file you want to add a comment. The line just below the "@@" line is position 1, the next line is position 2, and so on. The position in the diff continues to increase through lines of whitespace and additional hunks until the beginning of a new file.
-	Position *int64 `json:"position,omitempty"`
-	// Body Text of the review comment.
-	Body      string  `json:"body"`
-	Line      *int64  `json:"line,omitempty"`
-	Side      *string `json:"side,omitempty"`
-	StartLine *int64  `json:"start_line,omitempty"`
-	StartSide *string `json:"start_side,omitempty"`
-}
-
-func (value *PullsCreateReviewComments) UnmarshalJSON(data []byte) error {
-	type PullsCreateReviewCommentsAlias PullsCreateReviewComments
-	var decoded PullsCreateReviewCommentsAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = PullsCreateReviewComments(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"path", "body"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"path", "body"}); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewPullsCreateReviewComments returns a validated PullsCreateReviewComments built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewPullsCreateReviewComments(fields PullsCreateReviewComments) (*PullsCreateReviewComments, error) {
-	return ConstructModel(fields)
-}
-
-type PullsUpdateBranchResponse struct {
-	Message *string `json:"message,omitempty"`
-	Url     *string `json:"url,omitempty"`
-}
-
-// NewPullsUpdateBranchResponse returns a validated PullsUpdateBranchResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewPullsUpdateBranchResponse(fields PullsUpdateBranchResponse) (*PullsUpdateBranchResponse, error) {
-	return ConstructModel(fields)
-}
-
-type PullRequestStacksCreateResponse struct {
-	Id     int64                               `json:"id"`
-	Number int64                               `json:"number"`
-	NodeId string                              `json:"node_id"`
-	Url    string                              `json:"url"`
-	Base   PullRequestStacksCreateResponseBase `json:"base"`
-	// Open Whether the stack has any open pull request. False when all pull requests are merged or closed.
-	Open         bool                          `json:"open"`
-	CreatedAt    string                        `json:"created_at"`
-	PullRequests []PullRequestStackPullRequest `json:"pull_requests"`
-}
-
-func (value *PullRequestStacksCreateResponse) UnmarshalJSON(data []byte) error {
-	type PullRequestStacksCreateResponseAlias PullRequestStacksCreateResponse
-	var decoded PullRequestStacksCreateResponseAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = PullRequestStacksCreateResponse(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"id", "number", "node_id", "url", "base", "open", "created_at", "pull_requests"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"id", "number", "node_id", "url", "base", "open", "created_at", "pull_requests"}); err != nil {
-		return err
-	}
-	if err := ValidateUri("url", value.Url); err != nil {
-		return err
-	}
-	if err := ValidateModelDateTime("created_at", value.CreatedAt); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewPullRequestStacksCreateResponse returns a validated PullRequestStacksCreateResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewPullRequestStacksCreateResponse(fields PullRequestStacksCreateResponse) (*PullRequestStacksCreateResponse, error) {
-	return ConstructModel(fields)
-}
-
-type PullRequestStacksCreateResponseBase struct {
-	Ref string `json:"ref"`
-}
-
-func (value *PullRequestStacksCreateResponseBase) UnmarshalJSON(data []byte) error {
-	type PullRequestStacksCreateResponseBaseAlias PullRequestStacksCreateResponseBase
-	var decoded PullRequestStacksCreateResponseBaseAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = PullRequestStacksCreateResponseBase(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"ref"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"ref"}); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewPullRequestStacksCreateResponseBase returns a validated PullRequestStacksCreateResponseBase built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewPullRequestStacksCreateResponseBase(fields PullRequestStacksCreateResponseBase) (*PullRequestStacksCreateResponseBase, error) {
-	return ConstructModel(fields)
-}
-
-type PullRequestStacksGetResponse struct {
-	Id     int64                            `json:"id"`
-	Number int64                            `json:"number"`
-	NodeId string                           `json:"node_id"`
-	Url    string                           `json:"url"`
-	Base   PullRequestStacksGetResponseBase `json:"base"`
-	// Open Whether the stack has any open pull request. False when all pull requests are merged or closed.
-	Open         bool                          `json:"open"`
-	CreatedAt    string                        `json:"created_at"`
-	PullRequests []PullRequestStackPullRequest `json:"pull_requests"`
-}
-
-func (value *PullRequestStacksGetResponse) UnmarshalJSON(data []byte) error {
-	type PullRequestStacksGetResponseAlias PullRequestStacksGetResponse
-	var decoded PullRequestStacksGetResponseAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = PullRequestStacksGetResponse(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"id", "number", "node_id", "url", "base", "open", "created_at", "pull_requests"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"id", "number", "node_id", "url", "base", "open", "created_at", "pull_requests"}); err != nil {
-		return err
-	}
-	if err := ValidateUri("url", value.Url); err != nil {
-		return err
-	}
-	if err := ValidateModelDateTime("created_at", value.CreatedAt); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewPullRequestStacksGetResponse returns a validated PullRequestStacksGetResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewPullRequestStacksGetResponse(fields PullRequestStacksGetResponse) (*PullRequestStacksGetResponse, error) {
-	return ConstructModel(fields)
-}
-
-type PullRequestStacksGetResponseBase struct {
-	Ref string `json:"ref"`
-}
-
-func (value *PullRequestStacksGetResponseBase) UnmarshalJSON(data []byte) error {
-	type PullRequestStacksGetResponseBaseAlias PullRequestStacksGetResponseBase
-	var decoded PullRequestStacksGetResponseBaseAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = PullRequestStacksGetResponseBase(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"ref"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"ref"}); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewPullRequestStacksGetResponseBase returns a validated PullRequestStacksGetResponseBase built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewPullRequestStacksGetResponseBase(fields PullRequestStacksGetResponseBase) (*PullRequestStacksGetResponseBase, error) {
-	return ConstructModel(fields)
-}
-
-type PullRequestStacksAddResponse struct {
-	Id     int64                            `json:"id"`
-	Number int64                            `json:"number"`
-	NodeId string                           `json:"node_id"`
-	Url    string                           `json:"url"`
-	Base   PullRequestStacksAddResponseBase `json:"base"`
-	// Open Whether the stack has any open pull request. False when all pull requests are merged or closed.
-	Open         bool                          `json:"open"`
-	CreatedAt    string                        `json:"created_at"`
-	PullRequests []PullRequestStackPullRequest `json:"pull_requests"`
-}
-
-func (value *PullRequestStacksAddResponse) UnmarshalJSON(data []byte) error {
-	type PullRequestStacksAddResponseAlias PullRequestStacksAddResponse
-	var decoded PullRequestStacksAddResponseAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = PullRequestStacksAddResponse(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"id", "number", "node_id", "url", "base", "open", "created_at", "pull_requests"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"id", "number", "node_id", "url", "base", "open", "created_at", "pull_requests"}); err != nil {
-		return err
-	}
-	if err := ValidateUri("url", value.Url); err != nil {
-		return err
-	}
-	if err := ValidateModelDateTime("created_at", value.CreatedAt); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewPullRequestStacksAddResponse returns a validated PullRequestStacksAddResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewPullRequestStacksAddResponse(fields PullRequestStacksAddResponse) (*PullRequestStacksAddResponse, error) {
-	return ConstructModel(fields)
-}
-
-type PullRequestStacksAddResponseBase struct {
-	Ref string `json:"ref"`
-}
-
-func (value *PullRequestStacksAddResponseBase) UnmarshalJSON(data []byte) error {
-	type PullRequestStacksAddResponseBaseAlias PullRequestStacksAddResponseBase
-	var decoded PullRequestStacksAddResponseBaseAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = PullRequestStacksAddResponseBase(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"ref"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"ref"}); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewPullRequestStacksAddResponseBase returns a validated PullRequestStacksAddResponseBase built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewPullRequestStacksAddResponseBase(fields PullRequestStacksAddResponseBase) (*PullRequestStacksAddResponseBase, error) {
-	return ConstructModel(fields)
-}
-
-type PullRequestStacksUnstackResponse struct {
-	Id     int64                                `json:"id"`
-	Number int64                                `json:"number"`
-	NodeId string                               `json:"node_id"`
-	Url    string                               `json:"url"`
-	Base   PullRequestStacksUnstackResponseBase `json:"base"`
-	// Open Whether the stack has any open pull request. False when all pull requests are merged or closed.
-	Open         bool                          `json:"open"`
-	CreatedAt    string                        `json:"created_at"`
-	PullRequests []PullRequestStackPullRequest `json:"pull_requests"`
-}
-
-func (value *PullRequestStacksUnstackResponse) UnmarshalJSON(data []byte) error {
-	type PullRequestStacksUnstackResponseAlias PullRequestStacksUnstackResponse
-	var decoded PullRequestStacksUnstackResponseAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = PullRequestStacksUnstackResponse(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"id", "number", "node_id", "url", "base", "open", "created_at", "pull_requests"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"id", "number", "node_id", "url", "base", "open", "created_at", "pull_requests"}); err != nil {
-		return err
-	}
-	if err := ValidateUri("url", value.Url); err != nil {
-		return err
-	}
-	if err := ValidateModelDateTime("created_at", value.CreatedAt); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewPullRequestStacksUnstackResponse returns a validated PullRequestStacksUnstackResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewPullRequestStacksUnstackResponse(fields PullRequestStacksUnstackResponse) (*PullRequestStacksUnstackResponse, error) {
-	return ConstructModel(fields)
-}
-
-type PullRequestStacksUnstackResponseBase struct {
-	Ref string `json:"ref"`
-}
-
-func (value *PullRequestStacksUnstackResponseBase) UnmarshalJSON(data []byte) error {
-	type PullRequestStacksUnstackResponseBaseAlias PullRequestStacksUnstackResponseBase
-	var decoded PullRequestStacksUnstackResponseBaseAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = PullRequestStacksUnstackResponseBase(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"ref"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"ref"}); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewPullRequestStacksUnstackResponseBase returns a validated PullRequestStacksUnstackResponseBase built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewPullRequestStacksUnstackResponseBase(fields PullRequestStacksUnstackResponseBase) (*PullRequestStacksUnstackResponseBase, error) {
-	return ConstructModel(fields)
-}
 
 type PullsListParams struct {
 	Owner     string
@@ -509,166 +152,6 @@ func PullsCreate(ctx context.Context, clientConfig ClientConfig, params PullsCre
 	return &resp.Data, nil
 }
 
-type PullsListReviewCommentsForRepoParams struct {
-	Owner     string
-	Repo      string
-	Sort      *string
-	Direction *string
-	Since     *string
-	PerPage   *int64
-	Page      *int64
-}
-
-// PullsListReviewCommentsForRepo lists review comments across all pull requests in a repository, ordered by ID in ascending order by default. Use `sort`, `direction`, and `since` to control the results, and select a custom media type to receive the comment body as raw Markdown, plain text, rendered HTML, or all three. Use `page` and `per_page` to paginate the results.
-//
-// Lists review comments for all pull requests in a repository. By default, review comments are in ascending order by ID. This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)." - **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type. - **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`. - **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`. - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
-//
-// Parameters:
-//
-//	owner: The account owner of the repository. The name is not case sensitive.
-//	repo: The name of the repository without the `.git` extension. The name is
-//	not case sensitive.
-//	direction: The direction to sort results. Ignored without `sort` parameter.
-//	since: Only show results that were last updated after the given time. This
-//	is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format:
-//	`YYYY-MM-DDTHH:MM:SSZ`.
-//	perPage: The number of results per page (max 100). For more information, see
-//	"[Using pagination in the REST
-//	API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the
-//	-rest-api)."
-//	page: The page number of the results to fetch. For more information, see
-//	"[Using pagination in the REST
-//	API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the
-//	-rest-api)."
-func PullsListReviewCommentsForRepo(ctx context.Context, clientConfig ClientConfig, params PullsListReviewCommentsForRepoParams, opts ...RequestOption) ([]PullRequestReviewComment, error) {
-	owner := params.Owner
-	repo := params.Repo
-	sort := params.Sort
-	direction := params.Direction
-	since := params.Since
-	perPage := params.PerPage
-	page := params.Page
-
-	if since != nil {
-		if err := ValidateDateTime("since", *since); err != nil {
-			return nil, err
-		}
-	}
-
-	resp, err := DoCfg[[]PullRequestReviewComment](ctx, &clientConfig, "GET", fmt.Sprintf("/repos/%s/%s/pulls/comments", EncodePathSegment(owner), EncodePathSegment(repo)), &RequestOpts{
-		Query: map[string]any{
-			"sort":      QueryValue{Value: sort, Style: "form", Explode: true},
-			"direction": QueryValue{Value: direction, Style: "form", Explode: true},
-			"since":     QueryValue{Value: since, Style: "form", Explode: true},
-			"per_page":  QueryValue{Value: perPage, Style: "form", Explode: true},
-			"page":      QueryValue{Value: page, Style: "form", Explode: true},
-		},
-		OperationID: "PullsListReviewCommentsForRepo",
-		Options:     opts,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return resp.Data, nil
-}
-
-type PullsGetReviewCommentParams struct {
-	Owner     string
-	Repo      string
-	CommentId int64
-}
-
-// PullsGetReviewComment provides details for a specified review comment. This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)." - **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type. - **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`. - **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`. - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
-//
-// Parameters:
-//
-//	owner: The account owner of the repository. The name is not case sensitive.
-//	repo: The name of the repository without the `.git` extension. The name is
-//	not case sensitive.
-//	commentId: The unique identifier of the comment.
-func PullsGetReviewComment(ctx context.Context, clientConfig ClientConfig, params PullsGetReviewCommentParams, opts ...RequestOption) (*PullRequestReviewComment, error) {
-	owner := params.Owner
-	repo := params.Repo
-	commentId := params.CommentId
-
-	resp, err := DoCfg[PullRequestReviewComment](ctx, &clientConfig, "GET", fmt.Sprintf("/repos/%s/%s/pulls/comments/%s", EncodePathSegment(owner), EncodePathSegment(repo), EncodePathSegment(commentId)), &RequestOpts{
-		OperationID: "PullsGetReviewComment",
-		Errors:      ErrorDecoders{"404": decodeErrorData[BasicError]},
-		Options:     opts,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return &resp.Data, nil
-}
-
-type PullsUpdateReviewCommentParams struct {
-	Owner     string
-	Repo      string
-	CommentId int64
-	Body      string
-}
-
-// PullsUpdateReviewComment edits the content of a specified review comment. This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)." - **`application/vnd.github-commitcomment.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type. - **`application/vnd.github-commitcomment.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`. - **`application/vnd.github-commitcomment.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`. - **`application/vnd.github-commitcomment.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
-//
-// Parameters:
-//
-//	owner: The account owner of the repository. The name is not case sensitive.
-//	repo: The name of the repository without the `.git` extension. The name is
-//	not case sensitive.
-//	commentId: The unique identifier of the comment.
-//	body: The text of the reply to the review comment.
-func PullsUpdateReviewComment(ctx context.Context, clientConfig ClientConfig, params PullsUpdateReviewCommentParams, opts ...RequestOption) (*PullRequestReviewComment, error) {
-	owner := params.Owner
-	repo := params.Repo
-	commentId := params.CommentId
-	body := params.Body
-
-	resp, err := DoCfg[PullRequestReviewComment](ctx, &clientConfig, "PATCH", fmt.Sprintf("/repos/%s/%s/pulls/comments/%s", EncodePathSegment(owner), EncodePathSegment(repo), EncodePathSegment(commentId)), &RequestOpts{
-		Body: map[string]any{
-			"body": body,
-		},
-		OperationID: "PullsUpdateReviewComment",
-		Options:     opts,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return &resp.Data, nil
-}
-
-type PullsDeleteReviewCommentParams struct {
-	Owner     string
-	Repo      string
-	CommentId int64
-}
-
-// PullsDeleteReviewComment deletes a review comment from a pull request in a repository. Supply `owner` and `repo` to identify the repository and `comment_id` to select the comment. A 204 response confirms deletion without returning a response body.
-//
-// Deletes a review comment.
-//
-// Parameters:
-//
-//	owner: The account owner of the repository. The name is not case sensitive.
-//	repo: The name of the repository without the `.git` extension. The name is
-//	not case sensitive.
-//	commentId: The unique identifier of the comment.
-func PullsDeleteReviewComment(ctx context.Context, clientConfig ClientConfig, params PullsDeleteReviewCommentParams, opts ...RequestOption) (any, error) {
-	owner := params.Owner
-	repo := params.Repo
-	commentId := params.CommentId
-
-	_, err := DoEmptyCfg(ctx, &clientConfig, "DELETE", fmt.Sprintf("/repos/%s/%s/pulls/comments/%s", EncodePathSegment(owner), EncodePathSegment(repo), EncodePathSegment(commentId)), &RequestOpts{
-		OperationID: "PullsDeleteReviewComment",
-		Errors:      ErrorDecoders{"404": decodeErrorData[BasicError]},
-		Options:     opts,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return nil, nil
-}
-
 type PullsGetParams struct {
 	Owner      string
 	Repo       string
@@ -708,4 +191,49 @@ type PullsUpdateParams struct {
 	State               *string
 	Base                *string
 	MaintainerCanModify *bool
+}
+
+// PullsUpdate draft pull requests are available in public repositories with GitHub Free and GitHub Free for organizations, GitHub Pro, and legacy per-repository billing plans, and in public and private repositories with GitHub Team and GitHub Enterprise Cloud. For more information, see [GitHub's products](https://docs.github.com/github/getting-started-with-github/githubs-products) in the GitHub Help documentation. To open or update a pull request in a public repository, you must have write access to the head or the source branch. For organization-owned repositories, you must be a member of the organization that owns the repository to open or update a pull request. This endpoint supports the following custom media types. For more information, see "[Media types](https://docs.github.com/rest/using-the-rest-api/getting-started-with-the-rest-api#media-types)." - **`application/vnd.github.raw+json`**: Returns the raw markdown body. Response will include `body`. This is the default if you do not pass any specific media type. - **`application/vnd.github.text+json`**: Returns a text only representation of the markdown body. Response will include `body_text`. - **`application/vnd.github.html+json`**: Returns HTML rendered from the body's markdown. Response will include `body_html`. - **`application/vnd.github.full+json`**: Returns raw, text, and HTML representations. Response will include `body`, `body_text`, and `body_html`.
+//
+// Parameters:
+//
+//	owner: The account owner of the repository. The name is not case sensitive.
+//	repo: The name of the repository without the `.git` extension. The name is
+//	not case sensitive.
+//	pullNumber: The number that identifies the pull request.
+//	title: The title of the pull request.
+//	body: The contents of the pull request.
+//	state: State of this Pull Request. Either `open` or `closed`.
+//	base: The name of the branch you want your changes pulled into. This should
+//	be an existing branch on the current repository. You cannot update the base
+//	branch on a pull request to point to another repository.
+//	maintainerCanModify: Indicates whether [maintainers can
+//	modify](https://docs.github.com/articles/allowing-changes-to-a-pull-request-
+//	branch-created-from-a-fork/) the pull request.
+func PullsUpdate(ctx context.Context, clientConfig ClientConfig, params PullsUpdateParams, opts ...RequestOption) (*PullRequest, error) {
+	owner := params.Owner
+	repo := params.Repo
+	pullNumber := params.PullNumber
+	title := params.Title
+	body := params.Body
+	state := params.State
+	base := params.Base
+	maintainerCanModify := params.MaintainerCanModify
+
+	resp, err := DoCfg[PullRequest](ctx, &clientConfig, "PATCH", fmt.Sprintf("/repos/%s/%s/pulls/%s", EncodePathSegment(owner), EncodePathSegment(repo), EncodePathSegment(pullNumber)), &RequestOpts{
+		Body: map[string]any{
+			"title":                 title,
+			"body":                  body,
+			"state":                 state,
+			"base":                  base,
+			"maintainer_can_modify": maintainerCanModify,
+		},
+		OperationID: "PullsUpdate",
+		Errors:      ErrorDecoders{"403": decodeErrorData[BasicError], "422": decodeErrorData[ValidationError]},
+		Options:     opts,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &resp.Data, nil
 }

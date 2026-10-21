@@ -4,692 +4,518 @@
 package sdk
 
 import (
-	"bytes"
-	"encoding/json"
+	"context"
+	"fmt"
 )
 
-type OrgsCreateArtifactDeploymentRecordResponse struct {
-	// TotalCount The number of deployment records created
-	TotalCount        int64                      `json:"total_count"`
-	DeploymentRecords []ArtifactDeploymentRecord `json:"deployment_records,omitempty"`
+type OrgsGetParams struct {
+	Org string
 }
 
-func (value *OrgsCreateArtifactDeploymentRecordResponse) UnmarshalJSON(data []byte) error {
-	type OrgsCreateArtifactDeploymentRecordResponseAlias OrgsCreateArtifactDeploymentRecordResponse
-	var decoded OrgsCreateArtifactDeploymentRecordResponseAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
+// OrgsGet gets information about an organization. When the value of `two_factor_requirement_enabled` is `true`, the organization requires all members, billing managers, outside collaborators, guest collaborators, repository collaborators, or everyone with access to any repository within the organization to enable [two-factor authentication](https://docs.github.com/articles/securing-your-account-with-two-factor-authentication-2fa/). To see the full details about an organization, the authenticated user must be an organization owner. OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to see the full details about an organization. To see information about an organization's GitHub plan, GitHub Apps need the `Organization plan` permission.
+//
+// Parameters:
+//
+//	org: The organization name. The name is not case sensitive.
+func OrgsGet(ctx context.Context, clientConfig ClientConfig, params OrgsGetParams, opts ...RequestOption) (*OrganizationFull, error) {
+	org := params.Org
+
+	resp, err := DoCfg[OrganizationFull](ctx, &clientConfig, "GET", fmt.Sprintf("/orgs/%s", EncodePathSegment(org)), &RequestOpts{
+		OperationID: "OrgsGet",
+		Errors:      ErrorDecoders{"404": decodeErrorData[BasicError]},
+		Options:     opts,
+	})
+	if err != nil {
+		return nil, err
 	}
-	*value = OrgsCreateArtifactDeploymentRecordResponse(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"total_count"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"total_count"}); err != nil {
-		return err
-	}
-	return nil
+	return &resp.Data, nil
 }
 
-// NewOrgsCreateArtifactDeploymentRecordResponse returns a validated OrgsCreateArtifactDeploymentRecordResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewOrgsCreateArtifactDeploymentRecordResponse(fields OrgsCreateArtifactDeploymentRecordResponse) (*OrgsCreateArtifactDeploymentRecordResponse, error) {
-	return ConstructModel(fields)
+type OrgsUpdateParams struct {
+	Org                                                   string
+	BillingEmail                                          *string
+	Company                                               *string
+	Email                                                 *string
+	TwitterUsername                                       *string
+	Location                                              *string
+	Name                                                  *string
+	Description                                           *string
+	HasOrganizationProjects                               *bool
+	HasRepositoryProjects                                 *bool
+	DefaultRepositoryPermission                           *string
+	MembersCanCreateRepositories                          *bool
+	MembersCanCreateInternalRepositories                  *bool
+	MembersCanCreatePrivateRepositories                   *bool
+	MembersCanCreatePublicRepositories                    *bool
+	MembersAllowedRepositoryCreationType                  *string
+	MembersCanCreatePages                                 *bool
+	MembersCanCreatePublicPages                           *bool
+	MembersCanCreatePrivatePages                          *bool
+	MembersCanForkPrivateRepositories                     *bool
+	WebCommitSignoffRequired                              *bool
+	Blog                                                  *string
+	AdvancedSecurityEnabledForNewRepositories             *bool
+	DependabotAlertsEnabledForNewRepositories             *bool
+	DependabotSecurityUpdatesEnabledForNewRepositories    *bool
+	DependencyGraphEnabledForNewRepositories              *bool
+	SecretScanningEnabledForNewRepositories               *bool
+	SecretScanningPushProtectionEnabledForNewRepositories *bool
+	SecretScanningPushProtectionCustomLinkEnabled         *bool
+	SecretScanningPushProtectionCustomLink                *string
+	DeployKeysEnabledForRepositories                      *bool
 }
 
-type OrgsSetClusterDeploymentRecordsDeployments struct {
-	// Name The name of the artifact.
-	Name string `json:"name"`
-	// Digest The hex encoded digest of the artifact.
-	Digest string `json:"digest"`
-	// Version The artifact version.
-	Version *string `json:"version,omitempty"`
-	// Status The deployment status of the artifact.
-	Status *OrgsSetClusterDeploymentRecordsDeploymentsStatusEnum `json:"status,omitempty"`
-	// DeploymentName The unique identifier for the deployment represented by the new record. To accommodate differing
-	// containers and namespaces within a record set, the following format is recommended:
-	// {namespaceName}-{deploymentName}-{containerName}.
-	// The deployment_name must be unique across all entries in the deployments array.
-	DeploymentName string `json:"deployment_name"`
-	// GithubRepository The name of the GitHub repository associated with the artifact. This should be used
-	// when there are no provenance attestations available for the artifact. The repository
-	// must belong to the organization specified in the path parameter.
-	//
-	// If a provenance attestation is available for the artifact, the API will use
-	// the repository information from the attestation instead of this parameter.
-	GithubRepository *string `json:"github_repository,omitempty"`
-	// Tags Key-value pairs to tag the deployment record.
-	Tags map[string]string `json:"tags,omitempty"`
-	// RuntimeRisks A list of runtime risks associated with the deployment.
-	RuntimeRisks []OrgsSetClusterDeploymentRecordsDeploymentsRuntimeRisksEnum `json:"runtime_risks,omitempty"`
+// OrgsUpdate updates an organization's profile and member privileges. Use the profile fields and repository-creation settings to change organization details and member permissions; `members_allowed_repository_creation_type` is closing down in favor of more granular settings. The authenticated user must be an organization owner, and OAuth app tokens and personal access tokens (classic) must have the `admin:org` or `repo` scope.
+//
+// > [!WARNING] > **Closing down notice:** GitHub will replace and discontinue `members_allowed_repository_creation_type` in favor of more granular permissions. The new input parameters are `members_can_create_public_repositories`, `members_can_create_private_repositories` for all organizations and `members_can_create_internal_repositories` for organizations associated with an enterprise account using GitHub Enterprise Cloud or GitHub Enterprise Server 2.20+. For more information, see the [blog post](https://developer.github.com/changes/2019-12-03-internal-visibility-changes). > [!WARNING] > **Closing down notice:** Code security product enablement for new repositories through the organization API is closing down. Please use [code security configurations](https://docs.github.com/rest/code-security/configurations#set-a-code-security-configuration-as-a-default-for-an-organization) to set defaults instead. For more information on setting a default security configuration, see the [changelog](https://github.blog/changelog/2024-07-09-sunsetting-security-settings-defaults-parameters-in-the-organizations-rest-api/). Updates the organization's profile and member privileges. The authenticated user must be an organization owner to use this endpoint. OAuth app tokens and personal access tokens (classic) need the `admin:org` or `repo` scope to use this endpoint.
+//
+// Parameters:
+//
+//	org: The organization name. The name is not case sensitive.
+//	billingEmail: Billing email address. This address is not publicized.
+//	company: The company name.
+//	email: The publicly visible email address.
+//	twitterUsername: The Twitter username of the company.
+//	location: The location.
+//	name: The shorthand name of the company.
+//	description: The description of the company. The maximum size is 160
+//	characters.
+//	hasOrganizationProjects: Whether an organization can use organization
+//	projects.
+//	hasRepositoryProjects: Whether repositories that belong to the organization
+//	can use repository projects.
+//	defaultRepositoryPermission: Default permission level members have for
+//	organization repositories.
+//	membersCanCreateRepositories: Whether of non-admin organization members can
+//	create repositories. **Note:** A parameter can override this parameter. See
+//	`members_allowed_repository_creation_type` in this table for details.
+//	membersCanCreateInternalRepositories: Whether organization members can
+//	create internal repositories, which are visible to all enterprise members.
+//	You can only allow members to create internal repositories if your
+//	organization is associated with an enterprise account using GitHub
+//	Enterprise Cloud or GitHub Enterprise Server 2.20+. For more information,
+//	see "[Restricting repository creation in your
+//	organization](https://docs.github.com/github/setting-up-and-managing-organiz
+//	ations-and-teams/restricting-repository-creation-in-your-organization)" in
+//	the GitHub Help documentation.
+//	membersCanCreatePrivateRepositories: Whether organization members can create
+//	private repositories, which are visible to organization members with
+//	permission. For more information, see "[Restricting repository creation in
+//	your
+//	organization](https://docs.github.com/github/setting-up-and-managing-organiz
+//	ations-and-teams/restricting-repository-creation-in-your-organization)" in
+//	the GitHub Help documentation.
+//	membersCanCreatePublicRepositories: Whether organization members can create
+//	public repositories, which are visible to anyone. For more information, see
+//	"[Restricting repository creation in your
+//	organization](https://docs.github.com/github/setting-up-and-managing-organiz
+//	ations-and-teams/restricting-repository-creation-in-your-organization)" in
+//	the GitHub Help documentation.
+//	membersAllowedRepositoryCreationType: Specifies which types of repositories
+//	non-admin organization members can create. `private` is only available to
+//	repositories that are part of an organization on GitHub Enterprise Cloud.
+//	**Note:** This parameter is closing down and will be removed in the future.
+//	Its return value ignores internal repositories. Using this parameter
+//	overrides values set in `members_can_create_repositories`. See the parameter
+//	deprecation notice in the operation description for details.
+//	membersCanCreatePages: Whether organization members can create GitHub Pages
+//	sites. Existing published sites will not be impacted.
+//	membersCanCreatePublicPages: Whether organization members can create public
+//	GitHub Pages sites. Existing published sites will not be impacted.
+//	membersCanCreatePrivatePages: Whether organization members can create
+//	private GitHub Pages sites. Existing published sites will not be impacted.
+//	membersCanForkPrivateRepositories: Whether organization members can fork
+//	private organization repositories.
+//	webCommitSignoffRequired: Whether contributors to organization repositories
+//	are required to sign off on commits they make through GitHub's web
+//	interface.
+//	advancedSecurityEnabledForNewRepositories: **Endpoint closing down notice.**
+//	Please use [code security
+//	configurations](https://docs.github.com/rest/code-security/configurations)
+//	instead. Whether GitHub Advanced Security is automatically enabled for new
+//	repositories and repositories transferred to this organization. To use this
+//	parameter, you must have admin permissions for the repository or be an owner
+//	or security manager for the organization that owns the repository. For more
+//	information, see "[Managing security managers in your
+//	organization](https://docs.github.com/organizations/managing-peoples-access-
+//	to-your-organization-with-roles/managing-security-managers-in-your-organizat
+//	ion)." You can check which security and analysis features are currently
+//	enabled by using a `GET /orgs/{org}` request.
+//	dependabotAlertsEnabledForNewRepositories: **Endpoint closing down notice.**
+//	Please use [code security
+//	configurations](https://docs.github.com/rest/code-security/configurations)
+//	instead. Whether Dependabot alerts are automatically enabled for new
+//	repositories and repositories transferred to this organization. To use this
+//	parameter, you must have admin permissions for the repository or be an owner
+//	or security manager for the organization that owns the repository. For more
+//	information, see "[Managing security managers in your
+//	organization](https://docs.github.com/organizations/managing-peoples-access-
+//	to-your-organization-with-roles/managing-security-managers-in-your-organizat
+//	ion)." You can check which security and analysis features are currently
+//	enabled by using a `GET /orgs/{org}` request.
+//	dependabotSecurityUpdatesEnabledForNewRepositories: **Endpoint closing down
+//	notice.** Please use [code security
+//	configurations](https://docs.github.com/rest/code-security/configurations)
+//	instead. Whether Dependabot security updates are automatically enabled for
+//	new repositories and repositories transferred to this organization. To use
+//	this parameter, you must have admin permissions for the repository or be an
+//	owner or security manager for the organization that owns the repository. For
+//	more information, see "[Managing security managers in your
+//	organization](https://docs.github.com/organizations/managing-peoples-access-
+//	to-your-organization-with-roles/managing-security-managers-in-your-organizat
+//	ion)." You can check which security and analysis features are currently
+//	enabled by using a `GET /orgs/{org}` request.
+//	dependencyGraphEnabledForNewRepositories: **Endpoint closing down notice.**
+//	Please use [code security
+//	configurations](https://docs.github.com/rest/code-security/configurations)
+//	instead. Whether dependency graph is automatically enabled for new
+//	repositories and repositories transferred to this organization. To use this
+//	parameter, you must have admin permissions for the repository or be an owner
+//	or security manager for the organization that owns the repository. For more
+//	information, see "[Managing security managers in your
+//	organization](https://docs.github.com/organizations/managing-peoples-access-
+//	to-your-organization-with-roles/managing-security-managers-in-your-organizat
+//	ion)." You can check which security and analysis features are currently
+//	enabled by using a `GET /orgs/{org}` request.
+//	secretScanningEnabledForNewRepositories: **Endpoint closing down notice.**
+//	Please use [code security
+//	configurations](https://docs.github.com/rest/code-security/configurations)
+//	instead. Whether secret scanning is automatically enabled for new
+//	repositories and repositories transferred to this organization. To use this
+//	parameter, you must have admin permissions for the repository or be an owner
+//	or security manager for the organization that owns the repository. For more
+//	information, see "[Managing security managers in your
+//	organization](https://docs.github.com/organizations/managing-peoples-access-
+//	to-your-organization-with-roles/managing-security-managers-in-your-organizat
+//	ion)." You can check which security and analysis features are currently
+//	enabled by using a `GET /orgs/{org}` request.
+//	secretScanningPushProtectionEnabledForNewRepositories: **Endpoint closing
+//	down notice.** Please use [code security
+//	configurations](https://docs.github.com/rest/code-security/configurations)
+//	instead. Whether secret scanning push protection is automatically enabled
+//	for new repositories and repositories transferred to this organization. To
+//	use this parameter, you must have admin permissions for the repository or be
+//	an owner or security manager for the organization that owns the repository.
+//	For more information, see "[Managing security managers in your
+//	organization](https://docs.github.com/organizations/managing-peoples-access-
+//	to-your-organization-with-roles/managing-security-managers-in-your-organizat
+//	ion)." You can check which security and analysis features are currently
+//	enabled by using a `GET /orgs/{org}` request.
+//	secretScanningPushProtectionCustomLinkEnabled: Whether a custom link is
+//	shown to contributors who are blocked from pushing a secret by push
+//	protection.
+//	secretScanningPushProtectionCustomLink: If
+//	`secret_scanning_push_protection_custom_link_enabled` is true, the URL that
+//	will be displayed to contributors who are blocked from pushing a secret.
+//	deployKeysEnabledForRepositories: Controls whether or not deploy keys may be
+//	added and used for repositories in the organization.
+func OrgsUpdate(ctx context.Context, clientConfig ClientConfig, params OrgsUpdateParams, opts ...RequestOption) (*OrganizationFull, error) {
+	org := params.Org
+	billingEmail := params.BillingEmail
+	company := params.Company
+	email := params.Email
+	twitterUsername := params.TwitterUsername
+	location := params.Location
+	name := params.Name
+	description := params.Description
+	hasOrganizationProjects := params.HasOrganizationProjects
+	hasRepositoryProjects := params.HasRepositoryProjects
+	defaultRepositoryPermission := params.DefaultRepositoryPermission
+	membersCanCreateRepositories := params.MembersCanCreateRepositories
+	membersCanCreateInternalRepositories := params.MembersCanCreateInternalRepositories
+	membersCanCreatePrivateRepositories := params.MembersCanCreatePrivateRepositories
+	membersCanCreatePublicRepositories := params.MembersCanCreatePublicRepositories
+	membersAllowedRepositoryCreationType := params.MembersAllowedRepositoryCreationType
+	membersCanCreatePages := params.MembersCanCreatePages
+	membersCanCreatePublicPages := params.MembersCanCreatePublicPages
+	membersCanCreatePrivatePages := params.MembersCanCreatePrivatePages
+	membersCanForkPrivateRepositories := params.MembersCanForkPrivateRepositories
+	webCommitSignoffRequired := params.WebCommitSignoffRequired
+	blog := params.Blog
+	advancedSecurityEnabledForNewRepositories := params.AdvancedSecurityEnabledForNewRepositories
+	dependabotAlertsEnabledForNewRepositories := params.DependabotAlertsEnabledForNewRepositories
+	dependabotSecurityUpdatesEnabledForNewRepositories := params.DependabotSecurityUpdatesEnabledForNewRepositories
+	dependencyGraphEnabledForNewRepositories := params.DependencyGraphEnabledForNewRepositories
+	secretScanningEnabledForNewRepositories := params.SecretScanningEnabledForNewRepositories
+	secretScanningPushProtectionEnabledForNewRepositories := params.SecretScanningPushProtectionEnabledForNewRepositories
+	secretScanningPushProtectionCustomLinkEnabled := params.SecretScanningPushProtectionCustomLinkEnabled
+	secretScanningPushProtectionCustomLink := params.SecretScanningPushProtectionCustomLink
+	deployKeysEnabledForRepositories := params.DeployKeysEnabledForRepositories
+
+	resp, err := DoCfg[OrganizationFull](ctx, &clientConfig, "PATCH", fmt.Sprintf("/orgs/%s", EncodePathSegment(org)), &RequestOpts{
+		Body: map[string]any{
+			"billing_email":                   billingEmail,
+			"company":                         company,
+			"email":                           email,
+			"twitter_username":                twitterUsername,
+			"location":                        location,
+			"name":                            name,
+			"description":                     description,
+			"has_organization_projects":       hasOrganizationProjects,
+			"has_repository_projects":         hasRepositoryProjects,
+			"default_repository_permission":   defaultRepositoryPermission,
+			"members_can_create_repositories": membersCanCreateRepositories,
+			"members_can_create_internal_repositories":                     membersCanCreateInternalRepositories,
+			"members_can_create_private_repositories":                      membersCanCreatePrivateRepositories,
+			"members_can_create_public_repositories":                       membersCanCreatePublicRepositories,
+			"members_allowed_repository_creation_type":                     membersAllowedRepositoryCreationType,
+			"members_can_create_pages":                                     membersCanCreatePages,
+			"members_can_create_public_pages":                              membersCanCreatePublicPages,
+			"members_can_create_private_pages":                             membersCanCreatePrivatePages,
+			"members_can_fork_private_repositories":                        membersCanForkPrivateRepositories,
+			"web_commit_signoff_required":                                  webCommitSignoffRequired,
+			"blog":                                                         blog,
+			"advanced_security_enabled_for_new_repositories":               advancedSecurityEnabledForNewRepositories,
+			"dependabot_alerts_enabled_for_new_repositories":               dependabotAlertsEnabledForNewRepositories,
+			"dependabot_security_updates_enabled_for_new_repositories":     dependabotSecurityUpdatesEnabledForNewRepositories,
+			"dependency_graph_enabled_for_new_repositories":                dependencyGraphEnabledForNewRepositories,
+			"secret_scanning_enabled_for_new_repositories":                 secretScanningEnabledForNewRepositories,
+			"secret_scanning_push_protection_enabled_for_new_repositories": secretScanningPushProtectionEnabledForNewRepositories,
+			"secret_scanning_push_protection_custom_link_enabled":          secretScanningPushProtectionCustomLinkEnabled,
+			"secret_scanning_push_protection_custom_link":                  secretScanningPushProtectionCustomLink,
+			"deploy_keys_enabled_for_repositories":                         deployKeysEnabledForRepositories,
+		},
+		OperationID: "OrgsUpdate",
+		Errors:      ErrorDecoders{"409": decodeErrorData[BasicError]},
+		Options:     opts,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &resp.Data, nil
 }
 
-func (value *OrgsSetClusterDeploymentRecordsDeployments) UnmarshalJSON(data []byte) error {
-	type OrgsSetClusterDeploymentRecordsDeploymentsAlias OrgsSetClusterDeploymentRecordsDeployments
-	var decoded OrgsSetClusterDeploymentRecordsDeploymentsAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = OrgsSetClusterDeploymentRecordsDeployments(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"name", "deployment_name", "digest"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"name", "deployment_name", "digest"}); err != nil {
-		return err
-	}
-	if err := ValidateLength("name", value.Name, LengthOpts{Min: Ptr[int](1), Max: Ptr[int](256)}); err != nil {
-		return err
-	}
-	if err := ValidateLength("digest", value.Digest, LengthOpts{Min: Ptr[int](71), Max: Ptr[int](71)}); err != nil {
-		return err
-	}
-	if err := ValidatePattern("digest", value.Digest, "^sha256:[a-f0-9]{64}$"); err != nil {
-		return err
-	}
-	if value.Version != nil {
-		if err := ValidateLength("version", *value.Version, LengthOpts{Max: Ptr[int](100)}); err != nil {
-			return err
-		}
-	}
-	if err := ValidateLength("deployment_name", value.DeploymentName, LengthOpts{Min: Ptr[int](1), Max: Ptr[int](256)}); err != nil {
-		return err
-	}
-	if value.GithubRepository != nil {
-		if err := ValidateLength("github_repository", *value.GithubRepository, LengthOpts{Max: Ptr[int](100)}); err != nil {
-			return err
-		}
-		if err := ValidatePattern("github_repository", *value.GithubRepository, "^[A-Za-z0-9.\\-_]+$"); err != nil {
-			return err
-		}
-	}
-	if func() bool { _, ok := rawFields["runtime_risks"]; return ok }() {
-		if err := ValidateItems("runtime_risks", value.RuntimeRisks, LengthOpts{Max: Ptr[int](4)}); err != nil {
-			return err
-		}
-	}
-	return nil
+type OrgsDeleteParams struct {
+	Org string
 }
 
-// NewOrgsSetClusterDeploymentRecordsDeployments returns a validated OrgsSetClusterDeploymentRecordsDeployments built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewOrgsSetClusterDeploymentRecordsDeployments(fields OrgsSetClusterDeploymentRecordsDeployments) (*OrgsSetClusterDeploymentRecordsDeployments, error) {
-	return ConstructModel(fields)
-}
+// OrgsDelete deletes an organization and all its repositories. The organization login will be unavailable for 90 days after deletion. Please review the Terms of Service regarding account deletion before using this endpoint: https://docs.github.com/site-policy/github-terms/github-terms-of-service
+//
+// Parameters:
+//
+//	org: The organization name. The name is not case sensitive.
+func OrgsDelete(ctx context.Context, clientConfig ClientConfig, params OrgsDeleteParams, opts ...RequestOption) (map[string]any, error) {
+	org := params.Org
 
-// OrgsSetClusterDeploymentRecordsDeploymentsStatusEnum The deployment status of the artifact.
-type OrgsSetClusterDeploymentRecordsDeploymentsStatusEnum string
-
-const (
-	OrgsSetClusterDeploymentRecordsDeploymentsStatusEnumDeployed       OrgsSetClusterDeploymentRecordsDeploymentsStatusEnum = "deployed"
-	OrgsSetClusterDeploymentRecordsDeploymentsStatusEnumDecommissioned OrgsSetClusterDeploymentRecordsDeploymentsStatusEnum = "decommissioned"
-)
-
-type OrgsSetClusterDeploymentRecordsDeploymentsRuntimeRisksEnum string
-
-const (
-	OrgsSetClusterDeploymentRecordsDeploymentsRuntimeRisksEnumCriticalResource OrgsSetClusterDeploymentRecordsDeploymentsRuntimeRisksEnum = "critical-resource"
-	OrgsSetClusterDeploymentRecordsDeploymentsRuntimeRisksEnumInternetExposed  OrgsSetClusterDeploymentRecordsDeploymentsRuntimeRisksEnum = "internet-exposed"
-	OrgsSetClusterDeploymentRecordsDeploymentsRuntimeRisksEnumLateralMovement  OrgsSetClusterDeploymentRecordsDeploymentsRuntimeRisksEnum = "lateral-movement"
-	OrgsSetClusterDeploymentRecordsDeploymentsRuntimeRisksEnumSensitiveData    OrgsSetClusterDeploymentRecordsDeploymentsRuntimeRisksEnum = "sensitive-data"
-)
-
-type OrgsSetClusterDeploymentRecordsResponse struct {
-	// TotalCount The number of deployment records created
-	TotalCount        int64                      `json:"total_count"`
-	DeploymentRecords []ArtifactDeploymentRecord `json:"deployment_records,omitempty"`
-}
-
-func (value *OrgsSetClusterDeploymentRecordsResponse) UnmarshalJSON(data []byte) error {
-	type OrgsSetClusterDeploymentRecordsResponseAlias OrgsSetClusterDeploymentRecordsResponse
-	var decoded OrgsSetClusterDeploymentRecordsResponseAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
+	resp, err := DoCfg[map[string]any](ctx, &clientConfig, "DELETE", fmt.Sprintf("/orgs/%s", EncodePathSegment(org)), &RequestOpts{
+		OperationID: "OrgsDelete",
+		Errors:      ErrorDecoders{"403": decodeErrorData[BasicError], "404": decodeErrorData[BasicError]},
+		Options:     opts,
+	})
+	if err != nil {
+		return nil, err
 	}
-	*value = OrgsSetClusterDeploymentRecordsResponse(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
+	return resp.Data, nil
+}
+
+type OrgsEnableOrDisableSecurityProductOnAllOrgReposParams struct {
+	Org             string
+	SecurityProduct string
+	Enablement      string
+	QuerySuite      *string
+}
+
+// OrgsEnableOrDisableSecurityProductOnAllOrgRepos > [!WARNING] > **Closing down notice:** The ability to enable or disable a security feature for all eligible repositories in an organization is closing down. Please use [code security configurations](https://docs.github.com/rest/code-security/configurations) instead. For more information, see the [changelog](https://github.blog/changelog/2024-07-22-deprecation-of-api-endpoint-to-enable-or-disable-a-security-feature-for-an-organization/). Enables or disables the specified security feature for all eligible repositories in an organization. For more information, see "[Managing security managers in your organization](https://docs.github.com/organizations/managing-peoples-access-to-your-organization-with-roles/managing-security-managers-in-your-organization)." The authenticated user must be an organization owner or be member of a team with the security manager role to use this endpoint. OAuth app tokens and personal access tokens (classic) need the `admin:org`, `write:org`, or `repo` scopes to use this endpoint.
+//
+// Deprecated: this operation is deprecated and may be removed in a future release.
+//
+// Parameters:
+//
+//	org: The organization name. The name is not case sensitive.
+//	securityProduct: The security feature to enable or disable.
+//	enablement: The action to take. `enable_all` means to enable the specified
+//	security feature for all repositories in the organization. `disable_all`
+//	means to disable the specified security feature for all repositories in the
+//	organization.
+//	querySuite: CodeQL query suite to be used. If you specify the `query_suite`
+//	parameter, the default setup will be configured with this query suite only
+//	on all repositories that didn't have default setup already configured. It
+//	will not change the query suite on repositories that already have default
+//	setup configured. If you don't specify any `query_suite` in your request,
+//	the preferred query suite of the organization will be applied.
+func OrgsEnableOrDisableSecurityProductOnAllOrgRepos(ctx context.Context, clientConfig ClientConfig, params OrgsEnableOrDisableSecurityProductOnAllOrgReposParams, opts ...RequestOption) (any, error) {
+	org := params.Org
+	securityProduct := params.SecurityProduct
+	enablement := params.Enablement
+	querySuite := params.QuerySuite
+
+	_, err := DoEmptyCfg(ctx, &clientConfig, "POST", fmt.Sprintf("/orgs/%s/%s/%s", EncodePathSegment(org), EncodePathSegment(securityProduct), EncodePathSegment(enablement)), &RequestOpts{
+		Body: map[string]any{
+			"query_suite": querySuite,
+		},
+		OperationID: "OrgsEnableOrDisableSecurityProductOnAllOrgRepos",
+		Options:     opts,
+	})
+	if err != nil {
+		return nil, err
 	}
-	if err := ValidateRequired(rawFields, []string{"total_count"}); err != nil {
-		return err
+	return nil, nil
+}
+
+type OrgsListMembershipsForAuthenticatedUserParams struct {
+	State   *string
+	PerPage *int64
+	Page    *int64
+}
+
+// OrgsListMembershipsForAuthenticatedUser lists all of the authenticated user's organization memberships.
+//
+// Parameters:
+//
+//	state: Indicates the state of the memberships to return. If not specified,
+//	the API returns both active and pending memberships.
+//	perPage: The number of results per page (max 100). For more information, see
+//	"[Using pagination in the REST
+//	API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the
+//	-rest-api)."
+//	page: The page number of the results to fetch. For more information, see
+//	"[Using pagination in the REST
+//	API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the
+//	-rest-api)."
+func OrgsListMembershipsForAuthenticatedUser(ctx context.Context, clientConfig ClientConfig, params OrgsListMembershipsForAuthenticatedUserParams, opts ...RequestOption) ([]OrgMembership, error) {
+	state := params.State
+	perPage := params.PerPage
+	page := params.Page
+
+	resp, err := DoCfg[[]OrgMembership](ctx, &clientConfig, "GET", "/user/memberships/orgs", &RequestOpts{
+		Query: map[string]any{
+			"state":    QueryValue{Value: state, Style: "form", Explode: true},
+			"per_page": QueryValue{Value: perPage, Style: "form", Explode: true},
+			"page":     QueryValue{Value: page, Style: "form", Explode: true},
+		},
+		OperationID: "OrgsListMembershipsForAuthenticatedUser",
+		Errors:      ErrorDecoders{"401": decodeErrorData[BasicError], "403": decodeErrorData[BasicError], "422": decodeErrorData[ValidationError]},
+		Options:     opts,
+	})
+	if err != nil {
+		return nil, err
 	}
-	if err := ValidateNotNull(rawFields, []string{"total_count"}); err != nil {
-		return err
+	return resp.Data, nil
+}
+
+type OrgsGetMembershipForAuthenticatedUserParams struct {
+	Org string
+}
+
+// OrgsGetMembershipForAuthenticatedUser if the authenticated user is an active or pending member of the organization, this endpoint will return the user's membership. If the authenticated user is not affiliated with the organization, a `404` is returned. This endpoint will return a `403` if the request is made by a GitHub App that is blocked by the organization.
+//
+// Parameters:
+//
+//	org: The organization name. The name is not case sensitive.
+func OrgsGetMembershipForAuthenticatedUser(ctx context.Context, clientConfig ClientConfig, params OrgsGetMembershipForAuthenticatedUserParams, opts ...RequestOption) (*OrgMembership, error) {
+	org := params.Org
+
+	resp, err := DoCfg[OrgMembership](ctx, &clientConfig, "GET", fmt.Sprintf("/user/memberships/orgs/%s", EncodePathSegment(org)), &RequestOpts{
+		OperationID: "OrgsGetMembershipForAuthenticatedUser",
+		Errors:      ErrorDecoders{"403": decodeErrorData[BasicError], "404": decodeErrorData[BasicError]},
+		Options:     opts,
+	})
+	if err != nil {
+		return nil, err
 	}
-	return nil
+	return &resp.Data, nil
 }
 
-// NewOrgsSetClusterDeploymentRecordsResponse returns a validated OrgsSetClusterDeploymentRecordsResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewOrgsSetClusterDeploymentRecordsResponse(fields OrgsSetClusterDeploymentRecordsResponse) (*OrgsSetClusterDeploymentRecordsResponse, error) {
-	return ConstructModel(fields)
+type OrgsUpdateMembershipForAuthenticatedUserParams struct {
+	Org   string
+	State string
 }
 
-type OrgsCreateClusterDeploymentRecordsJobDeployments struct {
-	// Name The name of the artifact.
-	Name string `json:"name"`
-	// Digest The hex encoded digest of the artifact.
-	Digest string `json:"digest"`
-	// Version The artifact version.
-	Version *string `json:"version,omitempty"`
-	// Status The deployment status of the artifact.
-	Status *OrgsCreateClusterDeploymentRecordsJobDeploymentsStatusEnum `json:"status,omitempty"`
-	// DeploymentName The unique identifier for the deployment represented by the new record.
-	DeploymentName string `json:"deployment_name"`
-	// GithubRepository The name of the GitHub repository associated with the artifact.
-	GithubRepository *string `json:"github_repository,omitempty"`
-	// Tags Key-value pairs to tag the deployment record.
-	Tags map[string]string `json:"tags,omitempty"`
-	// RuntimeRisks A list of runtime risks associated with the deployment.
-	RuntimeRisks []OrgsCreateClusterDeploymentRecordsJobDeploymentsRuntimeRisksEnum `json:"runtime_risks,omitempty"`
-}
+// OrgsUpdateMembershipForAuthenticatedUser converts the authenticated user to an active member of the organization, if that user has a pending invitation from the organization.
+//
+// Parameters:
+//
+//	org: The organization name. The name is not case sensitive.
+//	state: The state that the membership should be in. Only `"active"` will be
+//	accepted.
+func OrgsUpdateMembershipForAuthenticatedUser(ctx context.Context, clientConfig ClientConfig, params OrgsUpdateMembershipForAuthenticatedUserParams, opts ...RequestOption) (*OrgMembership, error) {
+	org := params.Org
+	state := params.State
 
-func (value *OrgsCreateClusterDeploymentRecordsJobDeployments) UnmarshalJSON(data []byte) error {
-	type OrgsCreateClusterDeploymentRecordsJobDeploymentsAlias OrgsCreateClusterDeploymentRecordsJobDeployments
-	var decoded OrgsCreateClusterDeploymentRecordsJobDeploymentsAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
+	resp, err := DoCfg[OrgMembership](ctx, &clientConfig, "PATCH", fmt.Sprintf("/user/memberships/orgs/%s", EncodePathSegment(org)), &RequestOpts{
+		Body: map[string]any{
+			"state": state,
+		},
+		OperationID: "OrgsUpdateMembershipForAuthenticatedUser",
+		Errors:      ErrorDecoders{"403": decodeErrorData[BasicError], "404": decodeErrorData[BasicError], "422": decodeErrorData[ValidationError]},
+		Options:     opts,
+	})
+	if err != nil {
+		return nil, err
 	}
-	*value = OrgsCreateClusterDeploymentRecordsJobDeployments(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
+	return &resp.Data, nil
+}
+
+type OrgsListForAuthenticatedUserParams struct {
+	PerPage *int64
+	Page    *int64
+}
+
+// OrgsListForAuthenticatedUser list organizations for the authenticated user. For OAuth app tokens and personal access tokens (classic), this endpoint only lists organizations that your authorization allows you to operate on in some way (e.g., you can list teams with `read:org` scope, you can publicize your organization membership with `user` scope, etc.). Therefore, this API requires at least `user` or `read:org` scope for OAuth app tokens and personal access tokens (classic). Requests with insufficient scope will receive a `403 Forbidden` response. > [!NOTE] > Requests using a fine-grained access token will receive a `200 Success` response with an empty list.
+//
+// Parameters:
+//
+//	perPage: The number of results per page (max 100). For more information, see
+//	"[Using pagination in the REST
+//	API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the
+//	-rest-api)."
+//	page: The page number of the results to fetch. For more information, see
+//	"[Using pagination in the REST
+//	API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the
+//	-rest-api)."
+func OrgsListForAuthenticatedUser(ctx context.Context, clientConfig ClientConfig, params OrgsListForAuthenticatedUserParams, opts ...RequestOption) ([]OrganizationSimple, error) {
+	perPage := params.PerPage
+	page := params.Page
+
+	resp, err := DoCfg[[]OrganizationSimple](ctx, &clientConfig, "GET", "/user/orgs", &RequestOpts{
+		Query: map[string]any{
+			"per_page": QueryValue{Value: perPage, Style: "form", Explode: true},
+			"page":     QueryValue{Value: page, Style: "form", Explode: true},
+		},
+		OperationID: "OrgsListForAuthenticatedUser",
+		Errors:      ErrorDecoders{"401": decodeErrorData[BasicError], "403": decodeErrorData[BasicError]},
+		Options:     opts,
+	})
+	if err != nil {
+		return nil, err
 	}
-	if err := ValidateRequired(rawFields, []string{"name", "deployment_name", "digest"}); err != nil {
-		return err
+	return resp.Data, nil
+}
+
+type OrgsListForUserParams struct {
+	Username string
+	PerPage  *int64
+	Page     *int64
+}
+
+// OrgsListForUser list [public organization memberships](https://docs.github.com/articles/publicizing-or-concealing-organization-membership) for the specified user. This method only lists _public_ memberships, regardless of authentication. If you need to fetch all of the organization memberships (public and private) for the authenticated user, use the [List organizations for the authenticated user](https://docs.github.com/rest/orgs/orgs#list-organizations-for-the-authenticated-user) API instead.
+//
+// Parameters:
+//
+//	username: The handle for the GitHub user account.
+//	perPage: The number of results per page (max 100). For more information, see
+//	"[Using pagination in the REST
+//	API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the
+//	-rest-api)."
+//	page: The page number of the results to fetch. For more information, see
+//	"[Using pagination in the REST
+//	API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the
+//	-rest-api)."
+func OrgsListForUser(ctx context.Context, clientConfig ClientConfig, params OrgsListForUserParams, opts ...RequestOption) ([]OrganizationSimple, error) {
+	username := params.Username
+	perPage := params.PerPage
+	page := params.Page
+
+	resp, err := DoCfg[[]OrganizationSimple](ctx, &clientConfig, "GET", fmt.Sprintf("/users/%s/orgs", EncodePathSegment(username)), &RequestOpts{
+		Query: map[string]any{
+			"per_page": QueryValue{Value: perPage, Style: "form", Explode: true},
+			"page":     QueryValue{Value: page, Style: "form", Explode: true},
+		},
+		OperationID: "OrgsListForUser",
+		Options:     opts,
+	})
+	if err != nil {
+		return nil, err
 	}
-	if err := ValidateNotNull(rawFields, []string{"name", "deployment_name", "digest"}); err != nil {
-		return err
-	}
-	if err := ValidateLength("name", value.Name, LengthOpts{Min: Ptr[int](1), Max: Ptr[int](256)}); err != nil {
-		return err
-	}
-	if err := ValidateLength("digest", value.Digest, LengthOpts{Min: Ptr[int](71), Max: Ptr[int](71)}); err != nil {
-		return err
-	}
-	if err := ValidatePattern("digest", value.Digest, "^sha256:[a-f0-9]{64}$"); err != nil {
-		return err
-	}
-	if value.Version != nil {
-		if err := ValidateLength("version", *value.Version, LengthOpts{Max: Ptr[int](100)}); err != nil {
-			return err
-		}
-	}
-	if err := ValidateLength("deployment_name", value.DeploymentName, LengthOpts{Min: Ptr[int](1), Max: Ptr[int](256)}); err != nil {
-		return err
-	}
-	if value.GithubRepository != nil {
-		if err := ValidateLength("github_repository", *value.GithubRepository, LengthOpts{Max: Ptr[int](100)}); err != nil {
-			return err
-		}
-		if err := ValidatePattern("github_repository", *value.GithubRepository, "^[A-Za-z0-9.\\-_]+$"); err != nil {
-			return err
-		}
-	}
-	if func() bool { _, ok := rawFields["runtime_risks"]; return ok }() {
-		if err := ValidateItems("runtime_risks", value.RuntimeRisks, LengthOpts{Max: Ptr[int](4)}); err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-// NewOrgsCreateClusterDeploymentRecordsJobDeployments returns a validated OrgsCreateClusterDeploymentRecordsJobDeployments built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewOrgsCreateClusterDeploymentRecordsJobDeployments(fields OrgsCreateClusterDeploymentRecordsJobDeployments) (*OrgsCreateClusterDeploymentRecordsJobDeployments, error) {
-	return ConstructModel(fields)
-}
-
-// OrgsCreateClusterDeploymentRecordsJobDeploymentsStatusEnum The deployment status of the artifact.
-type OrgsCreateClusterDeploymentRecordsJobDeploymentsStatusEnum string
-
-const (
-	OrgsCreateClusterDeploymentRecordsJobDeploymentsStatusEnumDeployed       OrgsCreateClusterDeploymentRecordsJobDeploymentsStatusEnum = "deployed"
-	OrgsCreateClusterDeploymentRecordsJobDeploymentsStatusEnumDecommissioned OrgsCreateClusterDeploymentRecordsJobDeploymentsStatusEnum = "decommissioned"
-)
-
-type OrgsCreateClusterDeploymentRecordsJobDeploymentsRuntimeRisksEnum string
-
-const (
-	OrgsCreateClusterDeploymentRecordsJobDeploymentsRuntimeRisksEnumCriticalResource OrgsCreateClusterDeploymentRecordsJobDeploymentsRuntimeRisksEnum = "critical-resource"
-	OrgsCreateClusterDeploymentRecordsJobDeploymentsRuntimeRisksEnumInternetExposed  OrgsCreateClusterDeploymentRecordsJobDeploymentsRuntimeRisksEnum = "internet-exposed"
-	OrgsCreateClusterDeploymentRecordsJobDeploymentsRuntimeRisksEnumLateralMovement  OrgsCreateClusterDeploymentRecordsJobDeploymentsRuntimeRisksEnum = "lateral-movement"
-	OrgsCreateClusterDeploymentRecordsJobDeploymentsRuntimeRisksEnumSensitiveData    OrgsCreateClusterDeploymentRecordsJobDeploymentsRuntimeRisksEnum = "sensitive-data"
-)
-
-type OrgsCreateClusterDeploymentRecordsJobResponse struct {
-	// JobId The ID of the created job.
-	JobId int64 `json:"job_id"`
-	// Errors Deployments that were rejected during authorization.
-	Errors []map[string]any `json:"errors,omitempty"`
-}
-
-func (value *OrgsCreateClusterDeploymentRecordsJobResponse) UnmarshalJSON(data []byte) error {
-	type OrgsCreateClusterDeploymentRecordsJobResponseAlias OrgsCreateClusterDeploymentRecordsJobResponse
-	var decoded OrgsCreateClusterDeploymentRecordsJobResponseAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = OrgsCreateClusterDeploymentRecordsJobResponse(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"job_id"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"job_id"}); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewOrgsCreateClusterDeploymentRecordsJobResponse returns a validated OrgsCreateClusterDeploymentRecordsJobResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewOrgsCreateClusterDeploymentRecordsJobResponse(fields OrgsCreateClusterDeploymentRecordsJobResponse) (*OrgsCreateClusterDeploymentRecordsJobResponse, error) {
-	return ConstructModel(fields)
-}
-
-type OrgsGetClusterDeploymentRecordsJobResponse struct {
-	// JobId The ID of the job.
-	JobId int64 `json:"job_id"`
-	// Status The current status of the job.
-	Status OrgsGetClusterDeploymentRecordsJobResponseStatusEnum `json:"status"`
-	// StartedAt When the job started processing (only present when processing, completed, or failed).
-	StartedAt *string `json:"started_at,omitempty"`
-	// TotalCount The number of records successfully mutated (only present when completed).
-	TotalCount *int64 `json:"total_count,omitempty"`
-	// Errors Processing errors (only present when completed or failed).
-	Errors []map[string]any `json:"errors,omitempty"`
-}
-
-func (value *OrgsGetClusterDeploymentRecordsJobResponse) UnmarshalJSON(data []byte) error {
-	type OrgsGetClusterDeploymentRecordsJobResponseAlias OrgsGetClusterDeploymentRecordsJobResponse
-	var decoded OrgsGetClusterDeploymentRecordsJobResponseAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = OrgsGetClusterDeploymentRecordsJobResponse(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"job_id", "status"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"job_id", "status"}); err != nil {
-		return err
-	}
-	if value.StartedAt != nil {
-		if err := ValidateModelDateTime("started_at", *value.StartedAt); err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-// NewOrgsGetClusterDeploymentRecordsJobResponse returns a validated OrgsGetClusterDeploymentRecordsJobResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewOrgsGetClusterDeploymentRecordsJobResponse(fields OrgsGetClusterDeploymentRecordsJobResponse) (*OrgsGetClusterDeploymentRecordsJobResponse, error) {
-	return ConstructModel(fields)
-}
-
-// OrgsGetClusterDeploymentRecordsJobResponseStatusEnum The current status of the job.
-type OrgsGetClusterDeploymentRecordsJobResponseStatusEnum string
-
-const (
-	OrgsGetClusterDeploymentRecordsJobResponseStatusEnumPending    OrgsGetClusterDeploymentRecordsJobResponseStatusEnum = "pending"
-	OrgsGetClusterDeploymentRecordsJobResponseStatusEnumProcessing OrgsGetClusterDeploymentRecordsJobResponseStatusEnum = "processing"
-	OrgsGetClusterDeploymentRecordsJobResponseStatusEnumCompleted  OrgsGetClusterDeploymentRecordsJobResponseStatusEnum = "completed"
-	OrgsGetClusterDeploymentRecordsJobResponseStatusEnumFailed     OrgsGetClusterDeploymentRecordsJobResponseStatusEnum = "failed"
-)
-
-type OrgsCreateArtifactStorageRecordResponse struct {
-	TotalCount     int64                                                   `json:"total_count"`
-	StorageRecords []OrgsCreateArtifactStorageRecordResponseStorageRecords `json:"storage_records,omitempty"`
-}
-
-func (value *OrgsCreateArtifactStorageRecordResponse) UnmarshalJSON(data []byte) error {
-	type OrgsCreateArtifactStorageRecordResponseAlias OrgsCreateArtifactStorageRecordResponse
-	var decoded OrgsCreateArtifactStorageRecordResponseAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = OrgsCreateArtifactStorageRecordResponse(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"total_count"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"total_count"}); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewOrgsCreateArtifactStorageRecordResponse returns a validated OrgsCreateArtifactStorageRecordResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewOrgsCreateArtifactStorageRecordResponse(fields OrgsCreateArtifactStorageRecordResponse) (*OrgsCreateArtifactStorageRecordResponse, error) {
-	return ConstructModel(fields)
-}
-
-type OrgsCreateArtifactStorageRecordResponseStorageRecords struct {
-	Id          *int64                 `json:"id,omitempty"`
-	Name        *string                `json:"name,omitempty"`
-	Digest      *string                `json:"digest,omitempty"`
-	ArtifactUrl *NullableValue[string] `json:"artifact_url,omitempty"`
-	RegistryUrl *string                `json:"registry_url,omitempty"`
-	Repository  *NullableValue[string] `json:"repository,omitempty"`
-	Status      *string                `json:"status,omitempty"`
-	CreatedAt   *string                `json:"created_at,omitempty"`
-	UpdatedAt   *string                `json:"updated_at,omitempty"`
-}
-
-func (value *OrgsCreateArtifactStorageRecordResponseStorageRecords) UnmarshalJSON(data []byte) error {
-	type OrgsCreateArtifactStorageRecordResponseStorageRecordsAlias OrgsCreateArtifactStorageRecordResponseStorageRecords
-	var decoded OrgsCreateArtifactStorageRecordResponseStorageRecordsAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = OrgsCreateArtifactStorageRecordResponseStorageRecords(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if raw, ok := rawFields["artifact_url"]; ok && bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
-		value.ArtifactUrl = &NullableValue[string]{}
-	}
-	if raw, ok := rawFields["repository"]; ok && bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
-		value.Repository = &NullableValue[string]{}
-	}
-	return nil
-}
-
-// NewOrgsCreateArtifactStorageRecordResponseStorageRecords returns a validated OrgsCreateArtifactStorageRecordResponseStorageRecords built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewOrgsCreateArtifactStorageRecordResponseStorageRecords(fields OrgsCreateArtifactStorageRecordResponseStorageRecords) (*OrgsCreateArtifactStorageRecordResponseStorageRecords, error) {
-	return ConstructModel(fields)
-}
-
-type OrgsListArtifactDeploymentRecordsResponse struct {
-	// TotalCount The number of deployment records for this digest and organization
-	TotalCount        *int64                     `json:"total_count,omitempty"`
-	DeploymentRecords []ArtifactDeploymentRecord `json:"deployment_records,omitempty"`
-}
-
-// NewOrgsListArtifactDeploymentRecordsResponse returns a validated OrgsListArtifactDeploymentRecordsResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewOrgsListArtifactDeploymentRecordsResponse(fields OrgsListArtifactDeploymentRecordsResponse) (*OrgsListArtifactDeploymentRecordsResponse, error) {
-	return ConstructModel(fields)
-}
-
-type OrgsListArtifactStorageRecordsResponse struct {
-	// TotalCount The number of storage records for this digest and organization
-	TotalCount     *int64                                                 `json:"total_count,omitempty"`
-	StorageRecords []OrgsListArtifactStorageRecordsResponseStorageRecords `json:"storage_records,omitempty"`
-}
-
-// NewOrgsListArtifactStorageRecordsResponse returns a validated OrgsListArtifactStorageRecordsResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewOrgsListArtifactStorageRecordsResponse(fields OrgsListArtifactStorageRecordsResponse) (*OrgsListArtifactStorageRecordsResponse, error) {
-	return ConstructModel(fields)
-}
-
-type OrgsListArtifactStorageRecordsResponseStorageRecords struct {
-	Id          *int64  `json:"id,omitempty"`
-	Name        *string `json:"name,omitempty"`
-	Digest      *string `json:"digest,omitempty"`
-	ArtifactUrl *string `json:"artifact_url,omitempty"`
-	RegistryUrl *string `json:"registry_url,omitempty"`
-	Repository  *string `json:"repository,omitempty"`
-	Status      *string `json:"status,omitempty"`
-	CreatedAt   *string `json:"created_at,omitempty"`
-	UpdatedAt   *string `json:"updated_at,omitempty"`
-}
-
-// NewOrgsListArtifactStorageRecordsResponseStorageRecords returns a validated OrgsListArtifactStorageRecordsResponseStorageRecords built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewOrgsListArtifactStorageRecordsResponseStorageRecords(fields OrgsListArtifactStorageRecordsResponseStorageRecords) (*OrgsListArtifactStorageRecordsResponseStorageRecords, error) {
-	return ConstructModel(fields)
-}
-
-type OrgsListAttestationsBulkResponse struct {
-	// AttestationsSubjectDigests Mapping of subject digest to bundles.
-	AttestationsSubjectDigests map[string][]OrgsListAttestationsBulkResponseAttestationsSubjectDigests_671f3102 `json:"attestations_subject_digests,omitempty"`
-	// PageInfo Information about the current page.
-	PageInfo *OrgsListAttestationsBulkResponsePageInfo `json:"page_info,omitempty"`
-}
-
-// NewOrgsListAttestationsBulkResponse returns a validated OrgsListAttestationsBulkResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewOrgsListAttestationsBulkResponse(fields OrgsListAttestationsBulkResponse) (*OrgsListAttestationsBulkResponse, error) {
-	return ConstructModel(fields)
-}
-
-type OrgsListAttestationsBulkResponseAttestationsSubjectDigests_671f3102 struct {
-	// Bundle The bundle of the attestation.
-	Bundle       *OrgsListAttestationsBulkResponseAttestationsSubjectDigestsBundle `json:"bundle,omitempty"`
-	RepositoryId *int64                                                            `json:"repository_id,omitempty"`
-	BundleUrl    *string                                                           `json:"bundle_url,omitempty"`
-}
-
-// NewOrgsListAttestationsBulkResponseAttestationsSubjectDigests_671f3102 returns a validated OrgsListAttestationsBulkResponseAttestationsSubjectDigests_671f3102 built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewOrgsListAttestationsBulkResponseAttestationsSubjectDigests_671f3102(fields OrgsListAttestationsBulkResponseAttestationsSubjectDigests_671f3102) (*OrgsListAttestationsBulkResponseAttestationsSubjectDigests_671f3102, error) {
-	return ConstructModel(fields)
-}
-
-// OrgsListAttestationsBulkResponseAttestationsSubjectDigestsBundle The bundle of the attestation.
-type OrgsListAttestationsBulkResponseAttestationsSubjectDigestsBundle struct {
-	MediaType            *string        `json:"mediaType,omitempty"`
-	VerificationMaterial map[string]any `json:"verificationMaterial,omitempty"`
-	DsseEnvelope         map[string]any `json:"dsseEnvelope,omitempty"`
-}
-
-// NewOrgsListAttestationsBulkResponseAttestationsSubjectDigestsBundle returns a validated OrgsListAttestationsBulkResponseAttestationsSubjectDigestsBundle built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewOrgsListAttestationsBulkResponseAttestationsSubjectDigestsBundle(fields OrgsListAttestationsBulkResponseAttestationsSubjectDigestsBundle) (*OrgsListAttestationsBulkResponseAttestationsSubjectDigestsBundle, error) {
-	return ConstructModel(fields)
-}
-
-// OrgsListAttestationsBulkResponsePageInfo Information about the current page.
-type OrgsListAttestationsBulkResponsePageInfo struct {
-	// HasNext Indicates whether there is a next page.
-	HasNext *bool `json:"has_next,omitempty"`
-	// HasPrevious Indicates whether there is a previous page.
-	HasPrevious *bool `json:"has_previous,omitempty"`
-	// Next The cursor to the next page.
-	Next *string `json:"next,omitempty"`
-	// Previous The cursor to the previous page.
-	Previous *string `json:"previous,omitempty"`
-}
-
-// NewOrgsListAttestationsBulkResponsePageInfo returns a validated OrgsListAttestationsBulkResponsePageInfo built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewOrgsListAttestationsBulkResponsePageInfo(fields OrgsListAttestationsBulkResponsePageInfo) (*OrgsListAttestationsBulkResponsePageInfo, error) {
-	return ConstructModel(fields)
-}
-
-type OrgsListAttestationRepositoriesResponse struct {
-	Id   *int64  `json:"id,omitempty"`
-	Name *string `json:"name,omitempty"`
-}
-
-// NewOrgsListAttestationRepositoriesResponse returns a validated OrgsListAttestationRepositoriesResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewOrgsListAttestationRepositoriesResponse(fields OrgsListAttestationRepositoriesResponse) (*OrgsListAttestationRepositoriesResponse, error) {
-	return ConstructModel(fields)
-}
-
-type OrgsListAttestationsResponse struct {
-	Attestations []OrgsListAttestationsResponseAttestations `json:"attestations,omitempty"`
-}
-
-// NewOrgsListAttestationsResponse returns a validated OrgsListAttestationsResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewOrgsListAttestationsResponse(fields OrgsListAttestationsResponse) (*OrgsListAttestationsResponse, error) {
-	return ConstructModel(fields)
-}
-
-type OrgsListAttestationsResponseAttestations struct {
-	// Bundle The attestation's Sigstore Bundle.
-	// Refer to the [Sigstore Bundle Specification](https://github.com/sigstore/protobuf-specs/blob/main/protos/sigstore_bundle.proto) for more information.
-	Bundle       *NullableValue[OrgsListAttestationsResponseAttestationsBundle] `json:"bundle,omitempty"`
-	RepositoryId *int64                                                         `json:"repository_id,omitempty"`
-	BundleUrl    *string                                                        `json:"bundle_url,omitempty"`
-	Initiator    *string                                                        `json:"initiator,omitempty"`
-}
-
-func (value *OrgsListAttestationsResponseAttestations) UnmarshalJSON(data []byte) error {
-	type OrgsListAttestationsResponseAttestationsAlias OrgsListAttestationsResponseAttestations
-	var decoded OrgsListAttestationsResponseAttestationsAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = OrgsListAttestationsResponseAttestations(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if raw, ok := rawFields["bundle"]; ok && bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
-		value.Bundle = &NullableValue[OrgsListAttestationsResponseAttestationsBundle]{}
-	}
-	return nil
-}
-
-// NewOrgsListAttestationsResponseAttestations returns a validated OrgsListAttestationsResponseAttestations built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewOrgsListAttestationsResponseAttestations(fields OrgsListAttestationsResponseAttestations) (*OrgsListAttestationsResponseAttestations, error) {
-	return ConstructModel(fields)
-}
-
-// OrgsListAttestationsResponseAttestationsBundle The attestation's Sigstore Bundle.
-// Refer to the [Sigstore Bundle Specification](https://github.com/sigstore/protobuf-specs/blob/main/protos/sigstore_bundle.proto) for more information.
-type OrgsListAttestationsResponseAttestationsBundle struct {
-	MediaType            *string        `json:"mediaType,omitempty"`
-	VerificationMaterial map[string]any `json:"verificationMaterial,omitempty"`
-	DsseEnvelope         map[string]any `json:"dsseEnvelope,omitempty"`
-}
-
-// NewOrgsListAttestationsResponseAttestationsBundle returns a validated OrgsListAttestationsResponseAttestationsBundle built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewOrgsListAttestationsResponseAttestationsBundle(fields OrgsListAttestationsResponseAttestationsBundle) (*OrgsListAttestationsResponseAttestationsBundle, error) {
-	return ConstructModel(fields)
-}
-
-// OrgsCreateWebhookConfig Key/value pairs to provide settings for this webhook.
-type OrgsCreateWebhookConfig struct {
-	// Url The URL to which the payloads will be delivered.
-	Url string `json:"url"`
-	// ContentType The media type used to serialize the payloads. Supported values include `json` and `form`. The default is `form`.
-	ContentType *string `json:"content_type,omitempty"`
-	// Secret If provided, the `secret` will be used as the `key` to generate the HMAC hex digest value for [delivery signature headers](https://docs.github.com/webhooks/event-payloads/#delivery-headers).
-	Secret      *string                   `json:"secret,omitempty"`
-	InsecureSsl *WebhookConfigInsecureSsl `json:"insecure_ssl,omitempty"`
-	Username    *string                   `json:"username,omitempty"`
-	Password    *string                   `json:"password,omitempty"`
-}
-
-func (value *OrgsCreateWebhookConfig) UnmarshalJSON(data []byte) error {
-	type OrgsCreateWebhookConfigAlias OrgsCreateWebhookConfig
-	var decoded OrgsCreateWebhookConfigAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = OrgsCreateWebhookConfig(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"url"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"url"}); err != nil {
-		return err
-	}
-	if err := ValidateUri("url", value.Url); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewOrgsCreateWebhookConfig returns a validated OrgsCreateWebhookConfig built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewOrgsCreateWebhookConfig(fields OrgsCreateWebhookConfig) (*OrgsCreateWebhookConfig, error) {
-	return ConstructModel(fields)
-}
-
-// OrgsUpdateWebhookConfig Key/value pairs to provide settings for this webhook.
-type OrgsUpdateWebhookConfig struct {
-	// Url The URL to which the payloads will be delivered.
-	Url string `json:"url"`
-	// ContentType The media type used to serialize the payloads. Supported values include `json` and `form`. The default is `form`.
-	ContentType *string `json:"content_type,omitempty"`
-	// Secret If provided, the `secret` will be used as the `key` to generate the HMAC hex digest value for [delivery signature headers](https://docs.github.com/webhooks/event-payloads/#delivery-headers).
-	Secret      *string                   `json:"secret,omitempty"`
-	InsecureSsl *WebhookConfigInsecureSsl `json:"insecure_ssl,omitempty"`
-}
-
-func (value *OrgsUpdateWebhookConfig) UnmarshalJSON(data []byte) error {
-	type OrgsUpdateWebhookConfigAlias OrgsUpdateWebhookConfig
-	var decoded OrgsUpdateWebhookConfigAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = OrgsUpdateWebhookConfig(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"url"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"url"}); err != nil {
-		return err
-	}
-	if err := ValidateUri("url", value.Url); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewOrgsUpdateWebhookConfig returns a validated OrgsUpdateWebhookConfig built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewOrgsUpdateWebhookConfig(fields OrgsUpdateWebhookConfig) (*OrgsUpdateWebhookConfig, error) {
-	return ConstructModel(fields)
-}
-
-type OrgsListAppInstallationsResponse struct {
-	TotalCount    int64          `json:"total_count"`
-	Installations []Installation `json:"installations"`
+	return resp.Data, nil
 }

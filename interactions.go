@@ -9,162 +9,6 @@ import (
 	"fmt"
 )
 
-type InteractionsGetPullRequestCreationCapForOrgResponse struct {
-	// Enabled Whether the pull request creation cap is enabled
-	Enabled bool `json:"enabled"`
-	// MaxOpenPullRequests The maximum number of open pull requests a user can have at one time
-	MaxOpenPullRequests int64 `json:"max_open_pull_requests"`
-	// IncludeDrafts Whether draft pull requests count toward the pull request creation cap
-	IncludeDrafts *bool `json:"include_drafts,omitempty"`
-}
-
-func (value *InteractionsGetPullRequestCreationCapForOrgResponse) UnmarshalJSON(data []byte) error {
-	type InteractionsGetPullRequestCreationCapForOrgResponseAlias InteractionsGetPullRequestCreationCapForOrgResponse
-	var decoded InteractionsGetPullRequestCreationCapForOrgResponseAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = InteractionsGetPullRequestCreationCapForOrgResponse(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"enabled", "max_open_pull_requests"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"enabled", "max_open_pull_requests"}); err != nil {
-		return err
-	}
-	if err := ValidateRange("max_open_pull_requests", value.MaxOpenPullRequests, RangeOpts{Min: Ptr[float64](1), Max: Ptr[float64](1000)}); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewInteractionsGetPullRequestCreationCapForOrgResponse returns a validated InteractionsGetPullRequestCreationCapForOrgResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewInteractionsGetPullRequestCreationCapForOrgResponse(fields InteractionsGetPullRequestCreationCapForOrgResponse) (*InteractionsGetPullRequestCreationCapForOrgResponse, error) {
-	return ConstructModel(fields)
-}
-
-type InteractionsUpdatePullRequestCreationCapForOrgResponse struct {
-	// Enabled Whether the pull request creation cap is enabled
-	Enabled bool `json:"enabled"`
-	// MaxOpenPullRequests The maximum number of open pull requests a user can have at one time
-	MaxOpenPullRequests int64 `json:"max_open_pull_requests"`
-	// IncludeDrafts Whether draft pull requests count toward the pull request creation cap
-	IncludeDrafts *bool `json:"include_drafts,omitempty"`
-}
-
-func (value *InteractionsUpdatePullRequestCreationCapForOrgResponse) UnmarshalJSON(data []byte) error {
-	type InteractionsUpdatePullRequestCreationCapForOrgResponseAlias InteractionsUpdatePullRequestCreationCapForOrgResponse
-	var decoded InteractionsUpdatePullRequestCreationCapForOrgResponseAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = InteractionsUpdatePullRequestCreationCapForOrgResponse(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"enabled", "max_open_pull_requests"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"enabled", "max_open_pull_requests"}); err != nil {
-		return err
-	}
-	if err := ValidateRange("max_open_pull_requests", value.MaxOpenPullRequests, RangeOpts{Min: Ptr[float64](1), Max: Ptr[float64](1000)}); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewInteractionsUpdatePullRequestCreationCapForOrgResponse returns a validated InteractionsUpdatePullRequestCreationCapForOrgResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewInteractionsUpdatePullRequestCreationCapForOrgResponse(fields InteractionsUpdatePullRequestCreationCapForOrgResponse) (*InteractionsUpdatePullRequestCreationCapForOrgResponse, error) {
-	return ConstructModel(fields)
-}
-
-type InteractionsGetPullRequestCreationCapForRepoResponse struct {
-	// Enabled Whether the pull request creation cap is enabled
-	Enabled bool `json:"enabled"`
-	// MaxOpenPullRequests The maximum number of open pull requests a user can have at one time
-	MaxOpenPullRequests int64 `json:"max_open_pull_requests"`
-	// IncludeDrafts Whether draft pull requests count toward the pull request creation cap
-	IncludeDrafts *bool `json:"include_drafts,omitempty"`
-}
-
-func (value *InteractionsGetPullRequestCreationCapForRepoResponse) UnmarshalJSON(data []byte) error {
-	type InteractionsGetPullRequestCreationCapForRepoResponseAlias InteractionsGetPullRequestCreationCapForRepoResponse
-	var decoded InteractionsGetPullRequestCreationCapForRepoResponseAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = InteractionsGetPullRequestCreationCapForRepoResponse(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"enabled", "max_open_pull_requests"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"enabled", "max_open_pull_requests"}); err != nil {
-		return err
-	}
-	if err := ValidateRange("max_open_pull_requests", value.MaxOpenPullRequests, RangeOpts{Min: Ptr[float64](1), Max: Ptr[float64](1000)}); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewInteractionsGetPullRequestCreationCapForRepoResponse returns a validated InteractionsGetPullRequestCreationCapForRepoResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewInteractionsGetPullRequestCreationCapForRepoResponse(fields InteractionsGetPullRequestCreationCapForRepoResponse) (*InteractionsGetPullRequestCreationCapForRepoResponse, error) {
-	return ConstructModel(fields)
-}
-
-type InteractionsUpdatePullRequestCreationCapForRepoResponse struct {
-	// Enabled Whether the pull request creation cap is enabled
-	Enabled bool `json:"enabled"`
-	// MaxOpenPullRequests The maximum number of open pull requests a user can have at one time
-	MaxOpenPullRequests int64 `json:"max_open_pull_requests"`
-	// IncludeDrafts Whether draft pull requests count toward the pull request creation cap
-	IncludeDrafts *bool `json:"include_drafts,omitempty"`
-}
-
-func (value *InteractionsUpdatePullRequestCreationCapForRepoResponse) UnmarshalJSON(data []byte) error {
-	type InteractionsUpdatePullRequestCreationCapForRepoResponseAlias InteractionsUpdatePullRequestCreationCapForRepoResponse
-	var decoded InteractionsUpdatePullRequestCreationCapForRepoResponseAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = InteractionsUpdatePullRequestCreationCapForRepoResponse(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"enabled", "max_open_pull_requests"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"enabled", "max_open_pull_requests"}); err != nil {
-		return err
-	}
-	if err := ValidateRange("max_open_pull_requests", value.MaxOpenPullRequests, RangeOpts{Min: Ptr[float64](1), Max: Ptr[float64](1000)}); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewInteractionsUpdatePullRequestCreationCapForRepoResponse returns a validated InteractionsUpdatePullRequestCreationCapForRepoResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewInteractionsUpdatePullRequestCreationCapForRepoResponse(fields InteractionsUpdatePullRequestCreationCapForRepoResponse) (*InteractionsUpdatePullRequestCreationCapForRepoResponse, error) {
-	return ConstructModel(fields)
-}
-
 type InteractionsGetRestrictionsForOrgParams struct {
 	Org string
 }
@@ -624,4 +468,160 @@ func InteractionsRemoveRestrictionsForAuthenticatedUser(ctx context.Context, cli
 		return nil, err
 	}
 	return nil, nil
+}
+
+type InteractionsGetPullRequestCreationCapForOrgResponse struct {
+	// Enabled Whether the pull request creation cap is enabled
+	Enabled bool `json:"enabled"`
+	// MaxOpenPullRequests The maximum number of open pull requests a user can have at one time
+	MaxOpenPullRequests int64 `json:"max_open_pull_requests"`
+	// IncludeDrafts Whether draft pull requests count toward the pull request creation cap
+	IncludeDrafts *bool `json:"include_drafts,omitempty"`
+}
+
+func (value *InteractionsGetPullRequestCreationCapForOrgResponse) UnmarshalJSON(data []byte) error {
+	type InteractionsGetPullRequestCreationCapForOrgResponseAlias InteractionsGetPullRequestCreationCapForOrgResponse
+	var decoded InteractionsGetPullRequestCreationCapForOrgResponseAlias
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		return err
+	}
+	*value = InteractionsGetPullRequestCreationCapForOrgResponse(decoded)
+	var rawFields map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawFields); err != nil {
+		return err
+	}
+	if err := ValidateRequired(rawFields, []string{"enabled", "max_open_pull_requests"}); err != nil {
+		return err
+	}
+	if err := ValidateNotNull(rawFields, []string{"enabled", "max_open_pull_requests"}); err != nil {
+		return err
+	}
+	if err := ValidateRange("max_open_pull_requests", value.MaxOpenPullRequests, RangeOpts{Min: Ptr[float64](1), Max: Ptr[float64](1000)}); err != nil {
+		return err
+	}
+	return nil
+}
+
+// NewInteractionsGetPullRequestCreationCapForOrgResponse returns a validated InteractionsGetPullRequestCreationCapForOrgResponse built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewInteractionsGetPullRequestCreationCapForOrgResponse(fields InteractionsGetPullRequestCreationCapForOrgResponse) (*InteractionsGetPullRequestCreationCapForOrgResponse, error) {
+	return ConstructModel(fields)
+}
+
+type InteractionsUpdatePullRequestCreationCapForOrgResponse struct {
+	// Enabled Whether the pull request creation cap is enabled
+	Enabled bool `json:"enabled"`
+	// MaxOpenPullRequests The maximum number of open pull requests a user can have at one time
+	MaxOpenPullRequests int64 `json:"max_open_pull_requests"`
+	// IncludeDrafts Whether draft pull requests count toward the pull request creation cap
+	IncludeDrafts *bool `json:"include_drafts,omitempty"`
+}
+
+func (value *InteractionsUpdatePullRequestCreationCapForOrgResponse) UnmarshalJSON(data []byte) error {
+	type InteractionsUpdatePullRequestCreationCapForOrgResponseAlias InteractionsUpdatePullRequestCreationCapForOrgResponse
+	var decoded InteractionsUpdatePullRequestCreationCapForOrgResponseAlias
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		return err
+	}
+	*value = InteractionsUpdatePullRequestCreationCapForOrgResponse(decoded)
+	var rawFields map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawFields); err != nil {
+		return err
+	}
+	if err := ValidateRequired(rawFields, []string{"enabled", "max_open_pull_requests"}); err != nil {
+		return err
+	}
+	if err := ValidateNotNull(rawFields, []string{"enabled", "max_open_pull_requests"}); err != nil {
+		return err
+	}
+	if err := ValidateRange("max_open_pull_requests", value.MaxOpenPullRequests, RangeOpts{Min: Ptr[float64](1), Max: Ptr[float64](1000)}); err != nil {
+		return err
+	}
+	return nil
+}
+
+// NewInteractionsUpdatePullRequestCreationCapForOrgResponse returns a validated InteractionsUpdatePullRequestCreationCapForOrgResponse built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewInteractionsUpdatePullRequestCreationCapForOrgResponse(fields InteractionsUpdatePullRequestCreationCapForOrgResponse) (*InteractionsUpdatePullRequestCreationCapForOrgResponse, error) {
+	return ConstructModel(fields)
+}
+
+type InteractionsGetPullRequestCreationCapForRepoResponse struct {
+	// Enabled Whether the pull request creation cap is enabled
+	Enabled bool `json:"enabled"`
+	// MaxOpenPullRequests The maximum number of open pull requests a user can have at one time
+	MaxOpenPullRequests int64 `json:"max_open_pull_requests"`
+	// IncludeDrafts Whether draft pull requests count toward the pull request creation cap
+	IncludeDrafts *bool `json:"include_drafts,omitempty"`
+}
+
+func (value *InteractionsGetPullRequestCreationCapForRepoResponse) UnmarshalJSON(data []byte) error {
+	type InteractionsGetPullRequestCreationCapForRepoResponseAlias InteractionsGetPullRequestCreationCapForRepoResponse
+	var decoded InteractionsGetPullRequestCreationCapForRepoResponseAlias
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		return err
+	}
+	*value = InteractionsGetPullRequestCreationCapForRepoResponse(decoded)
+	var rawFields map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawFields); err != nil {
+		return err
+	}
+	if err := ValidateRequired(rawFields, []string{"enabled", "max_open_pull_requests"}); err != nil {
+		return err
+	}
+	if err := ValidateNotNull(rawFields, []string{"enabled", "max_open_pull_requests"}); err != nil {
+		return err
+	}
+	if err := ValidateRange("max_open_pull_requests", value.MaxOpenPullRequests, RangeOpts{Min: Ptr[float64](1), Max: Ptr[float64](1000)}); err != nil {
+		return err
+	}
+	return nil
+}
+
+// NewInteractionsGetPullRequestCreationCapForRepoResponse returns a validated InteractionsGetPullRequestCreationCapForRepoResponse built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewInteractionsGetPullRequestCreationCapForRepoResponse(fields InteractionsGetPullRequestCreationCapForRepoResponse) (*InteractionsGetPullRequestCreationCapForRepoResponse, error) {
+	return ConstructModel(fields)
+}
+
+type InteractionsUpdatePullRequestCreationCapForRepoResponse struct {
+	// Enabled Whether the pull request creation cap is enabled
+	Enabled bool `json:"enabled"`
+	// MaxOpenPullRequests The maximum number of open pull requests a user can have at one time
+	MaxOpenPullRequests int64 `json:"max_open_pull_requests"`
+	// IncludeDrafts Whether draft pull requests count toward the pull request creation cap
+	IncludeDrafts *bool `json:"include_drafts,omitempty"`
+}
+
+func (value *InteractionsUpdatePullRequestCreationCapForRepoResponse) UnmarshalJSON(data []byte) error {
+	type InteractionsUpdatePullRequestCreationCapForRepoResponseAlias InteractionsUpdatePullRequestCreationCapForRepoResponse
+	var decoded InteractionsUpdatePullRequestCreationCapForRepoResponseAlias
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		return err
+	}
+	*value = InteractionsUpdatePullRequestCreationCapForRepoResponse(decoded)
+	var rawFields map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawFields); err != nil {
+		return err
+	}
+	if err := ValidateRequired(rawFields, []string{"enabled", "max_open_pull_requests"}); err != nil {
+		return err
+	}
+	if err := ValidateNotNull(rawFields, []string{"enabled", "max_open_pull_requests"}); err != nil {
+		return err
+	}
+	if err := ValidateRange("max_open_pull_requests", value.MaxOpenPullRequests, RangeOpts{Min: Ptr[float64](1), Max: Ptr[float64](1000)}); err != nil {
+		return err
+	}
+	return nil
+}
+
+// NewInteractionsUpdatePullRequestCreationCapForRepoResponse returns a validated InteractionsUpdatePullRequestCreationCapForRepoResponse built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewInteractionsUpdatePullRequestCreationCapForRepoResponse(fields InteractionsUpdatePullRequestCreationCapForRepoResponse) (*InteractionsUpdatePullRequestCreationCapForRepoResponse, error) {
+	return ConstructModel(fields)
 }

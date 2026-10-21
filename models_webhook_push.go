@@ -726,3 +726,19 @@ func (u WebhookPushRepositoryCreatedAt) MarshalJSON() ([]byte, error) {
 	}
 	return []byte("null"), nil
 }
+
+// UnmarshalWebhookPushRepositoryCreatedAt converts an untyped value to WebhookPushRepositoryCreatedAt.
+func UnmarshalWebhookPushRepositoryCreatedAt(v any) WebhookPushRepositoryCreatedAt {
+	b, _ := json.Marshal(v)
+	var result WebhookPushRepositoryCreatedAt
+	_ = json.Unmarshal(b, &result)
+	return result
+}
+
+// WebhookPushRepositoryPullRequestCreationPolicyEnum The policy controlling who can create pull requests: all or collaborators_only.
+type WebhookPushRepositoryPullRequestCreationPolicyEnum string
+
+const (
+	WebhookPushRepositoryPullRequestCreationPolicyEnumAll               WebhookPushRepositoryPullRequestCreationPolicyEnum = "all"
+	WebhookPushRepositoryPullRequestCreationPolicyEnumCollaboratorsOnly WebhookPushRepositoryPullRequestCreationPolicyEnum = "collaborators_only"
+)

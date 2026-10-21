@@ -3,687 +3,748 @@
 
 package sdk
 
-import (
-	"encoding/json"
-	"fmt"
-)
+import "encoding/json"
 
-// RepositoryRuleCreation Only allow users with bypass permission to create matching refs.
-type RepositoryRuleCreation struct {
-	// Type Required enumerated value serialized in the `type` wire field.
-	Type RepositoryRuleCreationTypeEnum `json:"type"`
+// RepositoryRule represents a union type.
+type RepositoryRule struct {
+	RepositoryRuleCreation                  *RepositoryRuleCreation
+	RepositoryRuleUpdate                    *RepositoryRuleUpdate
+	RepositoryRuleDeletion                  *RepositoryRuleDeletion
+	RepositoryRuleRequiredLinearHistory     *RepositoryRuleRequiredLinearHistory
+	RepositoryRuleMergeQueue                *RepositoryRuleMergeQueue
+	RepositoryRuleRequiredDeployments       *RepositoryRuleRequiredDeployments
+	RepositoryRuleRequiredSignatures        *RepositoryRuleRequiredSignatures
+	RepositoryRulePullRequest               *RepositoryRulePullRequest
+	RepositoryRuleRequiredStatusChecks      *RepositoryRuleRequiredStatusChecks
+	RepositoryRuleNonFastForward            *RepositoryRuleNonFastForward
+	RepositoryRuleCommitMessagePattern      *RepositoryRuleCommitMessagePattern
+	RepositoryRuleCommitAuthorEmailPattern  *RepositoryRuleCommitAuthorEmailPattern
+	RepositoryRuleCommitterEmailPattern     *RepositoryRuleCommitterEmailPattern
+	RepositoryRuleBranchNamePattern         *RepositoryRuleBranchNamePattern
+	RepositoryRuleTagNamePattern            *RepositoryRuleTagNamePattern
+	RepositoryRuleWorkflows                 *RepositoryRuleWorkflows
+	RepositoryRuleCodeScanning              *RepositoryRuleCodeScanning
+	RepositoryRuleCodeQuality               *RepositoryRuleCodeQuality
+	RepositoryRuleCodeCoverage              *RepositoryRuleCodeCoverage
+	RepositoryRuleCopilotCodeReview         *RepositoryRuleCopilotCodeReview
+	RepositoryRuleLicenseComplianceScanning *RepositoryRuleLicenseComplianceScanning
+	RepositoryRuleFilePathRestriction       *RepositoryRuleFilePathRestriction
+	RepositoryRuleMaxFilePathLength         *RepositoryRuleMaxFilePathLength
+	RepositoryRuleFileExtensionRestriction  *RepositoryRuleFileExtensionRestriction
+	RepositoryRuleMaxFileSize               *RepositoryRuleMaxFileSize
+
+	// Unknown holds a member whose type names no branch this SDK knows, as received.
+	Unknown json.RawMessage
 }
 
-func (value *RepositoryRuleCreation) UnmarshalJSON(data []byte) error {
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
+func (u *RepositoryRule) UnmarshalJSON(data []byte) error {
+	*u = RepositoryRule{}
+	var refusal error
+	var object map[string]json.RawMessage
+	if err := json.Unmarshal(data, &object); err == nil {
+		if rawDiscriminator, ok := object["type"]; ok {
+			var discriminatorValue string
+			if err := json.Unmarshal(rawDiscriminator, &discriminatorValue); err == nil {
+				switch discriminatorValue {
+				case "creation":
+					var repositoryrulecreation RepositoryRuleCreation
+					if err := json.Unmarshal(data, &repositoryrulecreation); err != nil {
+						return err
+					}
+					u.RepositoryRuleCreation = &repositoryrulecreation
+					return nil
+				case "update":
+					var repositoryruleupdate RepositoryRuleUpdate
+					if err := json.Unmarshal(data, &repositoryruleupdate); err != nil {
+						return err
+					}
+					u.RepositoryRuleUpdate = &repositoryruleupdate
+					return nil
+				case "deletion":
+					var repositoryruledeletion RepositoryRuleDeletion
+					if err := json.Unmarshal(data, &repositoryruledeletion); err != nil {
+						return err
+					}
+					u.RepositoryRuleDeletion = &repositoryruledeletion
+					return nil
+				case "required_linear_history":
+					var repositoryrulerequiredlinearhistory RepositoryRuleRequiredLinearHistory
+					if err := json.Unmarshal(data, &repositoryrulerequiredlinearhistory); err != nil {
+						return err
+					}
+					u.RepositoryRuleRequiredLinearHistory = &repositoryrulerequiredlinearhistory
+					return nil
+				case "merge_queue":
+					var repositoryrulemergequeue RepositoryRuleMergeQueue
+					if err := json.Unmarshal(data, &repositoryrulemergequeue); err != nil {
+						return err
+					}
+					u.RepositoryRuleMergeQueue = &repositoryrulemergequeue
+					return nil
+				case "required_deployments":
+					var repositoryrulerequireddeployments RepositoryRuleRequiredDeployments
+					if err := json.Unmarshal(data, &repositoryrulerequireddeployments); err != nil {
+						return err
+					}
+					u.RepositoryRuleRequiredDeployments = &repositoryrulerequireddeployments
+					return nil
+				case "required_signatures":
+					var repositoryrulerequiredsignatures RepositoryRuleRequiredSignatures
+					if err := json.Unmarshal(data, &repositoryrulerequiredsignatures); err != nil {
+						return err
+					}
+					u.RepositoryRuleRequiredSignatures = &repositoryrulerequiredsignatures
+					return nil
+				case "pull_request":
+					var repositoryrulepullrequest RepositoryRulePullRequest
+					if err := json.Unmarshal(data, &repositoryrulepullrequest); err != nil {
+						return err
+					}
+					u.RepositoryRulePullRequest = &repositoryrulepullrequest
+					return nil
+				case "required_status_checks":
+					var repositoryrulerequiredstatuschecks RepositoryRuleRequiredStatusChecks
+					if err := json.Unmarshal(data, &repositoryrulerequiredstatuschecks); err != nil {
+						return err
+					}
+					u.RepositoryRuleRequiredStatusChecks = &repositoryrulerequiredstatuschecks
+					return nil
+				case "non_fast_forward":
+					var repositoryrulenonfastforward RepositoryRuleNonFastForward
+					if err := json.Unmarshal(data, &repositoryrulenonfastforward); err != nil {
+						return err
+					}
+					u.RepositoryRuleNonFastForward = &repositoryrulenonfastforward
+					return nil
+				case "commit_message_pattern":
+					var repositoryrulecommitmessagepattern RepositoryRuleCommitMessagePattern
+					if err := json.Unmarshal(data, &repositoryrulecommitmessagepattern); err != nil {
+						return err
+					}
+					u.RepositoryRuleCommitMessagePattern = &repositoryrulecommitmessagepattern
+					return nil
+				case "commit_author_email_pattern":
+					var repositoryrulecommitauthoremailpattern RepositoryRuleCommitAuthorEmailPattern
+					if err := json.Unmarshal(data, &repositoryrulecommitauthoremailpattern); err != nil {
+						return err
+					}
+					u.RepositoryRuleCommitAuthorEmailPattern = &repositoryrulecommitauthoremailpattern
+					return nil
+				case "committer_email_pattern":
+					var repositoryrulecommitteremailpattern RepositoryRuleCommitterEmailPattern
+					if err := json.Unmarshal(data, &repositoryrulecommitteremailpattern); err != nil {
+						return err
+					}
+					u.RepositoryRuleCommitterEmailPattern = &repositoryrulecommitteremailpattern
+					return nil
+				case "branch_name_pattern":
+					var repositoryrulebranchnamepattern RepositoryRuleBranchNamePattern
+					if err := json.Unmarshal(data, &repositoryrulebranchnamepattern); err != nil {
+						return err
+					}
+					u.RepositoryRuleBranchNamePattern = &repositoryrulebranchnamepattern
+					return nil
+				case "tag_name_pattern":
+					var repositoryruletagnamepattern RepositoryRuleTagNamePattern
+					if err := json.Unmarshal(data, &repositoryruletagnamepattern); err != nil {
+						return err
+					}
+					u.RepositoryRuleTagNamePattern = &repositoryruletagnamepattern
+					return nil
+				case "workflows":
+					var repositoryruleworkflows RepositoryRuleWorkflows
+					if err := json.Unmarshal(data, &repositoryruleworkflows); err != nil {
+						return err
+					}
+					u.RepositoryRuleWorkflows = &repositoryruleworkflows
+					return nil
+				case "code_scanning":
+					var repositoryrulecodescanning RepositoryRuleCodeScanning
+					if err := json.Unmarshal(data, &repositoryrulecodescanning); err != nil {
+						return err
+					}
+					u.RepositoryRuleCodeScanning = &repositoryrulecodescanning
+					return nil
+				case "code_quality":
+					var repositoryrulecodequality RepositoryRuleCodeQuality
+					if err := json.Unmarshal(data, &repositoryrulecodequality); err != nil {
+						return err
+					}
+					u.RepositoryRuleCodeQuality = &repositoryrulecodequality
+					return nil
+				case "code_coverage":
+					var repositoryrulecodecoverage RepositoryRuleCodeCoverage
+					if err := json.Unmarshal(data, &repositoryrulecodecoverage); err != nil {
+						return err
+					}
+					u.RepositoryRuleCodeCoverage = &repositoryrulecodecoverage
+					return nil
+				case "copilot_code_review":
+					var repositoryrulecopilotcodereview RepositoryRuleCopilotCodeReview
+					if err := json.Unmarshal(data, &repositoryrulecopilotcodereview); err != nil {
+						return err
+					}
+					u.RepositoryRuleCopilotCodeReview = &repositoryrulecopilotcodereview
+					return nil
+				case "license_compliance_scanning":
+					var repositoryrulelicensecompliancescanning RepositoryRuleLicenseComplianceScanning
+					if err := json.Unmarshal(data, &repositoryrulelicensecompliancescanning); err != nil {
+						return err
+					}
+					u.RepositoryRuleLicenseComplianceScanning = &repositoryrulelicensecompliancescanning
+					return nil
+				case "file_path_restriction":
+					var repositoryrulefilepathrestriction RepositoryRuleFilePathRestriction
+					if err := json.Unmarshal(data, &repositoryrulefilepathrestriction); err != nil {
+						return err
+					}
+					u.RepositoryRuleFilePathRestriction = &repositoryrulefilepathrestriction
+					return nil
+				case "max_file_path_length":
+					var repositoryrulemaxfilepathlength RepositoryRuleMaxFilePathLength
+					if err := json.Unmarshal(data, &repositoryrulemaxfilepathlength); err != nil {
+						return err
+					}
+					u.RepositoryRuleMaxFilePathLength = &repositoryrulemaxfilepathlength
+					return nil
+				case "file_extension_restriction":
+					var repositoryrulefileextensionrestriction RepositoryRuleFileExtensionRestriction
+					if err := json.Unmarshal(data, &repositoryrulefileextensionrestriction); err != nil {
+						return err
+					}
+					u.RepositoryRuleFileExtensionRestriction = &repositoryrulefileextensionrestriction
+					return nil
+				case "max_file_size":
+					var repositoryrulemaxfilesize RepositoryRuleMaxFileSize
+					if err := json.Unmarshal(data, &repositoryrulemaxfilesize); err != nil {
+						return err
+					}
+					u.RepositoryRuleMaxFileSize = &repositoryrulemaxfilesize
+					return nil
+				default:
+					u.Unknown = append(json.RawMessage(nil), data...)
+					return nil
+				}
+			}
+		}
 	}
-	if err := ValidateRawEnum("type", rawFields["type"], []string{"creation"}); err != nil {
-		return err
+	var raw map[string]json.RawMessage
+	if json.Unmarshal(data, &raw) == nil {
+		var lossless0 RepositoryRuleCreation
+		if json.Unmarshal(data, &lossless0) == nil && keepsEveryKey(raw, lossless0) {
+			u.RepositoryRuleCreation = &lossless0
+			return nil
+		}
+		var lossless1 RepositoryRuleUpdate
+		if json.Unmarshal(data, &lossless1) == nil && keepsEveryKey(raw, lossless1) {
+			u.RepositoryRuleUpdate = &lossless1
+			return nil
+		}
+		var lossless2 RepositoryRuleDeletion
+		if json.Unmarshal(data, &lossless2) == nil && keepsEveryKey(raw, lossless2) {
+			u.RepositoryRuleDeletion = &lossless2
+			return nil
+		}
+		var lossless3 RepositoryRuleRequiredLinearHistory
+		if json.Unmarshal(data, &lossless3) == nil && keepsEveryKey(raw, lossless3) {
+			u.RepositoryRuleRequiredLinearHistory = &lossless3
+			return nil
+		}
+		var lossless4 RepositoryRuleMergeQueue
+		if json.Unmarshal(data, &lossless4) == nil && keepsEveryKey(raw, lossless4) {
+			u.RepositoryRuleMergeQueue = &lossless4
+			return nil
+		}
+		var lossless5 RepositoryRuleRequiredDeployments
+		if json.Unmarshal(data, &lossless5) == nil && keepsEveryKey(raw, lossless5) {
+			u.RepositoryRuleRequiredDeployments = &lossless5
+			return nil
+		}
+		var lossless6 RepositoryRuleRequiredSignatures
+		if json.Unmarshal(data, &lossless6) == nil && keepsEveryKey(raw, lossless6) {
+			u.RepositoryRuleRequiredSignatures = &lossless6
+			return nil
+		}
+		var lossless7 RepositoryRulePullRequest
+		if json.Unmarshal(data, &lossless7) == nil && keepsEveryKey(raw, lossless7) {
+			u.RepositoryRulePullRequest = &lossless7
+			return nil
+		}
+		var lossless8 RepositoryRuleRequiredStatusChecks
+		if json.Unmarshal(data, &lossless8) == nil && keepsEveryKey(raw, lossless8) {
+			u.RepositoryRuleRequiredStatusChecks = &lossless8
+			return nil
+		}
+		var lossless9 RepositoryRuleNonFastForward
+		if json.Unmarshal(data, &lossless9) == nil && keepsEveryKey(raw, lossless9) {
+			u.RepositoryRuleNonFastForward = &lossless9
+			return nil
+		}
+		var lossless10 RepositoryRuleCommitMessagePattern
+		if json.Unmarshal(data, &lossless10) == nil && keepsEveryKey(raw, lossless10) {
+			u.RepositoryRuleCommitMessagePattern = &lossless10
+			return nil
+		}
+		var lossless11 RepositoryRuleCommitAuthorEmailPattern
+		if json.Unmarshal(data, &lossless11) == nil && keepsEveryKey(raw, lossless11) {
+			u.RepositoryRuleCommitAuthorEmailPattern = &lossless11
+			return nil
+		}
+		var lossless12 RepositoryRuleCommitterEmailPattern
+		if json.Unmarshal(data, &lossless12) == nil && keepsEveryKey(raw, lossless12) {
+			u.RepositoryRuleCommitterEmailPattern = &lossless12
+			return nil
+		}
+		var lossless13 RepositoryRuleBranchNamePattern
+		if json.Unmarshal(data, &lossless13) == nil && keepsEveryKey(raw, lossless13) {
+			u.RepositoryRuleBranchNamePattern = &lossless13
+			return nil
+		}
+		var lossless14 RepositoryRuleTagNamePattern
+		if json.Unmarshal(data, &lossless14) == nil && keepsEveryKey(raw, lossless14) {
+			u.RepositoryRuleTagNamePattern = &lossless14
+			return nil
+		}
+		var lossless15 RepositoryRuleWorkflows
+		if json.Unmarshal(data, &lossless15) == nil && keepsEveryKey(raw, lossless15) {
+			u.RepositoryRuleWorkflows = &lossless15
+			return nil
+		}
+		var lossless16 RepositoryRuleCodeScanning
+		if json.Unmarshal(data, &lossless16) == nil && keepsEveryKey(raw, lossless16) {
+			u.RepositoryRuleCodeScanning = &lossless16
+			return nil
+		}
+		var lossless17 RepositoryRuleCodeQuality
+		if json.Unmarshal(data, &lossless17) == nil && keepsEveryKey(raw, lossless17) {
+			u.RepositoryRuleCodeQuality = &lossless17
+			return nil
+		}
+		var lossless18 RepositoryRuleCodeCoverage
+		if json.Unmarshal(data, &lossless18) == nil && keepsEveryKey(raw, lossless18) {
+			u.RepositoryRuleCodeCoverage = &lossless18
+			return nil
+		}
+		var lossless19 RepositoryRuleCopilotCodeReview
+		if json.Unmarshal(data, &lossless19) == nil && keepsEveryKey(raw, lossless19) {
+			u.RepositoryRuleCopilotCodeReview = &lossless19
+			return nil
+		}
+		var lossless20 RepositoryRuleLicenseComplianceScanning
+		if json.Unmarshal(data, &lossless20) == nil && keepsEveryKey(raw, lossless20) {
+			u.RepositoryRuleLicenseComplianceScanning = &lossless20
+			return nil
+		}
+		var lossless21 RepositoryRuleFilePathRestriction
+		if json.Unmarshal(data, &lossless21) == nil && keepsEveryKey(raw, lossless21) {
+			u.RepositoryRuleFilePathRestriction = &lossless21
+			return nil
+		}
+		var lossless22 RepositoryRuleMaxFilePathLength
+		if json.Unmarshal(data, &lossless22) == nil && keepsEveryKey(raw, lossless22) {
+			u.RepositoryRuleMaxFilePathLength = &lossless22
+			return nil
+		}
+		var lossless23 RepositoryRuleFileExtensionRestriction
+		if json.Unmarshal(data, &lossless23) == nil && keepsEveryKey(raw, lossless23) {
+			u.RepositoryRuleFileExtensionRestriction = &lossless23
+			return nil
+		}
+		var lossless24 RepositoryRuleMaxFileSize
+		if json.Unmarshal(data, &lossless24) == nil && keepsEveryKey(raw, lossless24) {
+			u.RepositoryRuleMaxFileSize = &lossless24
+			return nil
+		}
 	}
-	type RepositoryRuleCreationAlias RepositoryRuleCreation
-	var decoded RepositoryRuleCreationAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = RepositoryRuleCreation(decoded)
-	if err := ValidateRequired(rawFields, []string{"type"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"type"}); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewRepositoryRuleCreation returns a validated RepositoryRuleCreation built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewRepositoryRuleCreation(fields RepositoryRuleCreation) (*RepositoryRuleCreation, error) {
-	return ConstructModel(fields)
-}
-
-// RepositoryRuleCreationTypeEnum Required enumerated value serialized in the `type` wire field.
-type RepositoryRuleCreationTypeEnum string
-
-const (
-	RepositoryRuleCreationTypeEnumCreation RepositoryRuleCreationTypeEnum = "creation"
-)
-
-func (value *RepositoryRuleCreationTypeEnum) UnmarshalJSON(data []byte) error {
-	var raw string
-	if err := json.Unmarshal(data, &raw); err != nil {
-		return err
-	}
-	switch raw {
-	case "creation":
-		*value = RepositoryRuleCreationTypeEnum(raw)
+	var repositoryrulecreation RepositoryRuleCreation
+	if err := json.Unmarshal(data, &repositoryrulecreation); err == nil && isNonEmptyRepositoryRuleRepositoryRuleCreation(repositoryrulecreation) {
+		u.RepositoryRuleCreation = &repositoryrulecreation
 		return nil
-	default:
-		return &SdkValidationError{Field: "RepositoryRuleCreationTypeEnum", Code: "enum", Message: fmt.Sprintf("unknown RepositoryRuleCreationTypeEnum: %v", raw)}
+	} else if _, refused := err.(*SdkValidationError); refused && refusal == nil {
+		refusal = err
 	}
-}
-
-// RepositoryRuleUpdate Only allow users with bypass permission to update matching refs.
-type RepositoryRuleUpdate struct {
-	// Type Required enumerated value serialized in the `type` wire field.
-	Type RepositoryRuleUpdateTypeEnum `json:"type"`
-	// Parameters Optional object value serialized in the `parameters` wire field.
-	Parameters *RepositoryRuleUpdateParameters `json:"parameters,omitempty"`
-}
-
-func (value *RepositoryRuleUpdate) UnmarshalJSON(data []byte) error {
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRawEnum("type", rawFields["type"], []string{"update"}); err != nil {
-		return err
-	}
-	type RepositoryRuleUpdateAlias RepositoryRuleUpdate
-	var decoded RepositoryRuleUpdateAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = RepositoryRuleUpdate(decoded)
-	if err := ValidateRequired(rawFields, []string{"type"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"type"}); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewRepositoryRuleUpdate returns a validated RepositoryRuleUpdate built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewRepositoryRuleUpdate(fields RepositoryRuleUpdate) (*RepositoryRuleUpdate, error) {
-	return ConstructModel(fields)
-}
-
-// RepositoryRuleUpdateTypeEnum Required enumerated value serialized in the `type` wire field.
-type RepositoryRuleUpdateTypeEnum string
-
-const (
-	RepositoryRuleUpdateTypeEnumUpdate RepositoryRuleUpdateTypeEnum = "update"
-)
-
-func (value *RepositoryRuleUpdateTypeEnum) UnmarshalJSON(data []byte) error {
-	var raw string
-	if err := json.Unmarshal(data, &raw); err != nil {
-		return err
-	}
-	switch raw {
-	case "update":
-		*value = RepositoryRuleUpdateTypeEnum(raw)
+	var repositoryruleupdate RepositoryRuleUpdate
+	if err := json.Unmarshal(data, &repositoryruleupdate); err == nil && isNonEmptyRepositoryRuleRepositoryRuleUpdate(repositoryruleupdate) {
+		u.RepositoryRuleUpdate = &repositoryruleupdate
 		return nil
-	default:
-		return &SdkValidationError{Field: "RepositoryRuleUpdateTypeEnum", Code: "enum", Message: fmt.Sprintf("unknown RepositoryRuleUpdateTypeEnum: %v", raw)}
+	} else if _, refused := err.(*SdkValidationError); refused && refusal == nil {
+		refusal = err
 	}
-}
-
-// RepositoryRuleUpdateParameters Optional object value serialized in the `parameters` wire field.
-type RepositoryRuleUpdateParameters struct {
-	// UpdateAllowsFetchAndMerge Branch can pull changes from its upstream repository
-	UpdateAllowsFetchAndMerge bool `json:"update_allows_fetch_and_merge"`
-}
-
-func (value *RepositoryRuleUpdateParameters) UnmarshalJSON(data []byte) error {
-	type RepositoryRuleUpdateParametersAlias RepositoryRuleUpdateParameters
-	var decoded RepositoryRuleUpdateParametersAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = RepositoryRuleUpdateParameters(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"update_allows_fetch_and_merge"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"update_allows_fetch_and_merge"}); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewRepositoryRuleUpdateParameters returns a validated RepositoryRuleUpdateParameters built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewRepositoryRuleUpdateParameters(fields RepositoryRuleUpdateParameters) (*RepositoryRuleUpdateParameters, error) {
-	return ConstructModel(fields)
-}
-
-// RepositoryRuleDeletion Only allow users with bypass permissions to delete matching refs.
-type RepositoryRuleDeletion struct {
-	// Type Required enumerated value serialized in the `type` wire field.
-	Type RepositoryRuleDeletionTypeEnum `json:"type"`
-}
-
-func (value *RepositoryRuleDeletion) UnmarshalJSON(data []byte) error {
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRawEnum("type", rawFields["type"], []string{"deletion"}); err != nil {
-		return err
-	}
-	type RepositoryRuleDeletionAlias RepositoryRuleDeletion
-	var decoded RepositoryRuleDeletionAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = RepositoryRuleDeletion(decoded)
-	if err := ValidateRequired(rawFields, []string{"type"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"type"}); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewRepositoryRuleDeletion returns a validated RepositoryRuleDeletion built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewRepositoryRuleDeletion(fields RepositoryRuleDeletion) (*RepositoryRuleDeletion, error) {
-	return ConstructModel(fields)
-}
-
-// RepositoryRuleDeletionTypeEnum Required enumerated value serialized in the `type` wire field.
-type RepositoryRuleDeletionTypeEnum string
-
-const (
-	RepositoryRuleDeletionTypeEnumDeletion RepositoryRuleDeletionTypeEnum = "deletion"
-)
-
-func (value *RepositoryRuleDeletionTypeEnum) UnmarshalJSON(data []byte) error {
-	var raw string
-	if err := json.Unmarshal(data, &raw); err != nil {
-		return err
-	}
-	switch raw {
-	case "deletion":
-		*value = RepositoryRuleDeletionTypeEnum(raw)
+	var repositoryruledeletion RepositoryRuleDeletion
+	if err := json.Unmarshal(data, &repositoryruledeletion); err == nil && isNonEmptyRepositoryRuleRepositoryRuleDeletion(repositoryruledeletion) {
+		u.RepositoryRuleDeletion = &repositoryruledeletion
 		return nil
-	default:
-		return &SdkValidationError{Field: "RepositoryRuleDeletionTypeEnum", Code: "enum", Message: fmt.Sprintf("unknown RepositoryRuleDeletionTypeEnum: %v", raw)}
+	} else if _, refused := err.(*SdkValidationError); refused && refusal == nil {
+		refusal = err
 	}
-}
-
-// RepositoryRuleRequiredLinearHistory Prevent merge commits from being pushed to matching refs.
-type RepositoryRuleRequiredLinearHistory struct {
-	// Type Required enumerated value serialized in the `type` wire field.
-	Type RepositoryRuleRequiredLinearHistoryTypeEnum `json:"type"`
-}
-
-func (value *RepositoryRuleRequiredLinearHistory) UnmarshalJSON(data []byte) error {
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRawEnum("type", rawFields["type"], []string{"required_linear_history"}); err != nil {
-		return err
-	}
-	type RepositoryRuleRequiredLinearHistoryAlias RepositoryRuleRequiredLinearHistory
-	var decoded RepositoryRuleRequiredLinearHistoryAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = RepositoryRuleRequiredLinearHistory(decoded)
-	if err := ValidateRequired(rawFields, []string{"type"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"type"}); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewRepositoryRuleRequiredLinearHistory returns a validated RepositoryRuleRequiredLinearHistory built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewRepositoryRuleRequiredLinearHistory(fields RepositoryRuleRequiredLinearHistory) (*RepositoryRuleRequiredLinearHistory, error) {
-	return ConstructModel(fields)
-}
-
-// RepositoryRuleRequiredLinearHistoryTypeEnum Required enumerated value serialized in the `type` wire field.
-type RepositoryRuleRequiredLinearHistoryTypeEnum string
-
-const (
-	RepositoryRuleRequiredLinearHistoryTypeEnumRequiredLinearHistory RepositoryRuleRequiredLinearHistoryTypeEnum = "required_linear_history"
-)
-
-func (value *RepositoryRuleRequiredLinearHistoryTypeEnum) UnmarshalJSON(data []byte) error {
-	var raw string
-	if err := json.Unmarshal(data, &raw); err != nil {
-		return err
-	}
-	switch raw {
-	case "required_linear_history":
-		*value = RepositoryRuleRequiredLinearHistoryTypeEnum(raw)
+	var repositoryrulerequiredlinearhistory RepositoryRuleRequiredLinearHistory
+	if err := json.Unmarshal(data, &repositoryrulerequiredlinearhistory); err == nil && isNonEmptyRepositoryRuleRepositoryRuleRequiredLinearHistory(repositoryrulerequiredlinearhistory) {
+		u.RepositoryRuleRequiredLinearHistory = &repositoryrulerequiredlinearhistory
 		return nil
-	default:
-		return &SdkValidationError{Field: "RepositoryRuleRequiredLinearHistoryTypeEnum", Code: "enum", Message: fmt.Sprintf("unknown RepositoryRuleRequiredLinearHistoryTypeEnum: %v", raw)}
+	} else if _, refused := err.(*SdkValidationError); refused && refusal == nil {
+		refusal = err
 	}
-}
-
-// RepositoryRuleMergeQueue Merges must be performed via a merge queue.
-type RepositoryRuleMergeQueue struct {
-	// Type Required enumerated value serialized in the `type` wire field.
-	Type RepositoryRuleMergeQueueTypeEnum `json:"type"`
-	// Parameters Optional object value serialized in the `parameters` wire field.
-	Parameters *RepositoryRuleMergeQueueParameters `json:"parameters,omitempty"`
-}
-
-func (value *RepositoryRuleMergeQueue) UnmarshalJSON(data []byte) error {
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRawEnum("type", rawFields["type"], []string{"merge_queue"}); err != nil {
-		return err
-	}
-	type RepositoryRuleMergeQueueAlias RepositoryRuleMergeQueue
-	var decoded RepositoryRuleMergeQueueAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = RepositoryRuleMergeQueue(decoded)
-	if err := ValidateRequired(rawFields, []string{"type"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"type"}); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewRepositoryRuleMergeQueue returns a validated RepositoryRuleMergeQueue built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewRepositoryRuleMergeQueue(fields RepositoryRuleMergeQueue) (*RepositoryRuleMergeQueue, error) {
-	return ConstructModel(fields)
-}
-
-// RepositoryRuleMergeQueueTypeEnum Required enumerated value serialized in the `type` wire field.
-type RepositoryRuleMergeQueueTypeEnum string
-
-const (
-	RepositoryRuleMergeQueueTypeEnumMergeQueue RepositoryRuleMergeQueueTypeEnum = "merge_queue"
-)
-
-func (value *RepositoryRuleMergeQueueTypeEnum) UnmarshalJSON(data []byte) error {
-	var raw string
-	if err := json.Unmarshal(data, &raw); err != nil {
-		return err
-	}
-	switch raw {
-	case "merge_queue":
-		*value = RepositoryRuleMergeQueueTypeEnum(raw)
+	var repositoryrulemergequeue RepositoryRuleMergeQueue
+	if err := json.Unmarshal(data, &repositoryrulemergequeue); err == nil && isNonEmptyRepositoryRuleRepositoryRuleMergeQueue(repositoryrulemergequeue) {
+		u.RepositoryRuleMergeQueue = &repositoryrulemergequeue
 		return nil
-	default:
-		return &SdkValidationError{Field: "RepositoryRuleMergeQueueTypeEnum", Code: "enum", Message: fmt.Sprintf("unknown RepositoryRuleMergeQueueTypeEnum: %v", raw)}
+	} else if _, refused := err.(*SdkValidationError); refused && refusal == nil {
+		refusal = err
 	}
-}
-
-// RepositoryRuleMergeQueueParameters Optional object value serialized in the `parameters` wire field.
-type RepositoryRuleMergeQueueParameters struct {
-	// CheckResponseTimeoutMinutes Maximum time for a required status check to report a conclusion. After this much time has elapsed, checks that have not reported a conclusion will be assumed to have failed
-	CheckResponseTimeoutMinutes int64 `json:"check_response_timeout_minutes"`
-	// GroupingStrategy When set to ALLGREEN, the merge commit created by merge queue for each PR in the group must pass all required checks to merge. When set to HEADGREEN, only the commit at the head of the merge group, i.e. the commit containing changes from all of the PRs in the group, must pass its required checks to merge.
-	GroupingStrategy RepositoryRuleMergeQueueParametersGroupingStrategyEnum `json:"grouping_strategy"`
-	// MaxEntriesToBuild Limit the number of queued pull requests requesting checks and workflow runs at the same time.
-	MaxEntriesToBuild int64 `json:"max_entries_to_build"`
-	// MaxEntriesToMerge The maximum number of PRs that will be merged together in a group.
-	MaxEntriesToMerge int64 `json:"max_entries_to_merge"`
-	// MergeMethod Method to use when merging changes from queued pull requests.
-	MergeMethod RepositoryRuleMergeQueueParametersMergeMethodEnum `json:"merge_method"`
-	// MinEntriesToMerge The minimum number of PRs that will be merged together in a group.
-	MinEntriesToMerge int64 `json:"min_entries_to_merge"`
-	// MinEntriesToMergeWaitMinutes The time merge queue should wait after the first PR is added to the queue for the minimum group size to be met. After this time has elapsed, the minimum group size will be ignored and a smaller group will be merged.
-	MinEntriesToMergeWaitMinutes int64 `json:"min_entries_to_merge_wait_minutes"`
-}
-
-func (value *RepositoryRuleMergeQueueParameters) UnmarshalJSON(data []byte) error {
-	type RepositoryRuleMergeQueueParametersAlias RepositoryRuleMergeQueueParameters
-	var decoded RepositoryRuleMergeQueueParametersAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = RepositoryRuleMergeQueueParameters(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"check_response_timeout_minutes", "grouping_strategy", "max_entries_to_build", "max_entries_to_merge", "merge_method", "min_entries_to_merge", "min_entries_to_merge_wait_minutes"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"check_response_timeout_minutes", "grouping_strategy", "max_entries_to_build", "max_entries_to_merge", "merge_method", "min_entries_to_merge", "min_entries_to_merge_wait_minutes"}); err != nil {
-		return err
-	}
-	if err := ValidateRange("check_response_timeout_minutes", value.CheckResponseTimeoutMinutes, RangeOpts{Min: Ptr[float64](1), Max: Ptr[float64](360)}); err != nil {
-		return err
-	}
-	if err := ValidateRange("max_entries_to_build", value.MaxEntriesToBuild, RangeOpts{Min: Ptr[float64](0), Max: Ptr[float64](100)}); err != nil {
-		return err
-	}
-	if err := ValidateRange("max_entries_to_merge", value.MaxEntriesToMerge, RangeOpts{Min: Ptr[float64](0), Max: Ptr[float64](100)}); err != nil {
-		return err
-	}
-	if err := ValidateRange("min_entries_to_merge", value.MinEntriesToMerge, RangeOpts{Min: Ptr[float64](0), Max: Ptr[float64](100)}); err != nil {
-		return err
-	}
-	if err := ValidateRange("min_entries_to_merge_wait_minutes", value.MinEntriesToMergeWaitMinutes, RangeOpts{Min: Ptr[float64](0), Max: Ptr[float64](360)}); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewRepositoryRuleMergeQueueParameters returns a validated RepositoryRuleMergeQueueParameters built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewRepositoryRuleMergeQueueParameters(fields RepositoryRuleMergeQueueParameters) (*RepositoryRuleMergeQueueParameters, error) {
-	return ConstructModel(fields)
-}
-
-// RepositoryRuleMergeQueueParametersGroupingStrategyEnum When set to ALLGREEN, the merge commit created by merge queue for each PR in the group must pass all required checks to merge. When set to HEADGREEN, only the commit at the head of the merge group, i.e. the commit containing changes from all of the PRs in the group, must pass its required checks to merge.
-type RepositoryRuleMergeQueueParametersGroupingStrategyEnum string
-
-const (
-	RepositoryRuleMergeQueueParametersGroupingStrategyEnumAllgreen  RepositoryRuleMergeQueueParametersGroupingStrategyEnum = "ALLGREEN"
-	RepositoryRuleMergeQueueParametersGroupingStrategyEnumHeadgreen RepositoryRuleMergeQueueParametersGroupingStrategyEnum = "HEADGREEN"
-)
-
-// RepositoryRuleMergeQueueParametersMergeMethodEnum Method to use when merging changes from queued pull requests.
-type RepositoryRuleMergeQueueParametersMergeMethodEnum string
-
-const (
-	RepositoryRuleMergeQueueParametersMergeMethodEnumMerge  RepositoryRuleMergeQueueParametersMergeMethodEnum = "MERGE"
-	RepositoryRuleMergeQueueParametersMergeMethodEnumSquash RepositoryRuleMergeQueueParametersMergeMethodEnum = "SQUASH"
-	RepositoryRuleMergeQueueParametersMergeMethodEnumRebase RepositoryRuleMergeQueueParametersMergeMethodEnum = "REBASE"
-)
-
-// RepositoryRuleRequiredDeployments Choose which environments must be successfully deployed to before refs can be pushed into a ref that matches this rule.
-type RepositoryRuleRequiredDeployments struct {
-	// Type Required enumerated value serialized in the `type` wire field.
-	Type RepositoryRuleRequiredDeploymentsTypeEnum `json:"type"`
-	// Parameters Optional object value serialized in the `parameters` wire field.
-	Parameters *RepositoryRuleRequiredDeploymentsParameters `json:"parameters,omitempty"`
-}
-
-func (value *RepositoryRuleRequiredDeployments) UnmarshalJSON(data []byte) error {
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRawEnum("type", rawFields["type"], []string{"required_deployments"}); err != nil {
-		return err
-	}
-	type RepositoryRuleRequiredDeploymentsAlias RepositoryRuleRequiredDeployments
-	var decoded RepositoryRuleRequiredDeploymentsAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = RepositoryRuleRequiredDeployments(decoded)
-	if err := ValidateRequired(rawFields, []string{"type"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"type"}); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewRepositoryRuleRequiredDeployments returns a validated RepositoryRuleRequiredDeployments built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewRepositoryRuleRequiredDeployments(fields RepositoryRuleRequiredDeployments) (*RepositoryRuleRequiredDeployments, error) {
-	return ConstructModel(fields)
-}
-
-// RepositoryRuleRequiredDeploymentsTypeEnum Required enumerated value serialized in the `type` wire field.
-type RepositoryRuleRequiredDeploymentsTypeEnum string
-
-const (
-	RepositoryRuleRequiredDeploymentsTypeEnumRequiredDeployments RepositoryRuleRequiredDeploymentsTypeEnum = "required_deployments"
-)
-
-func (value *RepositoryRuleRequiredDeploymentsTypeEnum) UnmarshalJSON(data []byte) error {
-	var raw string
-	if err := json.Unmarshal(data, &raw); err != nil {
-		return err
-	}
-	switch raw {
-	case "required_deployments":
-		*value = RepositoryRuleRequiredDeploymentsTypeEnum(raw)
+	var repositoryrulerequireddeployments RepositoryRuleRequiredDeployments
+	if err := json.Unmarshal(data, &repositoryrulerequireddeployments); err == nil && isNonEmptyRepositoryRuleRepositoryRuleRequiredDeployments(repositoryrulerequireddeployments) {
+		u.RepositoryRuleRequiredDeployments = &repositoryrulerequireddeployments
 		return nil
-	default:
-		return &SdkValidationError{Field: "RepositoryRuleRequiredDeploymentsTypeEnum", Code: "enum", Message: fmt.Sprintf("unknown RepositoryRuleRequiredDeploymentsTypeEnum: %v", raw)}
+	} else if _, refused := err.(*SdkValidationError); refused && refusal == nil {
+		refusal = err
 	}
-}
-
-// RepositoryRuleRequiredDeploymentsParameters Optional object value serialized in the `parameters` wire field.
-type RepositoryRuleRequiredDeploymentsParameters struct {
-	// RequiredDeploymentEnvironments The environments that must be successfully deployed to before branches can be merged.
-	RequiredDeploymentEnvironments []string `json:"required_deployment_environments"`
-}
-
-func (value *RepositoryRuleRequiredDeploymentsParameters) UnmarshalJSON(data []byte) error {
-	type RepositoryRuleRequiredDeploymentsParametersAlias RepositoryRuleRequiredDeploymentsParameters
-	var decoded RepositoryRuleRequiredDeploymentsParametersAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = RepositoryRuleRequiredDeploymentsParameters(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"required_deployment_environments"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"required_deployment_environments"}); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewRepositoryRuleRequiredDeploymentsParameters returns a validated RepositoryRuleRequiredDeploymentsParameters built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewRepositoryRuleRequiredDeploymentsParameters(fields RepositoryRuleRequiredDeploymentsParameters) (*RepositoryRuleRequiredDeploymentsParameters, error) {
-	return ConstructModel(fields)
-}
-
-// RepositoryRuleRequiredSignatures Commits pushed to matching refs must have verified signatures.
-type RepositoryRuleRequiredSignatures struct {
-	// Type Required enumerated value serialized in the `type` wire field.
-	Type RepositoryRuleRequiredSignaturesTypeEnum `json:"type"`
-}
-
-func (value *RepositoryRuleRequiredSignatures) UnmarshalJSON(data []byte) error {
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRawEnum("type", rawFields["type"], []string{"required_signatures"}); err != nil {
-		return err
-	}
-	type RepositoryRuleRequiredSignaturesAlias RepositoryRuleRequiredSignatures
-	var decoded RepositoryRuleRequiredSignaturesAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = RepositoryRuleRequiredSignatures(decoded)
-	if err := ValidateRequired(rawFields, []string{"type"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"type"}); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewRepositoryRuleRequiredSignatures returns a validated RepositoryRuleRequiredSignatures built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewRepositoryRuleRequiredSignatures(fields RepositoryRuleRequiredSignatures) (*RepositoryRuleRequiredSignatures, error) {
-	return ConstructModel(fields)
-}
-
-// RepositoryRuleRequiredSignaturesTypeEnum Required enumerated value serialized in the `type` wire field.
-type RepositoryRuleRequiredSignaturesTypeEnum string
-
-const (
-	RepositoryRuleRequiredSignaturesTypeEnumRequiredSignatures RepositoryRuleRequiredSignaturesTypeEnum = "required_signatures"
-)
-
-func (value *RepositoryRuleRequiredSignaturesTypeEnum) UnmarshalJSON(data []byte) error {
-	var raw string
-	if err := json.Unmarshal(data, &raw); err != nil {
-		return err
-	}
-	switch raw {
-	case "required_signatures":
-		*value = RepositoryRuleRequiredSignaturesTypeEnum(raw)
+	var repositoryrulerequiredsignatures RepositoryRuleRequiredSignatures
+	if err := json.Unmarshal(data, &repositoryrulerequiredsignatures); err == nil && isNonEmptyRepositoryRuleRepositoryRuleRequiredSignatures(repositoryrulerequiredsignatures) {
+		u.RepositoryRuleRequiredSignatures = &repositoryrulerequiredsignatures
 		return nil
-	default:
-		return &SdkValidationError{Field: "RepositoryRuleRequiredSignaturesTypeEnum", Code: "enum", Message: fmt.Sprintf("unknown RepositoryRuleRequiredSignaturesTypeEnum: %v", raw)}
+	} else if _, refused := err.(*SdkValidationError); refused && refusal == nil {
+		refusal = err
 	}
+	var repositoryrulepullrequest RepositoryRulePullRequest
+	if err := json.Unmarshal(data, &repositoryrulepullrequest); err == nil && isNonEmptyRepositoryRuleRepositoryRulePullRequest(repositoryrulepullrequest) {
+		u.RepositoryRulePullRequest = &repositoryrulepullrequest
+		return nil
+	} else if _, refused := err.(*SdkValidationError); refused && refusal == nil {
+		refusal = err
+	}
+	var repositoryrulerequiredstatuschecks RepositoryRuleRequiredStatusChecks
+	if err := json.Unmarshal(data, &repositoryrulerequiredstatuschecks); err == nil && isNonEmptyRepositoryRuleRepositoryRuleRequiredStatusChecks(repositoryrulerequiredstatuschecks) {
+		u.RepositoryRuleRequiredStatusChecks = &repositoryrulerequiredstatuschecks
+		return nil
+	} else if _, refused := err.(*SdkValidationError); refused && refusal == nil {
+		refusal = err
+	}
+	var repositoryrulenonfastforward RepositoryRuleNonFastForward
+	if err := json.Unmarshal(data, &repositoryrulenonfastforward); err == nil && isNonEmptyRepositoryRuleRepositoryRuleNonFastForward(repositoryrulenonfastforward) {
+		u.RepositoryRuleNonFastForward = &repositoryrulenonfastforward
+		return nil
+	} else if _, refused := err.(*SdkValidationError); refused && refusal == nil {
+		refusal = err
+	}
+	var repositoryrulecommitmessagepattern RepositoryRuleCommitMessagePattern
+	if err := json.Unmarshal(data, &repositoryrulecommitmessagepattern); err == nil && isNonEmptyRepositoryRuleRepositoryRuleCommitMessagePattern(repositoryrulecommitmessagepattern) {
+		u.RepositoryRuleCommitMessagePattern = &repositoryrulecommitmessagepattern
+		return nil
+	} else if _, refused := err.(*SdkValidationError); refused && refusal == nil {
+		refusal = err
+	}
+	var repositoryrulecommitauthoremailpattern RepositoryRuleCommitAuthorEmailPattern
+	if err := json.Unmarshal(data, &repositoryrulecommitauthoremailpattern); err == nil && isNonEmptyRepositoryRuleRepositoryRuleCommitAuthorEmailPattern(repositoryrulecommitauthoremailpattern) {
+		u.RepositoryRuleCommitAuthorEmailPattern = &repositoryrulecommitauthoremailpattern
+		return nil
+	} else if _, refused := err.(*SdkValidationError); refused && refusal == nil {
+		refusal = err
+	}
+	var repositoryrulecommitteremailpattern RepositoryRuleCommitterEmailPattern
+	if err := json.Unmarshal(data, &repositoryrulecommitteremailpattern); err == nil && isNonEmptyRepositoryRuleRepositoryRuleCommitterEmailPattern(repositoryrulecommitteremailpattern) {
+		u.RepositoryRuleCommitterEmailPattern = &repositoryrulecommitteremailpattern
+		return nil
+	} else if _, refused := err.(*SdkValidationError); refused && refusal == nil {
+		refusal = err
+	}
+	var repositoryrulebranchnamepattern RepositoryRuleBranchNamePattern
+	if err := json.Unmarshal(data, &repositoryrulebranchnamepattern); err == nil && isNonEmptyRepositoryRuleRepositoryRuleBranchNamePattern(repositoryrulebranchnamepattern) {
+		u.RepositoryRuleBranchNamePattern = &repositoryrulebranchnamepattern
+		return nil
+	} else if _, refused := err.(*SdkValidationError); refused && refusal == nil {
+		refusal = err
+	}
+	var repositoryruletagnamepattern RepositoryRuleTagNamePattern
+	if err := json.Unmarshal(data, &repositoryruletagnamepattern); err == nil && isNonEmptyRepositoryRuleRepositoryRuleTagNamePattern(repositoryruletagnamepattern) {
+		u.RepositoryRuleTagNamePattern = &repositoryruletagnamepattern
+		return nil
+	} else if _, refused := err.(*SdkValidationError); refused && refusal == nil {
+		refusal = err
+	}
+	var repositoryruleworkflows RepositoryRuleWorkflows
+	if err := json.Unmarshal(data, &repositoryruleworkflows); err == nil && isNonEmptyRepositoryRuleRepositoryRuleWorkflows(repositoryruleworkflows) {
+		u.RepositoryRuleWorkflows = &repositoryruleworkflows
+		return nil
+	} else if _, refused := err.(*SdkValidationError); refused && refusal == nil {
+		refusal = err
+	}
+	var repositoryrulecodescanning RepositoryRuleCodeScanning
+	if err := json.Unmarshal(data, &repositoryrulecodescanning); err == nil && isNonEmptyRepositoryRuleRepositoryRuleCodeScanning(repositoryrulecodescanning) {
+		u.RepositoryRuleCodeScanning = &repositoryrulecodescanning
+		return nil
+	} else if _, refused := err.(*SdkValidationError); refused && refusal == nil {
+		refusal = err
+	}
+	var repositoryrulecodequality RepositoryRuleCodeQuality
+	if err := json.Unmarshal(data, &repositoryrulecodequality); err == nil && isNonEmptyRepositoryRuleRepositoryRuleCodeQuality(repositoryrulecodequality) {
+		u.RepositoryRuleCodeQuality = &repositoryrulecodequality
+		return nil
+	} else if _, refused := err.(*SdkValidationError); refused && refusal == nil {
+		refusal = err
+	}
+	var repositoryrulecodecoverage RepositoryRuleCodeCoverage
+	if err := json.Unmarshal(data, &repositoryrulecodecoverage); err == nil && isNonEmptyRepositoryRuleRepositoryRuleCodeCoverage(repositoryrulecodecoverage) {
+		u.RepositoryRuleCodeCoverage = &repositoryrulecodecoverage
+		return nil
+	} else if _, refused := err.(*SdkValidationError); refused && refusal == nil {
+		refusal = err
+	}
+	var repositoryrulecopilotcodereview RepositoryRuleCopilotCodeReview
+	if err := json.Unmarshal(data, &repositoryrulecopilotcodereview); err == nil && isNonEmptyRepositoryRuleRepositoryRuleCopilotCodeReview(repositoryrulecopilotcodereview) {
+		u.RepositoryRuleCopilotCodeReview = &repositoryrulecopilotcodereview
+		return nil
+	} else if _, refused := err.(*SdkValidationError); refused && refusal == nil {
+		refusal = err
+	}
+	var repositoryrulelicensecompliancescanning RepositoryRuleLicenseComplianceScanning
+	if err := json.Unmarshal(data, &repositoryrulelicensecompliancescanning); err == nil && isNonEmptyRepositoryRuleRepositoryRuleLicenseComplianceScanning(repositoryrulelicensecompliancescanning) {
+		u.RepositoryRuleLicenseComplianceScanning = &repositoryrulelicensecompliancescanning
+		return nil
+	} else if _, refused := err.(*SdkValidationError); refused && refusal == nil {
+		refusal = err
+	}
+	var repositoryrulefilepathrestriction RepositoryRuleFilePathRestriction
+	if err := json.Unmarshal(data, &repositoryrulefilepathrestriction); err == nil && isNonEmptyRepositoryRuleRepositoryRuleFilePathRestriction(repositoryrulefilepathrestriction) {
+		u.RepositoryRuleFilePathRestriction = &repositoryrulefilepathrestriction
+		return nil
+	} else if _, refused := err.(*SdkValidationError); refused && refusal == nil {
+		refusal = err
+	}
+	var repositoryrulemaxfilepathlength RepositoryRuleMaxFilePathLength
+	if err := json.Unmarshal(data, &repositoryrulemaxfilepathlength); err == nil && isNonEmptyRepositoryRuleRepositoryRuleMaxFilePathLength(repositoryrulemaxfilepathlength) {
+		u.RepositoryRuleMaxFilePathLength = &repositoryrulemaxfilepathlength
+		return nil
+	} else if _, refused := err.(*SdkValidationError); refused && refusal == nil {
+		refusal = err
+	}
+	var repositoryrulefileextensionrestriction RepositoryRuleFileExtensionRestriction
+	if err := json.Unmarshal(data, &repositoryrulefileextensionrestriction); err == nil && isNonEmptyRepositoryRuleRepositoryRuleFileExtensionRestriction(repositoryrulefileextensionrestriction) {
+		u.RepositoryRuleFileExtensionRestriction = &repositoryrulefileextensionrestriction
+		return nil
+	} else if _, refused := err.(*SdkValidationError); refused && refusal == nil {
+		refusal = err
+	}
+	var repositoryrulemaxfilesize RepositoryRuleMaxFileSize
+	if err := json.Unmarshal(data, &repositoryrulemaxfilesize); err == nil && isNonEmptyRepositoryRuleRepositoryRuleMaxFileSize(repositoryrulemaxfilesize) {
+		u.RepositoryRuleMaxFileSize = &repositoryrulemaxfilesize
+		return nil
+	} else if _, refused := err.(*SdkValidationError); refused && refusal == nil {
+		refusal = err
+	}
+	return refusal
 }
 
-// RepositoryRuleParamsActor An actor allowed to dismiss pull request reviews
-type RepositoryRuleParamsActor struct {
-	// Id ID of the actor that can dismiss reviews.
-	Id int64 `json:"id"`
-	// Type The type of the actor
-	Type RepositoryRuleParamsActorTypeEnum `json:"type"`
+func (u RepositoryRule) MarshalJSON() ([]byte, error) {
+	if u.RepositoryRuleCreation != nil {
+		return json.Marshal(u.RepositoryRuleCreation)
+	}
+	if u.RepositoryRuleUpdate != nil {
+		return json.Marshal(u.RepositoryRuleUpdate)
+	}
+	if u.RepositoryRuleDeletion != nil {
+		return json.Marshal(u.RepositoryRuleDeletion)
+	}
+	if u.RepositoryRuleRequiredLinearHistory != nil {
+		return json.Marshal(u.RepositoryRuleRequiredLinearHistory)
+	}
+	if u.RepositoryRuleMergeQueue != nil {
+		return json.Marshal(u.RepositoryRuleMergeQueue)
+	}
+	if u.RepositoryRuleRequiredDeployments != nil {
+		return json.Marshal(u.RepositoryRuleRequiredDeployments)
+	}
+	if u.RepositoryRuleRequiredSignatures != nil {
+		return json.Marshal(u.RepositoryRuleRequiredSignatures)
+	}
+	if u.RepositoryRulePullRequest != nil {
+		return json.Marshal(u.RepositoryRulePullRequest)
+	}
+	if u.RepositoryRuleRequiredStatusChecks != nil {
+		return json.Marshal(u.RepositoryRuleRequiredStatusChecks)
+	}
+	if u.RepositoryRuleNonFastForward != nil {
+		return json.Marshal(u.RepositoryRuleNonFastForward)
+	}
+	if u.RepositoryRuleCommitMessagePattern != nil {
+		return json.Marshal(u.RepositoryRuleCommitMessagePattern)
+	}
+	if u.RepositoryRuleCommitAuthorEmailPattern != nil {
+		return json.Marshal(u.RepositoryRuleCommitAuthorEmailPattern)
+	}
+	if u.RepositoryRuleCommitterEmailPattern != nil {
+		return json.Marshal(u.RepositoryRuleCommitterEmailPattern)
+	}
+	if u.RepositoryRuleBranchNamePattern != nil {
+		return json.Marshal(u.RepositoryRuleBranchNamePattern)
+	}
+	if u.RepositoryRuleTagNamePattern != nil {
+		return json.Marshal(u.RepositoryRuleTagNamePattern)
+	}
+	if u.RepositoryRuleWorkflows != nil {
+		return json.Marshal(u.RepositoryRuleWorkflows)
+	}
+	if u.RepositoryRuleCodeScanning != nil {
+		return json.Marshal(u.RepositoryRuleCodeScanning)
+	}
+	if u.RepositoryRuleCodeQuality != nil {
+		return json.Marshal(u.RepositoryRuleCodeQuality)
+	}
+	if u.RepositoryRuleCodeCoverage != nil {
+		return json.Marshal(u.RepositoryRuleCodeCoverage)
+	}
+	if u.RepositoryRuleCopilotCodeReview != nil {
+		return json.Marshal(u.RepositoryRuleCopilotCodeReview)
+	}
+	if u.RepositoryRuleLicenseComplianceScanning != nil {
+		return json.Marshal(u.RepositoryRuleLicenseComplianceScanning)
+	}
+	if u.RepositoryRuleFilePathRestriction != nil {
+		return json.Marshal(u.RepositoryRuleFilePathRestriction)
+	}
+	if u.RepositoryRuleMaxFilePathLength != nil {
+		return json.Marshal(u.RepositoryRuleMaxFilePathLength)
+	}
+	if u.RepositoryRuleFileExtensionRestriction != nil {
+		return json.Marshal(u.RepositoryRuleFileExtensionRestriction)
+	}
+	if u.RepositoryRuleMaxFileSize != nil {
+		return json.Marshal(u.RepositoryRuleMaxFileSize)
+	}
+	if u.Unknown != nil {
+		return u.Unknown, nil
+	}
+	return []byte("null"), nil
 }
 
-func (value *RepositoryRuleParamsActor) UnmarshalJSON(data []byte) error {
-	type RepositoryRuleParamsActorAlias RepositoryRuleParamsActor
-	var decoded RepositoryRuleParamsActorAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = RepositoryRuleParamsActor(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"id", "type"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"id", "type"}); err != nil {
-		return err
-	}
-	return nil
+func isNonEmptyRepositoryRuleRepositoryRuleCreation(v RepositoryRuleCreation) bool {
+	b, _ := json.Marshal(v)
+	return string(b) != "{}" && string(b) != "null"
 }
 
-// NewRepositoryRuleParamsActor returns a validated RepositoryRuleParamsActor built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewRepositoryRuleParamsActor(fields RepositoryRuleParamsActor) (*RepositoryRuleParamsActor, error) {
-	return ConstructModel(fields)
+func isNonEmptyRepositoryRuleRepositoryRuleUpdate(v RepositoryRuleUpdate) bool {
+	b, _ := json.Marshal(v)
+	return string(b) != "{}" && string(b) != "null"
 }
 
-// RepositoryRuleParamsActorTypeEnum The type of the actor
-type RepositoryRuleParamsActorTypeEnum string
-
-const (
-	RepositoryRuleParamsActorTypeEnumUser                    RepositoryRuleParamsActorTypeEnum = "User"
-	RepositoryRuleParamsActorTypeEnumTeam                    RepositoryRuleParamsActorTypeEnum = "Team"
-	RepositoryRuleParamsActorTypeEnumIntegrationinstallation RepositoryRuleParamsActorTypeEnum = "IntegrationInstallation"
-	RepositoryRuleParamsActorTypeEnumRepositoryrole          RepositoryRuleParamsActorTypeEnum = "RepositoryRole"
-)
-
-// RepositoryRuleParamsDismissalRestriction Specify people, teams, or apps allowed to dismiss pull request reviews.
-type RepositoryRuleParamsDismissalRestriction struct {
-	// AllowedActors Specify people, teams, or apps allowed to dismiss pull request reviews.
-	AllowedActors []RepositoryRuleParamsActor `json:"allowed_actors,omitempty"`
-	// Enabled Whether to restrict review dismissal to specific actors.
-	Enabled bool `json:"enabled"`
+func isNonEmptyRepositoryRuleRepositoryRuleDeletion(v RepositoryRuleDeletion) bool {
+	b, _ := json.Marshal(v)
+	return string(b) != "{}" && string(b) != "null"
 }
 
-func (value *RepositoryRuleParamsDismissalRestriction) UnmarshalJSON(data []byte) error {
-	type RepositoryRuleParamsDismissalRestrictionAlias RepositoryRuleParamsDismissalRestriction
-	var decoded RepositoryRuleParamsDismissalRestrictionAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = RepositoryRuleParamsDismissalRestriction(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"enabled"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"enabled"}); err != nil {
-		return err
-	}
-	return nil
+func isNonEmptyRepositoryRuleRepositoryRuleRequiredLinearHistory(v RepositoryRuleRequiredLinearHistory) bool {
+	b, _ := json.Marshal(v)
+	return string(b) != "{}" && string(b) != "null"
 }
 
-// NewRepositoryRuleParamsDismissalRestriction returns a validated RepositoryRuleParamsDismissalRestriction built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewRepositoryRuleParamsDismissalRestriction(fields RepositoryRuleParamsDismissalRestriction) (*RepositoryRuleParamsDismissalRestriction, error) {
-	return ConstructModel(fields)
+func isNonEmptyRepositoryRuleRepositoryRuleMergeQueue(v RepositoryRuleMergeQueue) bool {
+	b, _ := json.Marshal(v)
+	return string(b) != "{}" && string(b) != "null"
 }
 
-// RepositoryRuleParamsReviewer A required reviewing team
-type RepositoryRuleParamsReviewer struct {
-	// Id ID of the reviewer which must review changes to matching files.
-	Id int64 `json:"id"`
-	// Type The type of the reviewer
-	Type RepositoryRuleParamsReviewerTypeEnum `json:"type"`
+func isNonEmptyRepositoryRuleRepositoryRuleRequiredDeployments(v RepositoryRuleRequiredDeployments) bool {
+	b, _ := json.Marshal(v)
+	return string(b) != "{}" && string(b) != "null"
 }
 
-func (value *RepositoryRuleParamsReviewer) UnmarshalJSON(data []byte) error {
-	type RepositoryRuleParamsReviewerAlias RepositoryRuleParamsReviewer
-	var decoded RepositoryRuleParamsReviewerAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = RepositoryRuleParamsReviewer(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"id", "type"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"id", "type"}); err != nil {
-		return err
-	}
-	return nil
+func isNonEmptyRepositoryRuleRepositoryRuleRequiredSignatures(v RepositoryRuleRequiredSignatures) bool {
+	b, _ := json.Marshal(v)
+	return string(b) != "{}" && string(b) != "null"
 }
 
-// NewRepositoryRuleParamsReviewer returns a validated RepositoryRuleParamsReviewer built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewRepositoryRuleParamsReviewer(fields RepositoryRuleParamsReviewer) (*RepositoryRuleParamsReviewer, error) {
-	return ConstructModel(fields)
+func isNonEmptyRepositoryRuleRepositoryRulePullRequest(v RepositoryRulePullRequest) bool {
+	b, _ := json.Marshal(v)
+	return string(b) != "{}" && string(b) != "null"
 }
 
-// RepositoryRuleParamsReviewerTypeEnum The type of the reviewer
-type RepositoryRuleParamsReviewerTypeEnum string
+func isNonEmptyRepositoryRuleRepositoryRuleRequiredStatusChecks(v RepositoryRuleRequiredStatusChecks) bool {
+	b, _ := json.Marshal(v)
+	return string(b) != "{}" && string(b) != "null"
+}
 
-const (
-	RepositoryRuleParamsReviewerTypeEnumTeam RepositoryRuleParamsReviewerTypeEnum = "Team"
-)
+func isNonEmptyRepositoryRuleRepositoryRuleNonFastForward(v RepositoryRuleNonFastForward) bool {
+	b, _ := json.Marshal(v)
+	return string(b) != "{}" && string(b) != "null"
+}
 
-// RepositoryRuleParamsRequiredReviewerConfiguration A reviewing team, and file patterns describing which files they must approve changes to.
-type RepositoryRuleParamsRequiredReviewerConfiguration struct {
-	// FilePatterns Array of file patterns. Pull requests which change matching files must be approved by the specified team. File patterns use fnmatch syntax.
-	FilePatterns []string `json:"file_patterns"`
-	// MinimumApprovals Minimum number of approvals required from the specified team. If set to zero, the team will be added to the pull request but approval is optional.
-	MinimumApprovals int64 `json:"minimum_approvals"`
-	// Reviewer A required reviewing team
-	Reviewer RepositoryRuleParamsReviewer `json:"reviewer"`
+func isNonEmptyRepositoryRuleRepositoryRuleCommitMessagePattern(v RepositoryRuleCommitMessagePattern) bool {
+	b, _ := json.Marshal(v)
+	return string(b) != "{}" && string(b) != "null"
+}
+
+func isNonEmptyRepositoryRuleRepositoryRuleCommitAuthorEmailPattern(v RepositoryRuleCommitAuthorEmailPattern) bool {
+	b, _ := json.Marshal(v)
+	return string(b) != "{}" && string(b) != "null"
+}
+
+func isNonEmptyRepositoryRuleRepositoryRuleCommitterEmailPattern(v RepositoryRuleCommitterEmailPattern) bool {
+	b, _ := json.Marshal(v)
+	return string(b) != "{}" && string(b) != "null"
+}
+
+func isNonEmptyRepositoryRuleRepositoryRuleBranchNamePattern(v RepositoryRuleBranchNamePattern) bool {
+	b, _ := json.Marshal(v)
+	return string(b) != "{}" && string(b) != "null"
+}
+
+func isNonEmptyRepositoryRuleRepositoryRuleTagNamePattern(v RepositoryRuleTagNamePattern) bool {
+	b, _ := json.Marshal(v)
+	return string(b) != "{}" && string(b) != "null"
+}
+
+func isNonEmptyRepositoryRuleRepositoryRuleWorkflows(v RepositoryRuleWorkflows) bool {
+	b, _ := json.Marshal(v)
+	return string(b) != "{}" && string(b) != "null"
+}
+
+func isNonEmptyRepositoryRuleRepositoryRuleCodeScanning(v RepositoryRuleCodeScanning) bool {
+	b, _ := json.Marshal(v)
+	return string(b) != "{}" && string(b) != "null"
+}
+
+func isNonEmptyRepositoryRuleRepositoryRuleCodeQuality(v RepositoryRuleCodeQuality) bool {
+	b, _ := json.Marshal(v)
+	return string(b) != "{}" && string(b) != "null"
+}
+
+func isNonEmptyRepositoryRuleRepositoryRuleCodeCoverage(v RepositoryRuleCodeCoverage) bool {
+	b, _ := json.Marshal(v)
+	return string(b) != "{}" && string(b) != "null"
+}
+
+func isNonEmptyRepositoryRuleRepositoryRuleCopilotCodeReview(v RepositoryRuleCopilotCodeReview) bool {
+	b, _ := json.Marshal(v)
+	return string(b) != "{}" && string(b) != "null"
+}
+
+func isNonEmptyRepositoryRuleRepositoryRuleLicenseComplianceScanning(v RepositoryRuleLicenseComplianceScanning) bool {
+	b, _ := json.Marshal(v)
+	return string(b) != "{}" && string(b) != "null"
+}
+
+func isNonEmptyRepositoryRuleRepositoryRuleFilePathRestriction(v RepositoryRuleFilePathRestriction) bool {
+	b, _ := json.Marshal(v)
+	return string(b) != "{}" && string(b) != "null"
+}
+
+func isNonEmptyRepositoryRuleRepositoryRuleMaxFilePathLength(v RepositoryRuleMaxFilePathLength) bool {
+	b, _ := json.Marshal(v)
+	return string(b) != "{}" && string(b) != "null"
+}
+
+func isNonEmptyRepositoryRuleRepositoryRuleFileExtensionRestriction(v RepositoryRuleFileExtensionRestriction) bool {
+	b, _ := json.Marshal(v)
+	return string(b) != "{}" && string(b) != "null"
+}
+
+func isNonEmptyRepositoryRuleRepositoryRuleMaxFileSize(v RepositoryRuleMaxFileSize) bool {
+	b, _ := json.Marshal(v)
+	return string(b) != "{}" && string(b) != "null"
+}
+
+// UnmarshalRepositoryRule converts an untyped value to RepositoryRule.
+func UnmarshalRepositoryRule(v any) RepositoryRule {
+	b, _ := json.Marshal(v)
+	var result RepositoryRule
+	_ = json.Unmarshal(b, &result)
+	return result
 }

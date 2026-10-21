@@ -101,9 +101,9 @@ func NewGitignoreNamespace(config ClientConfig) *GitignoreNamespace {
 	}
 }
 
-// GetAllTemplates list all templates available to pass as an option when [creating a repository](https://docs.github.com/rest/repos/repos#create-a-repository-for-the-authenticated-user).
-func (sdk *GitignoreNamespace) GetAllTemplates(ctx context.Context, opts ...RequestOption) ([]string, error) {
-	return GitignoreGetAllTemplates(ctx, sdk.config, opts...)
+// ListTemplates list all templates available to pass as an option when [creating a repository](https://docs.github.com/rest/repos/repos#create-a-repository-for-the-authenticated-user).
+func (sdk *GitignoreNamespace) ListTemplates(ctx context.Context, opts ...RequestOption) ([]string, error) {
+	return ListTemplates(ctx, sdk.config, opts...)
 }
 
 // GetTemplate retrieves the content of a gitignore template by name. The `application/vnd.github.raw+json` media type returns the raw `.gitignore` contents; the response object includes the template name and source.

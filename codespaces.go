@@ -9,6 +9,460 @@ import (
 	"fmt"
 )
 
+type CodespacesListInOrganizationParams struct {
+	Org     string
+	PerPage *int64
+	Page    *int64
+}
+
+// CodespacesListInOrganization lists the codespaces associated to a specified organization. OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
+//
+// Parameters:
+//
+//	org: The organization name. The name is not case sensitive.
+//	perPage: The number of results per page (max 100). For more information, see
+//	"[Using pagination in the REST
+//	API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the
+//	-rest-api)."
+//	page: The page number of the results to fetch. For more information, see
+//	"[Using pagination in the REST
+//	API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the
+//	-rest-api)."
+func CodespacesListInOrganization(ctx context.Context, clientConfig ClientConfig, params CodespacesListInOrganizationParams, opts ...RequestOption) (*CodespacesListInOrganizationResponse, error) {
+	org := params.Org
+	perPage := params.PerPage
+	page := params.Page
+
+	resp, err := DoCfg[CodespacesListInOrganizationResponse](ctx, &clientConfig, "GET", fmt.Sprintf("/orgs/%s/codespaces", EncodePathSegment(org)), &RequestOpts{
+		Query: map[string]any{
+			"per_page": QueryValue{Value: perPage, Style: "form", Explode: true},
+			"page":     QueryValue{Value: page, Style: "form", Explode: true},
+		},
+		OperationID: "CodespacesListInOrganization",
+		Errors:      ErrorDecoders{"401": decodeErrorData[BasicError], "403": decodeErrorData[BasicError], "404": decodeErrorData[BasicError], "500": decodeErrorData[BasicError]},
+		Options:     opts,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &resp.Data, nil
+}
+
+type CodespacesGetCodespacesForUserInOrgParams struct {
+	Org      string
+	Username string
+	PerPage  *int64
+	Page     *int64
+}
+
+// CodespacesGetCodespacesForUserInOrg lists the codespaces that a member of an organization has for repositories in that organization. OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
+//
+// Parameters:
+//
+//	org: The organization name. The name is not case sensitive.
+//	username: The handle for the GitHub user account.
+//	perPage: The number of results per page (max 100). For more information, see
+//	"[Using pagination in the REST
+//	API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the
+//	-rest-api)."
+//	page: The page number of the results to fetch. For more information, see
+//	"[Using pagination in the REST
+//	API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the
+//	-rest-api)."
+func CodespacesGetCodespacesForUserInOrg(ctx context.Context, clientConfig ClientConfig, params CodespacesGetCodespacesForUserInOrgParams, opts ...RequestOption) (*CodespacesGetCodespacesForUserInOrgResponse, error) {
+	org := params.Org
+	username := params.Username
+	perPage := params.PerPage
+	page := params.Page
+
+	resp, err := DoCfg[CodespacesGetCodespacesForUserInOrgResponse](ctx, &clientConfig, "GET", fmt.Sprintf("/orgs/%s/members/%s/codespaces", EncodePathSegment(org), EncodePathSegment(username)), &RequestOpts{
+		Query: map[string]any{
+			"per_page": QueryValue{Value: perPage, Style: "form", Explode: true},
+			"page":     QueryValue{Value: page, Style: "form", Explode: true},
+		},
+		OperationID: "CodespacesGetCodespacesForUserInOrg",
+		Errors:      ErrorDecoders{"401": decodeErrorData[BasicError], "403": decodeErrorData[BasicError], "404": decodeErrorData[BasicError], "500": decodeErrorData[BasicError]},
+		Options:     opts,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &resp.Data, nil
+}
+
+type CodespacesDeleteFromOrganizationParams struct {
+	Org           string
+	Username      string
+	CodespaceName string
+}
+
+// CodespacesDeleteFromOrganization deletes a user's codespace. OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
+//
+// Parameters:
+//
+//	org: The organization name. The name is not case sensitive.
+//	username: The handle for the GitHub user account.
+//	codespaceName: The name of the codespace.
+func CodespacesDeleteFromOrganization(ctx context.Context, clientConfig ClientConfig, params CodespacesDeleteFromOrganizationParams, opts ...RequestOption) (map[string]any, error) {
+	org := params.Org
+	username := params.Username
+	codespaceName := params.CodespaceName
+
+	resp, err := DoCfg[map[string]any](ctx, &clientConfig, "DELETE", fmt.Sprintf("/orgs/%s/members/%s/codespaces/%s", EncodePathSegment(org), EncodePathSegment(username), EncodePathSegment(codespaceName)), &RequestOpts{
+		OperationID: "CodespacesDeleteFromOrganization",
+		Errors:      ErrorDecoders{"401": decodeErrorData[BasicError], "403": decodeErrorData[BasicError], "404": decodeErrorData[BasicError], "500": decodeErrorData[BasicError]},
+		Options:     opts,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return resp.Data, nil
+}
+
+type CodespacesListInRepositoryForAuthenticatedUserParams struct {
+	Owner   string
+	Repo    string
+	PerPage *int64
+	Page    *int64
+}
+
+// CodespacesListInRepositoryForAuthenticatedUser lists the codespaces associated to a specified repository and the authenticated user. OAuth app tokens and personal access tokens (classic) need the `codespace` scope to use this endpoint.
+//
+// Parameters:
+//
+//	owner: The account owner of the repository. The name is not case sensitive.
+//	repo: The name of the repository without the `.git` extension. The name is
+//	not case sensitive.
+//	perPage: The number of results per page (max 100). For more information, see
+//	"[Using pagination in the REST
+//	API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the
+//	-rest-api)."
+//	page: The page number of the results to fetch. For more information, see
+//	"[Using pagination in the REST
+//	API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the
+//	-rest-api)."
+func CodespacesListInRepositoryForAuthenticatedUser(ctx context.Context, clientConfig ClientConfig, params CodespacesListInRepositoryForAuthenticatedUserParams, opts ...RequestOption) (*CodespacesListInRepositoryForAuthenticatedUserResponse, error) {
+	owner := params.Owner
+	repo := params.Repo
+	perPage := params.PerPage
+	page := params.Page
+
+	resp, err := DoCfg[CodespacesListInRepositoryForAuthenticatedUserResponse](ctx, &clientConfig, "GET", fmt.Sprintf("/repos/%s/%s/codespaces", EncodePathSegment(owner), EncodePathSegment(repo)), &RequestOpts{
+		Query: map[string]any{
+			"per_page": QueryValue{Value: perPage, Style: "form", Explode: true},
+			"page":     QueryValue{Value: page, Style: "form", Explode: true},
+		},
+		OperationID: "CodespacesListInRepositoryForAuthenticatedUser",
+		Errors:      ErrorDecoders{"401": decodeErrorData[BasicError], "403": decodeErrorData[BasicError], "404": decodeErrorData[BasicError], "500": decodeErrorData[BasicError]},
+		Options:     opts,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &resp.Data, nil
+}
+
+type CodespacesCreateWithRepoForAuthenticatedUserParams struct {
+	Owner                      string
+	Repo                       string
+	Ref                        *string
+	Location                   *string
+	Geo                        *string
+	ClientIp                   *string
+	Machine                    *string
+	DevcontainerPath           *string
+	MultiRepoPermissionsOptOut *bool
+	WorkingDirectory           *string
+	IdleTimeoutMinutes         *int64
+	DisplayName                *string
+	RetentionPeriodMinutes     *int64
+}
+
+// CodespacesCreateWithRepoForAuthenticatedUser creates a codespace owned by the authenticated user in the specified repository. OAuth app tokens and personal access tokens (classic) need the `codespace` scope to use this endpoint.
+//
+// Parameters:
+//
+//	owner: The account owner of the repository. The name is not case sensitive.
+//	repo: The name of the repository without the `.git` extension. The name is
+//	not case sensitive.
+//	ref: Git ref (typically a branch name) for this codespace
+//	location: The requested location for a new codespace. Best efforts are made
+//	to respect this upon creation. Assigned by IP if not provided.
+//	geo: The geographic area for this codespace. If not specified, the value is
+//	assigned by IP. This property replaces `location`, which is closing down.
+//	clientIp: IP for location auto-detection when proxying a request
+//	machine: Machine type to use for this codespace
+//	devcontainerPath: Path to devcontainer.json config to use for this codespace
+//	multiRepoPermissionsOptOut: Whether to authorize requested permissions from
+//	devcontainer.json
+//	workingDirectory: Working directory for this codespace
+//	idleTimeoutMinutes: Time in minutes before codespace stops from inactivity
+//	displayName: Display name for this codespace
+//	retentionPeriodMinutes: Duration in minutes after codespace has gone idle in
+//	which it will be deleted. Must be integer minutes between 0 and 43200 (30
+//	days).
+func CodespacesCreateWithRepoForAuthenticatedUser(ctx context.Context, clientConfig ClientConfig, params CodespacesCreateWithRepoForAuthenticatedUserParams, opts ...RequestOption) (*Codespace, error) {
+	owner := params.Owner
+	repo := params.Repo
+	ref := params.Ref
+	location := params.Location
+	geo := params.Geo
+	clientIp := params.ClientIp
+	machine := params.Machine
+	devcontainerPath := params.DevcontainerPath
+	multiRepoPermissionsOptOut := params.MultiRepoPermissionsOptOut
+	workingDirectory := params.WorkingDirectory
+	idleTimeoutMinutes := params.IdleTimeoutMinutes
+	displayName := params.DisplayName
+	retentionPeriodMinutes := params.RetentionPeriodMinutes
+
+	resp, err := DoCfg[Codespace](ctx, &clientConfig, "POST", fmt.Sprintf("/repos/%s/%s/codespaces", EncodePathSegment(owner), EncodePathSegment(repo)), &RequestOpts{
+		Body: map[string]any{
+			"ref":                            ref,
+			"location":                       location,
+			"geo":                            geo,
+			"client_ip":                      clientIp,
+			"machine":                        machine,
+			"devcontainer_path":              devcontainerPath,
+			"multi_repo_permissions_opt_out": multiRepoPermissionsOptOut,
+			"working_directory":              workingDirectory,
+			"idle_timeout_minutes":           idleTimeoutMinutes,
+			"display_name":                   displayName,
+			"retention_period_minutes":       retentionPeriodMinutes,
+		},
+		OperationID: "CodespacesCreateWithRepoForAuthenticatedUser",
+		Errors:      ErrorDecoders{"400": decodeErrorData[BasicError], "401": decodeErrorData[BasicError], "403": decodeErrorData[BasicError], "404": decodeErrorData[BasicError], "503": decodeErrorData[ServiceUnavailable]},
+		Options:     opts,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &resp.Data, nil
+}
+
+type CodespacesCreateWithPrForAuthenticatedUserParams struct {
+	Owner                      string
+	Repo                       string
+	PullNumber                 int64
+	Location                   *string
+	Geo                        *string
+	ClientIp                   *string
+	Machine                    *string
+	DevcontainerPath           *string
+	MultiRepoPermissionsOptOut *bool
+	WorkingDirectory           *string
+	IdleTimeoutMinutes         *int64
+	DisplayName                *string
+	RetentionPeriodMinutes     *int64
+}
+
+// CodespacesCreateWithPrForAuthenticatedUser creates a codespace owned by the authenticated user for the specified pull request. OAuth app tokens and personal access tokens (classic) need the `codespace` scope to use this endpoint.
+//
+// Parameters:
+//
+//	owner: The account owner of the repository. The name is not case sensitive.
+//	repo: The name of the repository without the `.git` extension. The name is
+//	not case sensitive.
+//	pullNumber: The number that identifies the pull request.
+//	location: The requested location for a new codespace. Best efforts are made
+//	to respect this upon creation. Assigned by IP if not provided.
+//	geo: The geographic area for this codespace. If not specified, the value is
+//	assigned by IP. This property replaces `location`, which is closing down.
+//	clientIp: IP for location auto-detection when proxying a request
+//	machine: Machine type to use for this codespace
+//	devcontainerPath: Path to devcontainer.json config to use for this codespace
+//	multiRepoPermissionsOptOut: Whether to authorize requested permissions from
+//	devcontainer.json
+//	workingDirectory: Working directory for this codespace
+//	idleTimeoutMinutes: Time in minutes before codespace stops from inactivity
+//	displayName: Display name for this codespace
+//	retentionPeriodMinutes: Duration in minutes after codespace has gone idle in
+//	which it will be deleted. Must be integer minutes between 0 and 43200 (30
+//	days).
+func CodespacesCreateWithPrForAuthenticatedUser(ctx context.Context, clientConfig ClientConfig, params CodespacesCreateWithPrForAuthenticatedUserParams, opts ...RequestOption) (*Codespace, error) {
+	owner := params.Owner
+	repo := params.Repo
+	pullNumber := params.PullNumber
+	location := params.Location
+	geo := params.Geo
+	clientIp := params.ClientIp
+	machine := params.Machine
+	devcontainerPath := params.DevcontainerPath
+	multiRepoPermissionsOptOut := params.MultiRepoPermissionsOptOut
+	workingDirectory := params.WorkingDirectory
+	idleTimeoutMinutes := params.IdleTimeoutMinutes
+	displayName := params.DisplayName
+	retentionPeriodMinutes := params.RetentionPeriodMinutes
+
+	resp, err := DoCfg[Codespace](ctx, &clientConfig, "POST", fmt.Sprintf("/repos/%s/%s/pulls/%s/codespaces", EncodePathSegment(owner), EncodePathSegment(repo), EncodePathSegment(pullNumber)), &RequestOpts{
+		Body: map[string]any{
+			"location":                       location,
+			"geo":                            geo,
+			"client_ip":                      clientIp,
+			"machine":                        machine,
+			"devcontainer_path":              devcontainerPath,
+			"multi_repo_permissions_opt_out": multiRepoPermissionsOptOut,
+			"working_directory":              workingDirectory,
+			"idle_timeout_minutes":           idleTimeoutMinutes,
+			"display_name":                   displayName,
+			"retention_period_minutes":       retentionPeriodMinutes,
+		},
+		OperationID: "CodespacesCreateWithPrForAuthenticatedUser",
+		Errors:      ErrorDecoders{"401": decodeErrorData[BasicError], "403": decodeErrorData[BasicError], "404": decodeErrorData[BasicError], "503": decodeErrorData[ServiceUnavailable]},
+		Options:     opts,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &resp.Data, nil
+}
+
+type CodespacesListForAuthenticatedUserParams struct {
+	PerPage      *int64
+	Page         *int64
+	RepositoryId *int64
+}
+
+// CodespacesListForAuthenticatedUser lists the authenticated user's codespaces. OAuth app tokens and personal access tokens (classic) need the `codespace` scope to use this endpoint.
+//
+// Parameters:
+//
+//	perPage: The number of results per page (max 100). For more information, see
+//	"[Using pagination in the REST
+//	API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the
+//	-rest-api)."
+//	page: The page number of the results to fetch. For more information, see
+//	"[Using pagination in the REST
+//	API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the
+//	-rest-api)."
+//	repositoryId: ID of the Repository to filter on
+func CodespacesListForAuthenticatedUser(ctx context.Context, clientConfig ClientConfig, params CodespacesListForAuthenticatedUserParams, opts ...RequestOption) (*CodespacesListForAuthenticatedUserResponse, error) {
+	perPage := params.PerPage
+	page := params.Page
+	repositoryId := params.RepositoryId
+
+	resp, err := DoCfg[CodespacesListForAuthenticatedUserResponse](ctx, &clientConfig, "GET", "/user/codespaces", &RequestOpts{
+		Query: map[string]any{
+			"per_page":      QueryValue{Value: perPage, Style: "form", Explode: true},
+			"page":          QueryValue{Value: page, Style: "form", Explode: true},
+			"repository_id": QueryValue{Value: repositoryId, Style: "form", Explode: true},
+		},
+		OperationID: "CodespacesListForAuthenticatedUser",
+		Errors:      ErrorDecoders{"401": decodeErrorData[BasicError], "403": decodeErrorData[BasicError], "404": decodeErrorData[BasicError], "500": decodeErrorData[BasicError]},
+		Options:     opts,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &resp.Data, nil
+}
+
+type CodespacesCreateForAuthenticatedUserParams struct {
+	Body map[string]any
+}
+
+// CodespacesCreateForAuthenticatedUser creates a codespace owned by the authenticated user for a repository or pull request. Provide either `repository_id` or `pull_request`, but not both, and use `geo` to select a region when needed. A 202 response indicates that creation partially failed and is being retried in the background.
+//
+// Creates a new codespace, owned by the authenticated user. This endpoint requires either a `repository_id` OR a `pull_request` but not both. OAuth app tokens and personal access tokens (classic) need the `codespace` scope to use this endpoint.
+func CodespacesCreateForAuthenticatedUser(ctx context.Context, clientConfig ClientConfig, params CodespacesCreateForAuthenticatedUserParams, opts ...RequestOption) (*Codespace, error) {
+	body := params.Body
+
+	resp, err := DoCfg[Codespace](ctx, &clientConfig, "POST", "/user/codespaces", &RequestOpts{
+		Body:        body,
+		OperationID: "CodespacesCreateForAuthenticatedUser",
+		Errors:      ErrorDecoders{"401": decodeErrorData[BasicError], "403": decodeErrorData[BasicError], "404": decodeErrorData[BasicError], "503": decodeErrorData[ServiceUnavailable]},
+		Options:     opts,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &resp.Data, nil
+}
+
+type CodespacesGetForAuthenticatedUserParams struct {
+	CodespaceName string
+}
+
+// CodespacesGetForAuthenticatedUser gets information about a user's codespace. OAuth app tokens and personal access tokens (classic) need the `codespace` scope to use this endpoint.
+//
+// Parameters:
+//
+//	codespaceName: The name of the codespace.
+func CodespacesGetForAuthenticatedUser(ctx context.Context, clientConfig ClientConfig, params CodespacesGetForAuthenticatedUserParams, opts ...RequestOption) (*Codespace, error) {
+	codespaceName := params.CodespaceName
+
+	resp, err := DoCfg[Codespace](ctx, &clientConfig, "GET", fmt.Sprintf("/user/codespaces/%s", EncodePathSegment(codespaceName)), &RequestOpts{
+		OperationID: "CodespacesGetForAuthenticatedUser",
+		Errors:      ErrorDecoders{"401": decodeErrorData[BasicError], "403": decodeErrorData[BasicError], "404": decodeErrorData[BasicError], "500": decodeErrorData[BasicError]},
+		Options:     opts,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &resp.Data, nil
+}
+
+type CodespacesUpdateForAuthenticatedUserParams struct {
+	CodespaceName string
+	Machine       *string
+	DisplayName   *string
+	RecentFolders *[]string
+}
+
+// CodespacesUpdateForAuthenticatedUser updates a codespace owned by the authenticated user. Currently only the codespace's machine type and recent folders can be modified using this endpoint. If you specify a new machine type it will be applied the next time your codespace is started. OAuth app tokens and personal access tokens (classic) need the `codespace` scope to use this endpoint.
+//
+// Parameters:
+//
+//	codespaceName: The name of the codespace.
+//	machine: A valid machine to transition this codespace to.
+//	displayName: Display name for this codespace
+//	recentFolders: Recently opened folders inside the codespace. It is currently
+//	used by the clients to determine the folder path to load the codespace in.
+func CodespacesUpdateForAuthenticatedUser(ctx context.Context, clientConfig ClientConfig, params CodespacesUpdateForAuthenticatedUserParams, opts ...RequestOption) (*Codespace, error) {
+	codespaceName := params.CodespaceName
+	machine := params.Machine
+	displayName := params.DisplayName
+	recentFolders := params.RecentFolders
+
+	resp, err := DoCfg[Codespace](ctx, &clientConfig, "PATCH", fmt.Sprintf("/user/codespaces/%s", EncodePathSegment(codespaceName)), &RequestOpts{
+		Body: map[string]any{
+			"machine":        machine,
+			"display_name":   displayName,
+			"recent_folders": recentFolders,
+		},
+		OperationID: "CodespacesUpdateForAuthenticatedUser",
+		Errors:      ErrorDecoders{"401": decodeErrorData[BasicError], "403": decodeErrorData[BasicError], "404": decodeErrorData[BasicError]},
+		Options:     opts,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &resp.Data, nil
+}
+
+type CodespacesDeleteForAuthenticatedUserParams struct {
+	CodespaceName string
+}
+
+// CodespacesDeleteForAuthenticatedUser deletes a user's codespace. OAuth app tokens and personal access tokens (classic) need the `codespace` scope to use this endpoint.
+//
+// Parameters:
+//
+//	codespaceName: The name of the codespace.
+func CodespacesDeleteForAuthenticatedUser(ctx context.Context, clientConfig ClientConfig, params CodespacesDeleteForAuthenticatedUserParams, opts ...RequestOption) (map[string]any, error) {
+	codespaceName := params.CodespaceName
+
+	resp, err := DoCfg[map[string]any](ctx, &clientConfig, "DELETE", fmt.Sprintf("/user/codespaces/%s", EncodePathSegment(codespaceName)), &RequestOpts{
+		OperationID: "CodespacesDeleteForAuthenticatedUser",
+		Errors:      ErrorDecoders{"401": decodeErrorData[BasicError], "403": decodeErrorData[BasicError], "404": decodeErrorData[BasicError], "500": decodeErrorData[BasicError]},
+		Options:     opts,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return resp.Data, nil
+}
+
 type CodespacesListInOrganizationResponse struct {
 	TotalCount int64       `json:"total_count"`
 	Codespaces []Codespace `json:"codespaces"`
@@ -38,70 +492,6 @@ func (value *CodespacesListInOrganizationResponse) UnmarshalJSON(data []byte) er
 // Optional fields may be left unset; a value that violates the schema is
 // reported as *SdkValidationError.
 func NewCodespacesListInOrganizationResponse(fields CodespacesListInOrganizationResponse) (*CodespacesListInOrganizationResponse, error) {
-	return ConstructModel(fields)
-}
-
-type CodespacesListOrgSecretsResponse struct {
-	TotalCount int64                 `json:"total_count"`
-	Secrets    []CodespacesOrgSecret `json:"secrets"`
-}
-
-func (value *CodespacesListOrgSecretsResponse) UnmarshalJSON(data []byte) error {
-	type CodespacesListOrgSecretsResponseAlias CodespacesListOrgSecretsResponse
-	var decoded CodespacesListOrgSecretsResponseAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = CodespacesListOrgSecretsResponse(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"total_count", "secrets"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"total_count", "secrets"}); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewCodespacesListOrgSecretsResponse returns a validated CodespacesListOrgSecretsResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewCodespacesListOrgSecretsResponse(fields CodespacesListOrgSecretsResponse) (*CodespacesListOrgSecretsResponse, error) {
-	return ConstructModel(fields)
-}
-
-type CodespacesListSelectedReposForOrgSecretResponse struct {
-	TotalCount   int64               `json:"total_count"`
-	Repositories []MinimalRepository `json:"repositories"`
-}
-
-func (value *CodespacesListSelectedReposForOrgSecretResponse) UnmarshalJSON(data []byte) error {
-	type CodespacesListSelectedReposForOrgSecretResponseAlias CodespacesListSelectedReposForOrgSecretResponse
-	var decoded CodespacesListSelectedReposForOrgSecretResponseAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = CodespacesListSelectedReposForOrgSecretResponse(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"total_count", "repositories"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"total_count", "repositories"}); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewCodespacesListSelectedReposForOrgSecretResponse returns a validated CodespacesListSelectedReposForOrgSecretResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewCodespacesListSelectedReposForOrgSecretResponse(fields CodespacesListSelectedReposForOrgSecretResponse) (*CodespacesListSelectedReposForOrgSecretResponse, error) {
 	return ConstructModel(fields)
 }
 
@@ -169,180 +559,6 @@ func NewCodespacesListInRepositoryForAuthenticatedUserResponse(fields Codespaces
 	return ConstructModel(fields)
 }
 
-type CodespacesListDevcontainersInRepositoryForAuthenticatedUserResponse struct {
-	TotalCount    int64                                                                              `json:"total_count"`
-	Devcontainers []CodespacesListDevcontainersInRepositoryForAuthenticatedUserResponseDevcontainers `json:"devcontainers"`
-}
-
-func (value *CodespacesListDevcontainersInRepositoryForAuthenticatedUserResponse) UnmarshalJSON(data []byte) error {
-	type CodespacesListDevcontainersInRepositoryForAuthenticatedUserResponseAlias CodespacesListDevcontainersInRepositoryForAuthenticatedUserResponse
-	var decoded CodespacesListDevcontainersInRepositoryForAuthenticatedUserResponseAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = CodespacesListDevcontainersInRepositoryForAuthenticatedUserResponse(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"total_count", "devcontainers"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"total_count", "devcontainers"}); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewCodespacesListDevcontainersInRepositoryForAuthenticatedUserResponse returns a validated CodespacesListDevcontainersInRepositoryForAuthenticatedUserResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewCodespacesListDevcontainersInRepositoryForAuthenticatedUserResponse(fields CodespacesListDevcontainersInRepositoryForAuthenticatedUserResponse) (*CodespacesListDevcontainersInRepositoryForAuthenticatedUserResponse, error) {
-	return ConstructModel(fields)
-}
-
-type CodespacesListDevcontainersInRepositoryForAuthenticatedUserResponseDevcontainers struct {
-	Path        string  `json:"path"`
-	Name        *string `json:"name,omitempty"`
-	DisplayName *string `json:"display_name,omitempty"`
-}
-
-func (value *CodespacesListDevcontainersInRepositoryForAuthenticatedUserResponseDevcontainers) UnmarshalJSON(data []byte) error {
-	type CodespacesListDevcontainersInRepositoryForAuthenticatedUserResponseDevcontainersAlias CodespacesListDevcontainersInRepositoryForAuthenticatedUserResponseDevcontainers
-	var decoded CodespacesListDevcontainersInRepositoryForAuthenticatedUserResponseDevcontainersAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = CodespacesListDevcontainersInRepositoryForAuthenticatedUserResponseDevcontainers(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"path"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"path"}); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewCodespacesListDevcontainersInRepositoryForAuthenticatedUserResponseDevcontainers returns a validated CodespacesListDevcontainersInRepositoryForAuthenticatedUserResponseDevcontainers built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewCodespacesListDevcontainersInRepositoryForAuthenticatedUserResponseDevcontainers(fields CodespacesListDevcontainersInRepositoryForAuthenticatedUserResponseDevcontainers) (*CodespacesListDevcontainersInRepositoryForAuthenticatedUserResponseDevcontainers, error) {
-	return ConstructModel(fields)
-}
-
-type CodespacesRepoMachinesForAuthenticatedUserResponse struct {
-	TotalCount int64              `json:"total_count"`
-	Machines   []CodespaceMachine `json:"machines"`
-}
-
-func (value *CodespacesRepoMachinesForAuthenticatedUserResponse) UnmarshalJSON(data []byte) error {
-	type CodespacesRepoMachinesForAuthenticatedUserResponseAlias CodespacesRepoMachinesForAuthenticatedUserResponse
-	var decoded CodespacesRepoMachinesForAuthenticatedUserResponseAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = CodespacesRepoMachinesForAuthenticatedUserResponse(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"total_count", "machines"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"total_count", "machines"}); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewCodespacesRepoMachinesForAuthenticatedUserResponse returns a validated CodespacesRepoMachinesForAuthenticatedUserResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewCodespacesRepoMachinesForAuthenticatedUserResponse(fields CodespacesRepoMachinesForAuthenticatedUserResponse) (*CodespacesRepoMachinesForAuthenticatedUserResponse, error) {
-	return ConstructModel(fields)
-}
-
-type CodespacesPreFlightWithRepoForAuthenticatedUserResponse struct {
-	// BillableOwner A GitHub user.
-	BillableOwner *SimpleUser                                                      `json:"billable_owner,omitempty"`
-	Defaults      *CodespacesPreFlightWithRepoForAuthenticatedUserResponseDefaults `json:"defaults,omitempty"`
-}
-
-// NewCodespacesPreFlightWithRepoForAuthenticatedUserResponse returns a validated CodespacesPreFlightWithRepoForAuthenticatedUserResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewCodespacesPreFlightWithRepoForAuthenticatedUserResponse(fields CodespacesPreFlightWithRepoForAuthenticatedUserResponse) (*CodespacesPreFlightWithRepoForAuthenticatedUserResponse, error) {
-	return ConstructModel(fields)
-}
-
-type CodespacesPreFlightWithRepoForAuthenticatedUserResponseDefaults struct {
-	Location         string                `json:"location"`
-	DevcontainerPath NullableValue[string] `json:"devcontainer_path"`
-}
-
-func (value *CodespacesPreFlightWithRepoForAuthenticatedUserResponseDefaults) UnmarshalJSON(data []byte) error {
-	type CodespacesPreFlightWithRepoForAuthenticatedUserResponseDefaultsAlias CodespacesPreFlightWithRepoForAuthenticatedUserResponseDefaults
-	var decoded CodespacesPreFlightWithRepoForAuthenticatedUserResponseDefaultsAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = CodespacesPreFlightWithRepoForAuthenticatedUserResponseDefaults(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"location", "devcontainer_path"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"location"}); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewCodespacesPreFlightWithRepoForAuthenticatedUserResponseDefaults returns a validated CodespacesPreFlightWithRepoForAuthenticatedUserResponseDefaults built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewCodespacesPreFlightWithRepoForAuthenticatedUserResponseDefaults(fields CodespacesPreFlightWithRepoForAuthenticatedUserResponseDefaults) (*CodespacesPreFlightWithRepoForAuthenticatedUserResponseDefaults, error) {
-	return ConstructModel(fields)
-}
-
-type CodespacesListRepoSecretsResponse struct {
-	TotalCount int64                  `json:"total_count"`
-	Secrets    []RepoCodespacesSecret `json:"secrets"`
-}
-
-func (value *CodespacesListRepoSecretsResponse) UnmarshalJSON(data []byte) error {
-	type CodespacesListRepoSecretsResponseAlias CodespacesListRepoSecretsResponse
-	var decoded CodespacesListRepoSecretsResponseAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = CodespacesListRepoSecretsResponse(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"total_count", "secrets"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"total_count", "secrets"}); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewCodespacesListRepoSecretsResponse returns a validated CodespacesListRepoSecretsResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewCodespacesListRepoSecretsResponse(fields CodespacesListRepoSecretsResponse) (*CodespacesListRepoSecretsResponse, error) {
-	return ConstructModel(fields)
-}
-
 type CodespacesListForAuthenticatedUserResponse struct {
 	TotalCount int64       `json:"total_count"`
 	Codespaces []Codespace `json:"codespaces"`
@@ -373,321 +589,4 @@ func (value *CodespacesListForAuthenticatedUserResponse) UnmarshalJSON(data []by
 // reported as *SdkValidationError.
 func NewCodespacesListForAuthenticatedUserResponse(fields CodespacesListForAuthenticatedUserResponse) (*CodespacesListForAuthenticatedUserResponse, error) {
 	return ConstructModel(fields)
-}
-
-type CodespacesListSecretsForAuthenticatedUserResponse struct {
-	TotalCount int64              `json:"total_count"`
-	Secrets    []CodespacesSecret `json:"secrets"`
-}
-
-func (value *CodespacesListSecretsForAuthenticatedUserResponse) UnmarshalJSON(data []byte) error {
-	type CodespacesListSecretsForAuthenticatedUserResponseAlias CodespacesListSecretsForAuthenticatedUserResponse
-	var decoded CodespacesListSecretsForAuthenticatedUserResponseAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = CodespacesListSecretsForAuthenticatedUserResponse(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"total_count", "secrets"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"total_count", "secrets"}); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewCodespacesListSecretsForAuthenticatedUserResponse returns a validated CodespacesListSecretsForAuthenticatedUserResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewCodespacesListSecretsForAuthenticatedUserResponse(fields CodespacesListSecretsForAuthenticatedUserResponse) (*CodespacesListSecretsForAuthenticatedUserResponse, error) {
-	return ConstructModel(fields)
-}
-
-type CodespacesListRepositoriesForSecretForAuthenticatedUserResponse struct {
-	TotalCount   int64               `json:"total_count"`
-	Repositories []MinimalRepository `json:"repositories"`
-}
-
-func (value *CodespacesListRepositoriesForSecretForAuthenticatedUserResponse) UnmarshalJSON(data []byte) error {
-	type CodespacesListRepositoriesForSecretForAuthenticatedUserResponseAlias CodespacesListRepositoriesForSecretForAuthenticatedUserResponse
-	var decoded CodespacesListRepositoriesForSecretForAuthenticatedUserResponseAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = CodespacesListRepositoriesForSecretForAuthenticatedUserResponse(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"total_count", "repositories"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"total_count", "repositories"}); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewCodespacesListRepositoriesForSecretForAuthenticatedUserResponse returns a validated CodespacesListRepositoriesForSecretForAuthenticatedUserResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewCodespacesListRepositoriesForSecretForAuthenticatedUserResponse(fields CodespacesListRepositoriesForSecretForAuthenticatedUserResponse) (*CodespacesListRepositoriesForSecretForAuthenticatedUserResponse, error) {
-	return ConstructModel(fields)
-}
-
-type CodespacesCodespaceMachinesForAuthenticatedUserResponse struct {
-	TotalCount int64              `json:"total_count"`
-	Machines   []CodespaceMachine `json:"machines"`
-}
-
-func (value *CodespacesCodespaceMachinesForAuthenticatedUserResponse) UnmarshalJSON(data []byte) error {
-	type CodespacesCodespaceMachinesForAuthenticatedUserResponseAlias CodespacesCodespaceMachinesForAuthenticatedUserResponse
-	var decoded CodespacesCodespaceMachinesForAuthenticatedUserResponseAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = CodespacesCodespaceMachinesForAuthenticatedUserResponse(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"total_count", "machines"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"total_count", "machines"}); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewCodespacesCodespaceMachinesForAuthenticatedUserResponse returns a validated CodespacesCodespaceMachinesForAuthenticatedUserResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewCodespacesCodespaceMachinesForAuthenticatedUserResponse(fields CodespacesCodespaceMachinesForAuthenticatedUserResponse) (*CodespacesCodespaceMachinesForAuthenticatedUserResponse, error) {
-	return ConstructModel(fields)
-}
-
-type CodespacesListInOrganizationParams struct {
-	Org     string
-	PerPage *int64
-	Page    *int64
-}
-
-// CodespacesListInOrganization lists the codespaces associated to a specified organization. OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
-//
-// Parameters:
-//
-//	org: The organization name. The name is not case sensitive.
-//	perPage: The number of results per page (max 100). For more information, see
-//	"[Using pagination in the REST
-//	API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the
-//	-rest-api)."
-//	page: The page number of the results to fetch. For more information, see
-//	"[Using pagination in the REST
-//	API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the
-//	-rest-api)."
-func CodespacesListInOrganization(ctx context.Context, clientConfig ClientConfig, params CodespacesListInOrganizationParams, opts ...RequestOption) (*CodespacesListInOrganizationResponse, error) {
-	org := params.Org
-	perPage := params.PerPage
-	page := params.Page
-
-	resp, err := DoCfg[CodespacesListInOrganizationResponse](ctx, &clientConfig, "GET", fmt.Sprintf("/orgs/%s/codespaces", EncodePathSegment(org)), &RequestOpts{
-		Query: map[string]any{
-			"per_page": QueryValue{Value: perPage, Style: "form", Explode: true},
-			"page":     QueryValue{Value: page, Style: "form", Explode: true},
-		},
-		OperationID: "CodespacesListInOrganization",
-		Errors:      ErrorDecoders{"401": decodeErrorData[BasicError], "403": decodeErrorData[BasicError], "404": decodeErrorData[BasicError], "500": decodeErrorData[BasicError]},
-		Options:     opts,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return &resp.Data, nil
-}
-
-type CodespacesSetCodespacesAccessParams struct {
-	Org               string
-	Visibility        string
-	SelectedUsernames *[]string
-}
-
-// CodespacesSetCodespacesAccess sets which users can access codespaces in an organization. This is synonymous with granting or revoking codespaces access permissions for users according to the visibility. OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
-//
-// Deprecated: this operation is deprecated and may be removed in a future release.
-//
-// Parameters:
-//
-//	org: The organization name. The name is not case sensitive.
-//	visibility: Which users can access codespaces in the organization.
-//	`disabled` means that no users can access codespaces in the organization.
-//	selectedUsernames: The usernames of the organization members who should have
-//	access to codespaces in the organization. Required when `visibility` is
-//	`selected_members`. The provided list of usernames will replace any existing
-//	value.
-func CodespacesSetCodespacesAccess(ctx context.Context, clientConfig ClientConfig, params CodespacesSetCodespacesAccessParams, opts ...RequestOption) (any, error) {
-	org := params.Org
-	visibility := params.Visibility
-	selectedUsernames := params.SelectedUsernames
-
-	if selectedUsernames != nil {
-		if err := ValidateItems("selected_usernames", *selectedUsernames, LengthOpts{Max: Ptr[int](100)}); err != nil {
-			return nil, err
-		}
-	}
-
-	_, err := DoEmptyCfg(ctx, &clientConfig, "PUT", fmt.Sprintf("/orgs/%s/codespaces/access", EncodePathSegment(org)), &RequestOpts{
-		Body: map[string]any{
-			"visibility":         visibility,
-			"selected_usernames": selectedUsernames,
-		},
-		OperationID: "CodespacesSetCodespacesAccess",
-		Errors:      ErrorDecoders{"404": decodeErrorData[BasicError], "422": decodeErrorData[ValidationError], "500": decodeErrorData[BasicError]},
-		Options:     opts,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return nil, nil
-}
-
-type CodespacesSetCodespacesAccessUsersParams struct {
-	Org               string
-	SelectedUsernames []string
-}
-
-// CodespacesSetCodespacesAccessUsers codespaces for the specified users will be billed to the organization. To use this endpoint, the access settings for the organization must be set to `selected_members`. For information on how to change this setting, see "[Manage access control for organization codespaces](https://docs.github.com/rest/codespaces/organizations#manage-access-control-for-organization-codespaces)." OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
-//
-// Deprecated: this operation is deprecated and may be removed in a future release.
-//
-// Parameters:
-//
-//	org: The organization name. The name is not case sensitive.
-//	selectedUsernames: The usernames of the organization members and outside
-//	collaborators whose codespaces should be billed to the organization.
-func CodespacesSetCodespacesAccessUsers(ctx context.Context, clientConfig ClientConfig, params CodespacesSetCodespacesAccessUsersParams, opts ...RequestOption) (any, error) {
-	org := params.Org
-	selectedUsernames := params.SelectedUsernames
-
-	if err := ValidateItems("selected_usernames", selectedUsernames, LengthOpts{Max: Ptr[int](100)}); err != nil {
-		return nil, err
-	}
-
-	_, err := DoEmptyCfg(ctx, &clientConfig, "POST", fmt.Sprintf("/orgs/%s/codespaces/access/selected_users", EncodePathSegment(org)), &RequestOpts{
-		Body: map[string]any{
-			"selected_usernames": selectedUsernames,
-		},
-		OperationID: "CodespacesSetCodespacesAccessUsers",
-		Errors:      ErrorDecoders{"404": decodeErrorData[BasicError], "422": decodeErrorData[ValidationError], "500": decodeErrorData[BasicError]},
-		Options:     opts,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return nil, nil
-}
-
-type CodespacesDeleteCodespacesAccessUsersParams struct {
-	Org               string
-	SelectedUsernames []string
-}
-
-// CodespacesDeleteCodespacesAccessUsers codespaces for the specified users will no longer be billed to the organization. To use this endpoint, the access settings for the organization must be set to `selected_members`. For information on how to change this setting, see "[Manage access control for organization codespaces](https://docs.github.com/rest/codespaces/organizations#manage-access-control-for-organization-codespaces)." OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
-//
-// Deprecated: this operation is deprecated and may be removed in a future release.
-//
-// Parameters:
-//
-//	org: The organization name. The name is not case sensitive.
-//	selectedUsernames: The usernames of the organization members and outside
-//	collaborators whose codespaces should not be billed to the organization.
-func CodespacesDeleteCodespacesAccessUsers(ctx context.Context, clientConfig ClientConfig, params CodespacesDeleteCodespacesAccessUsersParams, opts ...RequestOption) (any, error) {
-	org := params.Org
-	selectedUsernames := params.SelectedUsernames
-
-	if err := ValidateItems("selected_usernames", selectedUsernames, LengthOpts{Max: Ptr[int](100)}); err != nil {
-		return nil, err
-	}
-
-	_, err := DoEmptyCfg(ctx, &clientConfig, "DELETE", fmt.Sprintf("/orgs/%s/codespaces/access/selected_users", EncodePathSegment(org)), &RequestOpts{
-		Body: map[string]any{
-			"selected_usernames": selectedUsernames,
-		},
-		OperationID: "CodespacesDeleteCodespacesAccessUsers",
-		Errors:      ErrorDecoders{"404": decodeErrorData[BasicError], "422": decodeErrorData[ValidationError], "500": decodeErrorData[BasicError]},
-		Options:     opts,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return nil, nil
-}
-
-type CodespacesListOrgSecretsParams struct {
-	Org     string
-	PerPage *int64
-	Page    *int64
-}
-
-// CodespacesListOrgSecrets lists all Codespaces development environment secrets available at the organization-level without revealing their encrypted values. OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
-//
-// Parameters:
-//
-//	org: The organization name. The name is not case sensitive.
-//	perPage: The number of results per page (max 100). For more information, see
-//	"[Using pagination in the REST
-//	API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the
-//	-rest-api)."
-//	page: The page number of the results to fetch. For more information, see
-//	"[Using pagination in the REST
-//	API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the
-//	-rest-api)."
-func CodespacesListOrgSecrets(ctx context.Context, clientConfig ClientConfig, params CodespacesListOrgSecretsParams, opts ...RequestOption) (*CodespacesListOrgSecretsResponse, error) {
-	org := params.Org
-	perPage := params.PerPage
-	page := params.Page
-
-	resp, err := DoCfg[CodespacesListOrgSecretsResponse](ctx, &clientConfig, "GET", fmt.Sprintf("/orgs/%s/codespaces/secrets", EncodePathSegment(org)), &RequestOpts{
-		Query: map[string]any{
-			"per_page": QueryValue{Value: perPage, Style: "form", Explode: true},
-			"page":     QueryValue{Value: page, Style: "form", Explode: true},
-		},
-		OperationID: "CodespacesListOrgSecrets",
-		Options:     opts,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return &resp.Data, nil
-}
-
-type CodespacesGetOrgPublicKeyParams struct {
-	Org string
-}
-
-// CodespacesGetOrgPublicKey gets a public key for an organization, which is required in order to encrypt secrets. You need to encrypt the value of a secret before you can create or update secrets. OAuth app tokens and personal access tokens (classic) need the `admin:org` scope to use this endpoint.
-//
-// Parameters:
-//
-//	org: The organization name. The name is not case sensitive.
-func CodespacesGetOrgPublicKey(ctx context.Context, clientConfig ClientConfig, params CodespacesGetOrgPublicKeyParams, opts ...RequestOption) (*CodespacesPublicKey, error) {
-	org := params.Org
-
-	resp, err := DoCfg[CodespacesPublicKey](ctx, &clientConfig, "GET", fmt.Sprintf("/orgs/%s/codespaces/secrets/public-key", EncodePathSegment(org)), &RequestOpts{
-		OperationID: "CodespacesGetOrgPublicKey",
-		Options:     opts,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return &resp.Data, nil
-}
-
-type CodespacesGetOrgSecretParams struct {
-	Org        string
-	SecretName string
 }

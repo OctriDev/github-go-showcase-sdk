@@ -9,43 +9,6 @@ import (
 	"fmt"
 )
 
-type CampaignsCreateCampaignCodeScanningAlerts struct {
-	// RepositoryId The repository id
-	RepositoryId int64 `json:"repository_id"`
-	// AlertNumbers The alert numbers
-	AlertNumbers []int64 `json:"alert_numbers"`
-}
-
-func (value *CampaignsCreateCampaignCodeScanningAlerts) UnmarshalJSON(data []byte) error {
-	type CampaignsCreateCampaignCodeScanningAlertsAlias CampaignsCreateCampaignCodeScanningAlerts
-	var decoded CampaignsCreateCampaignCodeScanningAlertsAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = CampaignsCreateCampaignCodeScanningAlerts(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"repository_id", "alert_numbers"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"repository_id", "alert_numbers"}); err != nil {
-		return err
-	}
-	if err := ValidateItems("alert_numbers", value.AlertNumbers, LengthOpts{Min: Ptr[int](1)}); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewCampaignsCreateCampaignCodeScanningAlerts returns a validated CampaignsCreateCampaignCodeScanningAlerts built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewCampaignsCreateCampaignCodeScanningAlerts(fields CampaignsCreateCampaignCodeScanningAlerts) (*CampaignsCreateCampaignCodeScanningAlerts, error) {
-	return ConstructModel(fields)
-}
-
 type CampaignsListOrgCampaignsParams struct {
 	Org       string
 	Page      *int64
@@ -337,4 +300,41 @@ func CampaignsDeleteCampaign(ctx context.Context, clientConfig ClientConfig, par
 		return nil, err
 	}
 	return nil, nil
+}
+
+type CampaignsCreateCampaignCodeScanningAlerts struct {
+	// RepositoryId The repository id
+	RepositoryId int64 `json:"repository_id"`
+	// AlertNumbers The alert numbers
+	AlertNumbers []int64 `json:"alert_numbers"`
+}
+
+func (value *CampaignsCreateCampaignCodeScanningAlerts) UnmarshalJSON(data []byte) error {
+	type CampaignsCreateCampaignCodeScanningAlertsAlias CampaignsCreateCampaignCodeScanningAlerts
+	var decoded CampaignsCreateCampaignCodeScanningAlertsAlias
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		return err
+	}
+	*value = CampaignsCreateCampaignCodeScanningAlerts(decoded)
+	var rawFields map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawFields); err != nil {
+		return err
+	}
+	if err := ValidateRequired(rawFields, []string{"repository_id", "alert_numbers"}); err != nil {
+		return err
+	}
+	if err := ValidateNotNull(rawFields, []string{"repository_id", "alert_numbers"}); err != nil {
+		return err
+	}
+	if err := ValidateItems("alert_numbers", value.AlertNumbers, LengthOpts{Min: Ptr[int](1)}); err != nil {
+		return err
+	}
+	return nil
+}
+
+// NewCampaignsCreateCampaignCodeScanningAlerts returns a validated CampaignsCreateCampaignCodeScanningAlerts built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewCampaignsCreateCampaignCodeScanningAlerts(fields CampaignsCreateCampaignCodeScanningAlerts) (*CampaignsCreateCampaignCodeScanningAlerts, error) {
+	return ConstructModel(fields)
 }

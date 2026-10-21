@@ -9,390 +9,6 @@ import (
 	"fmt"
 )
 
-type CopilotSpacesListForOrgResponse struct {
-	// Spaces The list of Copilot Spaces on this page of results.
-	Spaces []CopilotSpace `json:"spaces"`
-}
-
-func (value *CopilotSpacesListForOrgResponse) UnmarshalJSON(data []byte) error {
-	type CopilotSpacesListForOrgResponseAlias CopilotSpacesListForOrgResponse
-	var decoded CopilotSpacesListForOrgResponseAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = CopilotSpacesListForOrgResponse(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"spaces"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"spaces"}); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewCopilotSpacesListForOrgResponse returns a validated CopilotSpacesListForOrgResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewCopilotSpacesListForOrgResponse(fields CopilotSpacesListForOrgResponse) (*CopilotSpacesListForOrgResponse, error) {
-	return ConstructModel(fields)
-}
-
-type CopilotSpacesCreateForOrgResourcesAttributes struct {
-	// ResourceType The type of resource.
-	ResourceType *CopilotSpacesCreateForOrgResourcesAttributesResourceTypeEnum `json:"resource_type,omitempty"`
-	// Metadata Metadata specific to the resource type.
-	Metadata *CopilotSpacesCreateForOrgResourcesAttributesMetadata `json:"metadata,omitempty"`
-}
-
-// NewCopilotSpacesCreateForOrgResourcesAttributes returns a validated CopilotSpacesCreateForOrgResourcesAttributes built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewCopilotSpacesCreateForOrgResourcesAttributes(fields CopilotSpacesCreateForOrgResourcesAttributes) (*CopilotSpacesCreateForOrgResourcesAttributes, error) {
-	return ConstructModel(fields)
-}
-
-// CopilotSpacesCreateForOrgResourcesAttributesResourceTypeEnum The type of resource.
-type CopilotSpacesCreateForOrgResourcesAttributesResourceTypeEnum string
-
-const (
-	CopilotSpacesCreateForOrgResourcesAttributesResourceTypeEnumRepository        CopilotSpacesCreateForOrgResourcesAttributesResourceTypeEnum = "repository"
-	CopilotSpacesCreateForOrgResourcesAttributesResourceTypeEnumGithubFile        CopilotSpacesCreateForOrgResourcesAttributesResourceTypeEnum = "github_file"
-	CopilotSpacesCreateForOrgResourcesAttributesResourceTypeEnumFreeText          CopilotSpacesCreateForOrgResourcesAttributesResourceTypeEnum = "free_text"
-	CopilotSpacesCreateForOrgResourcesAttributesResourceTypeEnumGithubIssue       CopilotSpacesCreateForOrgResourcesAttributesResourceTypeEnum = "github_issue"
-	CopilotSpacesCreateForOrgResourcesAttributesResourceTypeEnumGithubPullRequest CopilotSpacesCreateForOrgResourcesAttributesResourceTypeEnum = "github_pull_request"
-	CopilotSpacesCreateForOrgResourcesAttributesResourceTypeEnumMediaContent      CopilotSpacesCreateForOrgResourcesAttributesResourceTypeEnum = "media_content"
-	CopilotSpacesCreateForOrgResourcesAttributesResourceTypeEnumUploadedTextFile  CopilotSpacesCreateForOrgResourcesAttributesResourceTypeEnum = "uploaded_text_file"
-)
-
-// CopilotSpacesCreateForOrgResourcesAttributesMetadata Metadata specific to the resource type.
-type CopilotSpacesCreateForOrgResourcesAttributesMetadata struct {
-	// RepositoryId Repository ID for repository or file resources.
-	RepositoryId *int64 `json:"repository_id,omitempty"`
-	// FilePath File path for file resources.
-	FilePath *string `json:"file_path,omitempty"`
-	// Text Text content for free text resources.
-	Text *string `json:"text,omitempty"`
-	// Name Name for the resource.
-	Name *string `json:"name,omitempty"`
-	// Number Issue or PR number.
-	Number *int64 `json:"number,omitempty"`
-}
-
-// NewCopilotSpacesCreateForOrgResourcesAttributesMetadata returns a validated CopilotSpacesCreateForOrgResourcesAttributesMetadata built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewCopilotSpacesCreateForOrgResourcesAttributesMetadata(fields CopilotSpacesCreateForOrgResourcesAttributesMetadata) (*CopilotSpacesCreateForOrgResourcesAttributesMetadata, error) {
-	return ConstructModel(fields)
-}
-
-type CopilotSpacesUpdateForOrgResourcesAttributes struct {
-	// ResourceType The type of resource.
-	ResourceType *CopilotSpacesUpdateForOrgResourcesAttributesResourceTypeEnum `json:"resource_type,omitempty"`
-	// Metadata Metadata specific to the resource type.
-	Metadata *CopilotSpacesUpdateForOrgResourcesAttributesMetadata `json:"metadata,omitempty"`
-}
-
-// NewCopilotSpacesUpdateForOrgResourcesAttributes returns a validated CopilotSpacesUpdateForOrgResourcesAttributes built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewCopilotSpacesUpdateForOrgResourcesAttributes(fields CopilotSpacesUpdateForOrgResourcesAttributes) (*CopilotSpacesUpdateForOrgResourcesAttributes, error) {
-	return ConstructModel(fields)
-}
-
-// CopilotSpacesUpdateForOrgResourcesAttributesResourceTypeEnum The type of resource.
-type CopilotSpacesUpdateForOrgResourcesAttributesResourceTypeEnum string
-
-const (
-	CopilotSpacesUpdateForOrgResourcesAttributesResourceTypeEnumRepository        CopilotSpacesUpdateForOrgResourcesAttributesResourceTypeEnum = "repository"
-	CopilotSpacesUpdateForOrgResourcesAttributesResourceTypeEnumGithubFile        CopilotSpacesUpdateForOrgResourcesAttributesResourceTypeEnum = "github_file"
-	CopilotSpacesUpdateForOrgResourcesAttributesResourceTypeEnumFreeText          CopilotSpacesUpdateForOrgResourcesAttributesResourceTypeEnum = "free_text"
-	CopilotSpacesUpdateForOrgResourcesAttributesResourceTypeEnumGithubIssue       CopilotSpacesUpdateForOrgResourcesAttributesResourceTypeEnum = "github_issue"
-	CopilotSpacesUpdateForOrgResourcesAttributesResourceTypeEnumGithubPullRequest CopilotSpacesUpdateForOrgResourcesAttributesResourceTypeEnum = "github_pull_request"
-	CopilotSpacesUpdateForOrgResourcesAttributesResourceTypeEnumMediaContent      CopilotSpacesUpdateForOrgResourcesAttributesResourceTypeEnum = "media_content"
-	CopilotSpacesUpdateForOrgResourcesAttributesResourceTypeEnumUploadedTextFile  CopilotSpacesUpdateForOrgResourcesAttributesResourceTypeEnum = "uploaded_text_file"
-)
-
-// CopilotSpacesUpdateForOrgResourcesAttributesMetadata Metadata specific to the resource type.
-type CopilotSpacesUpdateForOrgResourcesAttributesMetadata struct {
-	// RepositoryId Repository ID for repository or file resources.
-	RepositoryId *int64 `json:"repository_id,omitempty"`
-	// FilePath File path for file resources.
-	FilePath *string `json:"file_path,omitempty"`
-	// Text Text content for free text resources.
-	Text *string `json:"text,omitempty"`
-	// Name Name for the resource.
-	Name *string `json:"name,omitempty"`
-	// Number Issue or PR number.
-	Number *int64 `json:"number,omitempty"`
-}
-
-// NewCopilotSpacesUpdateForOrgResourcesAttributesMetadata returns a validated CopilotSpacesUpdateForOrgResourcesAttributesMetadata built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewCopilotSpacesUpdateForOrgResourcesAttributesMetadata(fields CopilotSpacesUpdateForOrgResourcesAttributesMetadata) (*CopilotSpacesUpdateForOrgResourcesAttributesMetadata, error) {
-	return ConstructModel(fields)
-}
-
-type CopilotSpacesListCollaboratorsForOrgResponse struct {
-	// Collaborators The list of collaborators for this Copilot Space.
-	Collaborators []CopilotSpaceCollaborator `json:"collaborators"`
-}
-
-func (value *CopilotSpacesListCollaboratorsForOrgResponse) UnmarshalJSON(data []byte) error {
-	type CopilotSpacesListCollaboratorsForOrgResponseAlias CopilotSpacesListCollaboratorsForOrgResponse
-	var decoded CopilotSpacesListCollaboratorsForOrgResponseAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = CopilotSpacesListCollaboratorsForOrgResponse(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"collaborators"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"collaborators"}); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewCopilotSpacesListCollaboratorsForOrgResponse returns a validated CopilotSpacesListCollaboratorsForOrgResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewCopilotSpacesListCollaboratorsForOrgResponse(fields CopilotSpacesListCollaboratorsForOrgResponse) (*CopilotSpacesListCollaboratorsForOrgResponse, error) {
-	return ConstructModel(fields)
-}
-
-type CopilotSpacesListResourcesForOrgResponse struct {
-	// Resources The list of resources attached to this Copilot Space.
-	Resources []CopilotSpaceResource `json:"resources"`
-}
-
-func (value *CopilotSpacesListResourcesForOrgResponse) UnmarshalJSON(data []byte) error {
-	type CopilotSpacesListResourcesForOrgResponseAlias CopilotSpacesListResourcesForOrgResponse
-	var decoded CopilotSpacesListResourcesForOrgResponseAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = CopilotSpacesListResourcesForOrgResponse(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"resources"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"resources"}); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewCopilotSpacesListResourcesForOrgResponse returns a validated CopilotSpacesListResourcesForOrgResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewCopilotSpacesListResourcesForOrgResponse(fields CopilotSpacesListResourcesForOrgResponse) (*CopilotSpacesListResourcesForOrgResponse, error) {
-	return ConstructModel(fields)
-}
-
-type CopilotSpacesListForUserResponse struct {
-	// Spaces The list of Copilot Spaces on this page of results.
-	Spaces []CopilotSpace `json:"spaces"`
-}
-
-func (value *CopilotSpacesListForUserResponse) UnmarshalJSON(data []byte) error {
-	type CopilotSpacesListForUserResponseAlias CopilotSpacesListForUserResponse
-	var decoded CopilotSpacesListForUserResponseAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = CopilotSpacesListForUserResponse(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"spaces"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"spaces"}); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewCopilotSpacesListForUserResponse returns a validated CopilotSpacesListForUserResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewCopilotSpacesListForUserResponse(fields CopilotSpacesListForUserResponse) (*CopilotSpacesListForUserResponse, error) {
-	return ConstructModel(fields)
-}
-
-type CopilotSpacesCreateForUserResourcesAttributes struct {
-	// ResourceType The type of resource.
-	ResourceType *CopilotSpacesCreateForUserResourcesAttributesResourceTypeEnum `json:"resource_type,omitempty"`
-	// Metadata Metadata specific to the resource type.
-	Metadata *CopilotSpacesCreateForUserResourcesAttributesMetadata `json:"metadata,omitempty"`
-}
-
-// NewCopilotSpacesCreateForUserResourcesAttributes returns a validated CopilotSpacesCreateForUserResourcesAttributes built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewCopilotSpacesCreateForUserResourcesAttributes(fields CopilotSpacesCreateForUserResourcesAttributes) (*CopilotSpacesCreateForUserResourcesAttributes, error) {
-	return ConstructModel(fields)
-}
-
-// CopilotSpacesCreateForUserResourcesAttributesResourceTypeEnum The type of resource.
-type CopilotSpacesCreateForUserResourcesAttributesResourceTypeEnum string
-
-const (
-	CopilotSpacesCreateForUserResourcesAttributesResourceTypeEnumRepository        CopilotSpacesCreateForUserResourcesAttributesResourceTypeEnum = "repository"
-	CopilotSpacesCreateForUserResourcesAttributesResourceTypeEnumGithubFile        CopilotSpacesCreateForUserResourcesAttributesResourceTypeEnum = "github_file"
-	CopilotSpacesCreateForUserResourcesAttributesResourceTypeEnumFreeText          CopilotSpacesCreateForUserResourcesAttributesResourceTypeEnum = "free_text"
-	CopilotSpacesCreateForUserResourcesAttributesResourceTypeEnumGithubIssue       CopilotSpacesCreateForUserResourcesAttributesResourceTypeEnum = "github_issue"
-	CopilotSpacesCreateForUserResourcesAttributesResourceTypeEnumGithubPullRequest CopilotSpacesCreateForUserResourcesAttributesResourceTypeEnum = "github_pull_request"
-	CopilotSpacesCreateForUserResourcesAttributesResourceTypeEnumMediaContent      CopilotSpacesCreateForUserResourcesAttributesResourceTypeEnum = "media_content"
-	CopilotSpacesCreateForUserResourcesAttributesResourceTypeEnumUploadedTextFile  CopilotSpacesCreateForUserResourcesAttributesResourceTypeEnum = "uploaded_text_file"
-)
-
-// CopilotSpacesCreateForUserResourcesAttributesMetadata Metadata specific to the resource type.
-type CopilotSpacesCreateForUserResourcesAttributesMetadata struct {
-	// RepositoryId Repository ID for repository or file resources.
-	RepositoryId *int64 `json:"repository_id,omitempty"`
-	// FilePath File path for file resources.
-	FilePath *string `json:"file_path,omitempty"`
-	// Text Text content for free text resources.
-	Text *string `json:"text,omitempty"`
-	// Name Name for the resource.
-	Name *string `json:"name,omitempty"`
-	// Number Issue or PR number.
-	Number *int64 `json:"number,omitempty"`
-}
-
-// NewCopilotSpacesCreateForUserResourcesAttributesMetadata returns a validated CopilotSpacesCreateForUserResourcesAttributesMetadata built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewCopilotSpacesCreateForUserResourcesAttributesMetadata(fields CopilotSpacesCreateForUserResourcesAttributesMetadata) (*CopilotSpacesCreateForUserResourcesAttributesMetadata, error) {
-	return ConstructModel(fields)
-}
-
-type CopilotSpacesUpdateForUserResourcesAttributes struct {
-	// ResourceType The type of resource.
-	ResourceType *CopilotSpacesUpdateForUserResourcesAttributesResourceTypeEnum `json:"resource_type,omitempty"`
-	// Metadata Metadata specific to the resource type.
-	Metadata *CopilotSpacesUpdateForUserResourcesAttributesMetadata `json:"metadata,omitempty"`
-}
-
-// NewCopilotSpacesUpdateForUserResourcesAttributes returns a validated CopilotSpacesUpdateForUserResourcesAttributes built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewCopilotSpacesUpdateForUserResourcesAttributes(fields CopilotSpacesUpdateForUserResourcesAttributes) (*CopilotSpacesUpdateForUserResourcesAttributes, error) {
-	return ConstructModel(fields)
-}
-
-// CopilotSpacesUpdateForUserResourcesAttributesResourceTypeEnum The type of resource.
-type CopilotSpacesUpdateForUserResourcesAttributesResourceTypeEnum string
-
-const (
-	CopilotSpacesUpdateForUserResourcesAttributesResourceTypeEnumRepository        CopilotSpacesUpdateForUserResourcesAttributesResourceTypeEnum = "repository"
-	CopilotSpacesUpdateForUserResourcesAttributesResourceTypeEnumGithubFile        CopilotSpacesUpdateForUserResourcesAttributesResourceTypeEnum = "github_file"
-	CopilotSpacesUpdateForUserResourcesAttributesResourceTypeEnumFreeText          CopilotSpacesUpdateForUserResourcesAttributesResourceTypeEnum = "free_text"
-	CopilotSpacesUpdateForUserResourcesAttributesResourceTypeEnumGithubIssue       CopilotSpacesUpdateForUserResourcesAttributesResourceTypeEnum = "github_issue"
-	CopilotSpacesUpdateForUserResourcesAttributesResourceTypeEnumGithubPullRequest CopilotSpacesUpdateForUserResourcesAttributesResourceTypeEnum = "github_pull_request"
-	CopilotSpacesUpdateForUserResourcesAttributesResourceTypeEnumMediaContent      CopilotSpacesUpdateForUserResourcesAttributesResourceTypeEnum = "media_content"
-	CopilotSpacesUpdateForUserResourcesAttributesResourceTypeEnumUploadedTextFile  CopilotSpacesUpdateForUserResourcesAttributesResourceTypeEnum = "uploaded_text_file"
-)
-
-// CopilotSpacesUpdateForUserResourcesAttributesMetadata Metadata specific to the resource type.
-type CopilotSpacesUpdateForUserResourcesAttributesMetadata struct {
-	// RepositoryId Repository ID for repository or file resources.
-	RepositoryId *int64 `json:"repository_id,omitempty"`
-	// FilePath File path for file resources.
-	FilePath *string `json:"file_path,omitempty"`
-	// Text Text content for free text resources.
-	Text *string `json:"text,omitempty"`
-	// Name Name for the resource.
-	Name *string `json:"name,omitempty"`
-	// Number Issue or PR number.
-	Number *int64 `json:"number,omitempty"`
-}
-
-// NewCopilotSpacesUpdateForUserResourcesAttributesMetadata returns a validated CopilotSpacesUpdateForUserResourcesAttributesMetadata built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewCopilotSpacesUpdateForUserResourcesAttributesMetadata(fields CopilotSpacesUpdateForUserResourcesAttributesMetadata) (*CopilotSpacesUpdateForUserResourcesAttributesMetadata, error) {
-	return ConstructModel(fields)
-}
-
-type CopilotSpacesListCollaboratorsForUserResponse struct {
-	// Collaborators The list of collaborators for this Copilot Space.
-	Collaborators []CopilotSpaceCollaborator `json:"collaborators"`
-}
-
-func (value *CopilotSpacesListCollaboratorsForUserResponse) UnmarshalJSON(data []byte) error {
-	type CopilotSpacesListCollaboratorsForUserResponseAlias CopilotSpacesListCollaboratorsForUserResponse
-	var decoded CopilotSpacesListCollaboratorsForUserResponseAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = CopilotSpacesListCollaboratorsForUserResponse(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"collaborators"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"collaborators"}); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewCopilotSpacesListCollaboratorsForUserResponse returns a validated CopilotSpacesListCollaboratorsForUserResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewCopilotSpacesListCollaboratorsForUserResponse(fields CopilotSpacesListCollaboratorsForUserResponse) (*CopilotSpacesListCollaboratorsForUserResponse, error) {
-	return ConstructModel(fields)
-}
-
-type CopilotSpacesListResourcesForUserResponse struct {
-	// Resources The list of resources attached to this Copilot Space.
-	Resources []CopilotSpaceResource `json:"resources"`
-}
-
-func (value *CopilotSpacesListResourcesForUserResponse) UnmarshalJSON(data []byte) error {
-	type CopilotSpacesListResourcesForUserResponseAlias CopilotSpacesListResourcesForUserResponse
-	var decoded CopilotSpacesListResourcesForUserResponseAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = CopilotSpacesListResourcesForUserResponse(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"resources"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"resources"}); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewCopilotSpacesListResourcesForUserResponse returns a validated CopilotSpacesListResourcesForUserResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewCopilotSpacesListResourcesForUserResponse(fields CopilotSpacesListResourcesForUserResponse) (*CopilotSpacesListResourcesForUserResponse, error) {
-	return ConstructModel(fields)
-}
-
 type CopilotSpacesListForOrgParams struct {
 	Org     string
 	PerPage *int64
@@ -607,23 +223,46 @@ func CopilotSpacesDeleteForOrg(ctx context.Context, clientConfig ClientConfig, p
 	return nil, nil
 }
 
-type CopilotSpacesListCollaboratorsForOrgParams struct {
-	Org         string
-	SpaceNumber int64
+type CopilotSpacesListForUserParams struct {
+	Username string
+	PerPage  *int64
+	Before   *string
+	After    *string
 }
 
-// CopilotSpacesListCollaboratorsForOrg lists all collaborators for a specific Copilot Space owned by an organization. The authenticated user must have appropriate permissions to view collaborators. Each collaborator entry specifies which user or team has access to the space and at what level (reader, writer, or admin). The space owner (organization) is excluded from this list. **Note:** Team collaborators listed here are teams that are defined in the organization. OAuth app tokens and personal access tokens (classic) need the `read:org` scope to use this endpoint. Fine-grained tokens and GitHub App user access tokens must have been granted access to the organization that owns the space. They must also have been granted access to every repository referenced by resources in the space.
+// CopilotSpacesListForUser lists Copilot Spaces owned by a user. The authenticated user must have read access to the user's Copilot Spaces. Only Spaces that are readable by the authenticated user are returned. This includes the user's own spaces, and public user spaces when accessing another user's spaces. OAuth app tokens and personal access tokens (classic) need the `read:user` scope to use this endpoint.
 //
 // Parameters:
 //
-//	org: The organization name. The name is not case sensitive.
-//	spaceNumber: The unique identifier of the Copilot Space.
-func CopilotSpacesListCollaboratorsForOrg(ctx context.Context, clientConfig ClientConfig, params CopilotSpacesListCollaboratorsForOrgParams, opts ...RequestOption) (*CopilotSpacesListCollaboratorsForOrgResponse, error) {
-	org := params.Org
-	spaceNumber := params.SpaceNumber
+//	username: The handle for the GitHub user account.
+//	perPage: The number of results per page (max 100).
+//	before: A cursor, as given in the [Link
+//	header](https://docs.github.com/rest/guides/using-pagination-in-the-rest-api
+//	#using-link-headers). If specified, the query only searches for results
+//	before this cursor.
+//	after: A cursor, as given in the [Link
+//	header](https://docs.github.com/rest/guides/using-pagination-in-the-rest-api
+//	#using-link-headers). If specified, the query only searches for results
+//	after this cursor.
+func CopilotSpacesListForUser(ctx context.Context, clientConfig ClientConfig, params CopilotSpacesListForUserParams, opts ...RequestOption) (*CopilotSpacesListForUserResponse, error) {
+	username := params.Username
+	perPage := params.PerPage
+	before := params.Before
+	after := params.After
 
-	resp, err := DoCfg[CopilotSpacesListCollaboratorsForOrgResponse](ctx, &clientConfig, "GET", fmt.Sprintf("/orgs/%s/copilot-spaces/%s/collaborators", EncodePathSegment(org), EncodePathSegment(spaceNumber)), &RequestOpts{
-		OperationID: "CopilotSpacesListCollaboratorsForOrg",
+	if perPage != nil {
+		if err := ValidateRange("per_page", *perPage, RangeOpts{Min: Ptr[float64](1), Max: Ptr[float64](100)}); err != nil {
+			return nil, err
+		}
+	}
+
+	resp, err := DoCfg[CopilotSpacesListForUserResponse](ctx, &clientConfig, "GET", fmt.Sprintf("/users/%s/copilot-spaces", EncodePathSegment(username)), &RequestOpts{
+		Query: map[string]any{
+			"per_page": QueryValue{Value: perPage, Style: "form", Explode: true},
+			"before":   QueryValue{Value: before, Style: "form", Explode: true},
+			"after":    QueryValue{Value: after, Style: "form", Explode: true},
+		},
+		OperationID: "CopilotSpacesListForUser",
 		Errors:      ErrorDecoders{"403": decodeErrorData[BasicError], "404": decodeErrorData[BasicError]},
 		Options:     opts,
 	})
@@ -633,38 +272,51 @@ func CopilotSpacesListCollaboratorsForOrg(ctx context.Context, clientConfig Clie
 	return &resp.Data, nil
 }
 
-type CopilotSpacesAddCollaboratorForOrgParams struct {
-	Org             string
-	SpaceNumber     int64
-	ActorType       string
-	ActorIdentifier string
-	Role            string
+type CopilotSpacesCreateForUserParams struct {
+	Username            string
+	Name                string
+	Description         *string
+	GeneralInstructions *string
+	BaseRole            *string
+	ResourcesAttributes *[]CopilotSpacesCreateForUserResourcesAttributes
 }
 
-// CopilotSpacesAddCollaboratorForOrg adds a collaborator (user or team) to a specific Copilot Space owned by an organization. The authenticated user must have appropriate permissions to manage collaborators. **Note:** When adding users as collaborators, they must already be members of the organization. When adding teams as collaborators, they must be defined in the organization. OAuth app tokens and personal access tokens (classic) need the `write:org` scope to use this endpoint. Fine-grained tokens and GitHub App user access tokens must have been granted access to the organization that owns the space. They must also have been granted access to every repository referenced by resources in the space.
+// CopilotSpacesCreateForUser creates a new Copilot Space owned by a user. Only the authenticated user can create spaces for their own account. Users can create personal Copilot Spaces for their individual use. OAuth app tokens and personal access tokens (classic) need the `read:user` scope to use this endpoint.
 //
 // Parameters:
 //
-//	org: The organization name. The name is not case sensitive.
-//	spaceNumber: The unique identifier of the Copilot Space.
-//	actorType: The type of actor (user or team).
-//	actorIdentifier: The username (for users) or team slug (for teams). The
-//	numeric ID of a user or team is also accepted.
-//	role: The role to grant to the collaborator.
-func CopilotSpacesAddCollaboratorForOrg(ctx context.Context, clientConfig ClientConfig, params CopilotSpacesAddCollaboratorForOrgParams, opts ...RequestOption) (*CopilotSpaceCollaborator, error) {
-	org := params.Org
-	spaceNumber := params.SpaceNumber
-	actorType := params.ActorType
-	actorIdentifier := params.ActorIdentifier
-	role := params.Role
+//	username: The handle for the GitHub user account.
+//	name: The name of the Copilot Space.
+//	description: A description of the Copilot Space.
+//	generalInstructions: General instructions for the Copilot Space.
+//	baseRole: The base role that determines default permissions for the space. -
+//	`no_access`: No default access (default) - `reader`: Makes the space
+//	publicly readable Note: User spaces do not support writer or admin base
+//	roles.
+//	resourcesAttributes: Resources to attach to the space.
+func CopilotSpacesCreateForUser(ctx context.Context, clientConfig ClientConfig, params CopilotSpacesCreateForUserParams, opts ...RequestOption) (*CopilotSpace, error) {
+	username := params.Username
+	name := params.Name
+	description := params.Description
+	generalInstructions := params.GeneralInstructions
+	baseRole := params.BaseRole
+	resourcesAttributes := params.ResourcesAttributes
 
-	resp, err := DoCfg[CopilotSpaceCollaborator](ctx, &clientConfig, "POST", fmt.Sprintf("/orgs/%s/copilot-spaces/%s/collaborators", EncodePathSegment(org), EncodePathSegment(spaceNumber)), &RequestOpts{
+	if generalInstructions != nil {
+		if err := ValidateLength("general_instructions", *generalInstructions, LengthOpts{Max: Ptr[int](4000)}); err != nil {
+			return nil, err
+		}
+	}
+
+	resp, err := DoCfg[CopilotSpace](ctx, &clientConfig, "POST", fmt.Sprintf("/users/%s/copilot-spaces", EncodePathSegment(username)), &RequestOpts{
 		Body: map[string]any{
-			"actor_type":       actorType,
-			"actor_identifier": actorIdentifier,
-			"role":             role,
+			"name":                 name,
+			"description":          description,
+			"general_instructions": generalInstructions,
+			"base_role":            baseRole,
+			"resources_attributes": resourcesAttributes,
 		},
-		OperationID: "CopilotSpacesAddCollaboratorForOrg",
+		OperationID: "CopilotSpacesCreateForUser",
 		Errors:      ErrorDecoders{"403": decodeErrorData[BasicError], "404": decodeErrorData[BasicError], "422": decodeErrorData[ValidationError]},
 		Options:     opts,
 	})
@@ -674,10 +326,367 @@ func CopilotSpacesAddCollaboratorForOrg(ctx context.Context, clientConfig Client
 	return &resp.Data, nil
 }
 
-type CopilotSpacesUpdateCollaboratorForOrgParams struct {
-	Org             string
-	SpaceNumber     int64
-	ActorType       string
-	ActorIdentifier string
-	Role            string
+type CopilotSpacesGetForUserParams struct {
+	Username    string
+	SpaceNumber int64
+}
+
+// CopilotSpacesGetForUser gets details about a specific Copilot Space owned by a user. The authenticated user must have read access to the Space. Private user spaces require the authenticated user to be the owner of the space. Public user spaces are accessible to any authenticated user. OAuth app tokens and personal access tokens (classic) need the `repo` scope to use this endpoint.
+//
+// Parameters:
+//
+//	username: The handle for the GitHub user account.
+//	spaceNumber: The unique identifier of the Copilot Space.
+func CopilotSpacesGetForUser(ctx context.Context, clientConfig ClientConfig, params CopilotSpacesGetForUserParams, opts ...RequestOption) (*CopilotSpace, error) {
+	username := params.Username
+	spaceNumber := params.SpaceNumber
+
+	resp, err := DoCfg[CopilotSpace](ctx, &clientConfig, "GET", fmt.Sprintf("/users/%s/copilot-spaces/%s", EncodePathSegment(username), EncodePathSegment(spaceNumber)), &RequestOpts{
+		OperationID: "CopilotSpacesGetForUser",
+		Errors:      ErrorDecoders{"403": decodeErrorData[BasicError], "404": decodeErrorData[BasicError]},
+		Options:     opts,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &resp.Data, nil
+}
+
+type CopilotSpacesUpdateForUserParams struct {
+	Username            string
+	SpaceNumber         int64
+	Name                *string
+	Description         *string
+	GeneralInstructions *string
+	BaseRole            *string
+	ResourcesAttributes *[]CopilotSpacesUpdateForUserResourcesAttributes
+}
+
+// CopilotSpacesUpdateForUser updates a Copilot Space owned by a user. Only the authenticated user can update spaces for their own account. Users can update their personal Copilot Spaces. OAuth app tokens and personal access tokens (classic) need the `read:user` scope to use this endpoint.
+//
+// Parameters:
+//
+//	username: The handle for the GitHub user account.
+//	spaceNumber: The unique identifier of the Copilot Space.
+//	name: The name of the Copilot Space.
+//	description: A description of the Copilot Space.
+//	generalInstructions: General instructions for the Copilot Space.
+//	baseRole: The base role that determines default permissions for the space.
+//	Changing this field requires admin permissions. - `no_access`: No default
+//	access (default) - `reader`: Makes the space publicly readable Note: User
+//	spaces do not support writer or admin base roles.
+//	resourcesAttributes: Resources to attach to the space.
+func CopilotSpacesUpdateForUser(ctx context.Context, clientConfig ClientConfig, params CopilotSpacesUpdateForUserParams, opts ...RequestOption) (*CopilotSpace, error) {
+	username := params.Username
+	spaceNumber := params.SpaceNumber
+	name := params.Name
+	description := params.Description
+	generalInstructions := params.GeneralInstructions
+	baseRole := params.BaseRole
+	resourcesAttributes := params.ResourcesAttributes
+
+	if generalInstructions != nil {
+		if err := ValidateLength("general_instructions", *generalInstructions, LengthOpts{Max: Ptr[int](4000)}); err != nil {
+			return nil, err
+		}
+	}
+
+	resp, err := DoCfg[CopilotSpace](ctx, &clientConfig, "PUT", fmt.Sprintf("/users/%s/copilot-spaces/%s", EncodePathSegment(username), EncodePathSegment(spaceNumber)), &RequestOpts{
+		Body: map[string]any{
+			"name":                 name,
+			"description":          description,
+			"general_instructions": generalInstructions,
+			"base_role":            baseRole,
+			"resources_attributes": resourcesAttributes,
+		},
+		OperationID: "CopilotSpacesUpdateForUser",
+		Errors:      ErrorDecoders{"403": decodeErrorData[BasicError], "404": decodeErrorData[BasicError], "422": decodeErrorData[ValidationError]},
+		Options:     opts,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &resp.Data, nil
+}
+
+type CopilotSpacesDeleteForUserParams struct {
+	Username    string
+	SpaceNumber int64
+}
+
+// CopilotSpacesDeleteForUser deletes a Copilot Space owned by a user. The authenticated user must be the owner of the space. **Warning:** This action is permanent and cannot be undone. Deleting a space will remove all associated resources and configurations. OAuth app tokens and personal access tokens (classic) need the `user` scope to use this endpoint.
+//
+// Parameters:
+//
+//	username: The handle for the GitHub user account.
+//	spaceNumber: The unique identifier of the Copilot Space.
+func CopilotSpacesDeleteForUser(ctx context.Context, clientConfig ClientConfig, params CopilotSpacesDeleteForUserParams, opts ...RequestOption) (any, error) {
+	username := params.Username
+	spaceNumber := params.SpaceNumber
+
+	_, err := DoEmptyCfg(ctx, &clientConfig, "DELETE", fmt.Sprintf("/users/%s/copilot-spaces/%s", EncodePathSegment(username), EncodePathSegment(spaceNumber)), &RequestOpts{
+		OperationID: "CopilotSpacesDeleteForUser",
+		Errors:      ErrorDecoders{"404": decodeErrorData[BasicError], "422": decodeErrorData[ValidationError]},
+		Options:     opts,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return nil, nil
+}
+
+type CopilotSpacesListForOrgResponse struct {
+	// Spaces The list of Copilot Spaces on this page of results.
+	Spaces []CopilotSpace `json:"spaces"`
+}
+
+func (value *CopilotSpacesListForOrgResponse) UnmarshalJSON(data []byte) error {
+	type CopilotSpacesListForOrgResponseAlias CopilotSpacesListForOrgResponse
+	var decoded CopilotSpacesListForOrgResponseAlias
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		return err
+	}
+	*value = CopilotSpacesListForOrgResponse(decoded)
+	var rawFields map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawFields); err != nil {
+		return err
+	}
+	if err := ValidateRequired(rawFields, []string{"spaces"}); err != nil {
+		return err
+	}
+	if err := ValidateNotNull(rawFields, []string{"spaces"}); err != nil {
+		return err
+	}
+	return nil
+}
+
+// NewCopilotSpacesListForOrgResponse returns a validated CopilotSpacesListForOrgResponse built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewCopilotSpacesListForOrgResponse(fields CopilotSpacesListForOrgResponse) (*CopilotSpacesListForOrgResponse, error) {
+	return ConstructModel(fields)
+}
+
+type CopilotSpacesCreateForOrgResourcesAttributes struct {
+	// ResourceType The type of resource.
+	ResourceType *CopilotSpacesCreateForOrgResourcesAttributesResourceTypeEnum `json:"resource_type,omitempty"`
+	// Metadata Metadata specific to the resource type.
+	Metadata *CopilotSpacesCreateForOrgResourcesAttributesMetadata `json:"metadata,omitempty"`
+}
+
+// NewCopilotSpacesCreateForOrgResourcesAttributes returns a validated CopilotSpacesCreateForOrgResourcesAttributes built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewCopilotSpacesCreateForOrgResourcesAttributes(fields CopilotSpacesCreateForOrgResourcesAttributes) (*CopilotSpacesCreateForOrgResourcesAttributes, error) {
+	return ConstructModel(fields)
+}
+
+// CopilotSpacesCreateForOrgResourcesAttributesResourceTypeEnum The type of resource.
+type CopilotSpacesCreateForOrgResourcesAttributesResourceTypeEnum string
+
+const (
+	CopilotSpacesCreateForOrgResourcesAttributesResourceTypeEnumRepository        CopilotSpacesCreateForOrgResourcesAttributesResourceTypeEnum = "repository"
+	CopilotSpacesCreateForOrgResourcesAttributesResourceTypeEnumGithubFile        CopilotSpacesCreateForOrgResourcesAttributesResourceTypeEnum = "github_file"
+	CopilotSpacesCreateForOrgResourcesAttributesResourceTypeEnumFreeText          CopilotSpacesCreateForOrgResourcesAttributesResourceTypeEnum = "free_text"
+	CopilotSpacesCreateForOrgResourcesAttributesResourceTypeEnumGithubIssue       CopilotSpacesCreateForOrgResourcesAttributesResourceTypeEnum = "github_issue"
+	CopilotSpacesCreateForOrgResourcesAttributesResourceTypeEnumGithubPullRequest CopilotSpacesCreateForOrgResourcesAttributesResourceTypeEnum = "github_pull_request"
+	CopilotSpacesCreateForOrgResourcesAttributesResourceTypeEnumMediaContent      CopilotSpacesCreateForOrgResourcesAttributesResourceTypeEnum = "media_content"
+	CopilotSpacesCreateForOrgResourcesAttributesResourceTypeEnumUploadedTextFile  CopilotSpacesCreateForOrgResourcesAttributesResourceTypeEnum = "uploaded_text_file"
+)
+
+// CopilotSpacesCreateForOrgResourcesAttributesMetadata Metadata specific to the resource type.
+type CopilotSpacesCreateForOrgResourcesAttributesMetadata struct {
+	// RepositoryId Repository ID for repository or file resources.
+	RepositoryId *int64 `json:"repository_id,omitempty"`
+	// FilePath File path for file resources.
+	FilePath *string `json:"file_path,omitempty"`
+	// Text Text content for free text resources.
+	Text *string `json:"text,omitempty"`
+	// Name Name for the resource.
+	Name *string `json:"name,omitempty"`
+	// Number Issue or PR number.
+	Number *int64 `json:"number,omitempty"`
+}
+
+// NewCopilotSpacesCreateForOrgResourcesAttributesMetadata returns a validated CopilotSpacesCreateForOrgResourcesAttributesMetadata built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewCopilotSpacesCreateForOrgResourcesAttributesMetadata(fields CopilotSpacesCreateForOrgResourcesAttributesMetadata) (*CopilotSpacesCreateForOrgResourcesAttributesMetadata, error) {
+	return ConstructModel(fields)
+}
+
+type CopilotSpacesUpdateForOrgResourcesAttributes struct {
+	// ResourceType The type of resource.
+	ResourceType *CopilotSpacesUpdateForOrgResourcesAttributesResourceTypeEnum `json:"resource_type,omitempty"`
+	// Metadata Metadata specific to the resource type.
+	Metadata *CopilotSpacesUpdateForOrgResourcesAttributesMetadata `json:"metadata,omitempty"`
+}
+
+// NewCopilotSpacesUpdateForOrgResourcesAttributes returns a validated CopilotSpacesUpdateForOrgResourcesAttributes built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewCopilotSpacesUpdateForOrgResourcesAttributes(fields CopilotSpacesUpdateForOrgResourcesAttributes) (*CopilotSpacesUpdateForOrgResourcesAttributes, error) {
+	return ConstructModel(fields)
+}
+
+// CopilotSpacesUpdateForOrgResourcesAttributesResourceTypeEnum The type of resource.
+type CopilotSpacesUpdateForOrgResourcesAttributesResourceTypeEnum string
+
+const (
+	CopilotSpacesUpdateForOrgResourcesAttributesResourceTypeEnumRepository        CopilotSpacesUpdateForOrgResourcesAttributesResourceTypeEnum = "repository"
+	CopilotSpacesUpdateForOrgResourcesAttributesResourceTypeEnumGithubFile        CopilotSpacesUpdateForOrgResourcesAttributesResourceTypeEnum = "github_file"
+	CopilotSpacesUpdateForOrgResourcesAttributesResourceTypeEnumFreeText          CopilotSpacesUpdateForOrgResourcesAttributesResourceTypeEnum = "free_text"
+	CopilotSpacesUpdateForOrgResourcesAttributesResourceTypeEnumGithubIssue       CopilotSpacesUpdateForOrgResourcesAttributesResourceTypeEnum = "github_issue"
+	CopilotSpacesUpdateForOrgResourcesAttributesResourceTypeEnumGithubPullRequest CopilotSpacesUpdateForOrgResourcesAttributesResourceTypeEnum = "github_pull_request"
+	CopilotSpacesUpdateForOrgResourcesAttributesResourceTypeEnumMediaContent      CopilotSpacesUpdateForOrgResourcesAttributesResourceTypeEnum = "media_content"
+	CopilotSpacesUpdateForOrgResourcesAttributesResourceTypeEnumUploadedTextFile  CopilotSpacesUpdateForOrgResourcesAttributesResourceTypeEnum = "uploaded_text_file"
+)
+
+// CopilotSpacesUpdateForOrgResourcesAttributesMetadata Metadata specific to the resource type.
+type CopilotSpacesUpdateForOrgResourcesAttributesMetadata struct {
+	// RepositoryId Repository ID for repository or file resources.
+	RepositoryId *int64 `json:"repository_id,omitempty"`
+	// FilePath File path for file resources.
+	FilePath *string `json:"file_path,omitempty"`
+	// Text Text content for free text resources.
+	Text *string `json:"text,omitempty"`
+	// Name Name for the resource.
+	Name *string `json:"name,omitempty"`
+	// Number Issue or PR number.
+	Number *int64 `json:"number,omitempty"`
+}
+
+// NewCopilotSpacesUpdateForOrgResourcesAttributesMetadata returns a validated CopilotSpacesUpdateForOrgResourcesAttributesMetadata built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewCopilotSpacesUpdateForOrgResourcesAttributesMetadata(fields CopilotSpacesUpdateForOrgResourcesAttributesMetadata) (*CopilotSpacesUpdateForOrgResourcesAttributesMetadata, error) {
+	return ConstructModel(fields)
+}
+
+type CopilotSpacesListForUserResponse struct {
+	// Spaces The list of Copilot Spaces on this page of results.
+	Spaces []CopilotSpace `json:"spaces"`
+}
+
+func (value *CopilotSpacesListForUserResponse) UnmarshalJSON(data []byte) error {
+	type CopilotSpacesListForUserResponseAlias CopilotSpacesListForUserResponse
+	var decoded CopilotSpacesListForUserResponseAlias
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		return err
+	}
+	*value = CopilotSpacesListForUserResponse(decoded)
+	var rawFields map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawFields); err != nil {
+		return err
+	}
+	if err := ValidateRequired(rawFields, []string{"spaces"}); err != nil {
+		return err
+	}
+	if err := ValidateNotNull(rawFields, []string{"spaces"}); err != nil {
+		return err
+	}
+	return nil
+}
+
+// NewCopilotSpacesListForUserResponse returns a validated CopilotSpacesListForUserResponse built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewCopilotSpacesListForUserResponse(fields CopilotSpacesListForUserResponse) (*CopilotSpacesListForUserResponse, error) {
+	return ConstructModel(fields)
+}
+
+type CopilotSpacesCreateForUserResourcesAttributes struct {
+	// ResourceType The type of resource.
+	ResourceType *CopilotSpacesCreateForUserResourcesAttributesResourceTypeEnum `json:"resource_type,omitempty"`
+	// Metadata Metadata specific to the resource type.
+	Metadata *CopilotSpacesCreateForUserResourcesAttributesMetadata `json:"metadata,omitempty"`
+}
+
+// NewCopilotSpacesCreateForUserResourcesAttributes returns a validated CopilotSpacesCreateForUserResourcesAttributes built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewCopilotSpacesCreateForUserResourcesAttributes(fields CopilotSpacesCreateForUserResourcesAttributes) (*CopilotSpacesCreateForUserResourcesAttributes, error) {
+	return ConstructModel(fields)
+}
+
+// CopilotSpacesCreateForUserResourcesAttributesResourceTypeEnum The type of resource.
+type CopilotSpacesCreateForUserResourcesAttributesResourceTypeEnum string
+
+const (
+	CopilotSpacesCreateForUserResourcesAttributesResourceTypeEnumRepository        CopilotSpacesCreateForUserResourcesAttributesResourceTypeEnum = "repository"
+	CopilotSpacesCreateForUserResourcesAttributesResourceTypeEnumGithubFile        CopilotSpacesCreateForUserResourcesAttributesResourceTypeEnum = "github_file"
+	CopilotSpacesCreateForUserResourcesAttributesResourceTypeEnumFreeText          CopilotSpacesCreateForUserResourcesAttributesResourceTypeEnum = "free_text"
+	CopilotSpacesCreateForUserResourcesAttributesResourceTypeEnumGithubIssue       CopilotSpacesCreateForUserResourcesAttributesResourceTypeEnum = "github_issue"
+	CopilotSpacesCreateForUserResourcesAttributesResourceTypeEnumGithubPullRequest CopilotSpacesCreateForUserResourcesAttributesResourceTypeEnum = "github_pull_request"
+	CopilotSpacesCreateForUserResourcesAttributesResourceTypeEnumMediaContent      CopilotSpacesCreateForUserResourcesAttributesResourceTypeEnum = "media_content"
+	CopilotSpacesCreateForUserResourcesAttributesResourceTypeEnumUploadedTextFile  CopilotSpacesCreateForUserResourcesAttributesResourceTypeEnum = "uploaded_text_file"
+)
+
+// CopilotSpacesCreateForUserResourcesAttributesMetadata Metadata specific to the resource type.
+type CopilotSpacesCreateForUserResourcesAttributesMetadata struct {
+	// RepositoryId Repository ID for repository or file resources.
+	RepositoryId *int64 `json:"repository_id,omitempty"`
+	// FilePath File path for file resources.
+	FilePath *string `json:"file_path,omitempty"`
+	// Text Text content for free text resources.
+	Text *string `json:"text,omitempty"`
+	// Name Name for the resource.
+	Name *string `json:"name,omitempty"`
+	// Number Issue or PR number.
+	Number *int64 `json:"number,omitempty"`
+}
+
+// NewCopilotSpacesCreateForUserResourcesAttributesMetadata returns a validated CopilotSpacesCreateForUserResourcesAttributesMetadata built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewCopilotSpacesCreateForUserResourcesAttributesMetadata(fields CopilotSpacesCreateForUserResourcesAttributesMetadata) (*CopilotSpacesCreateForUserResourcesAttributesMetadata, error) {
+	return ConstructModel(fields)
+}
+
+type CopilotSpacesUpdateForUserResourcesAttributes struct {
+	// ResourceType The type of resource.
+	ResourceType *CopilotSpacesUpdateForUserResourcesAttributesResourceTypeEnum `json:"resource_type,omitempty"`
+	// Metadata Metadata specific to the resource type.
+	Metadata *CopilotSpacesUpdateForUserResourcesAttributesMetadata `json:"metadata,omitempty"`
+}
+
+// NewCopilotSpacesUpdateForUserResourcesAttributes returns a validated CopilotSpacesUpdateForUserResourcesAttributes built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewCopilotSpacesUpdateForUserResourcesAttributes(fields CopilotSpacesUpdateForUserResourcesAttributes) (*CopilotSpacesUpdateForUserResourcesAttributes, error) {
+	return ConstructModel(fields)
+}
+
+// CopilotSpacesUpdateForUserResourcesAttributesResourceTypeEnum The type of resource.
+type CopilotSpacesUpdateForUserResourcesAttributesResourceTypeEnum string
+
+const (
+	CopilotSpacesUpdateForUserResourcesAttributesResourceTypeEnumRepository        CopilotSpacesUpdateForUserResourcesAttributesResourceTypeEnum = "repository"
+	CopilotSpacesUpdateForUserResourcesAttributesResourceTypeEnumGithubFile        CopilotSpacesUpdateForUserResourcesAttributesResourceTypeEnum = "github_file"
+	CopilotSpacesUpdateForUserResourcesAttributesResourceTypeEnumFreeText          CopilotSpacesUpdateForUserResourcesAttributesResourceTypeEnum = "free_text"
+	CopilotSpacesUpdateForUserResourcesAttributesResourceTypeEnumGithubIssue       CopilotSpacesUpdateForUserResourcesAttributesResourceTypeEnum = "github_issue"
+	CopilotSpacesUpdateForUserResourcesAttributesResourceTypeEnumGithubPullRequest CopilotSpacesUpdateForUserResourcesAttributesResourceTypeEnum = "github_pull_request"
+	CopilotSpacesUpdateForUserResourcesAttributesResourceTypeEnumMediaContent      CopilotSpacesUpdateForUserResourcesAttributesResourceTypeEnum = "media_content"
+	CopilotSpacesUpdateForUserResourcesAttributesResourceTypeEnumUploadedTextFile  CopilotSpacesUpdateForUserResourcesAttributesResourceTypeEnum = "uploaded_text_file"
+)
+
+// CopilotSpacesUpdateForUserResourcesAttributesMetadata Metadata specific to the resource type.
+type CopilotSpacesUpdateForUserResourcesAttributesMetadata struct {
+	// RepositoryId Repository ID for repository or file resources.
+	RepositoryId *int64 `json:"repository_id,omitempty"`
+	// FilePath File path for file resources.
+	FilePath *string `json:"file_path,omitempty"`
+	// Text Text content for free text resources.
+	Text *string `json:"text,omitempty"`
+	// Name Name for the resource.
+	Name *string `json:"name,omitempty"`
+	// Number Issue or PR number.
+	Number *int64 `json:"number,omitempty"`
+}
+
+// NewCopilotSpacesUpdateForUserResourcesAttributesMetadata returns a validated CopilotSpacesUpdateForUserResourcesAttributesMetadata built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewCopilotSpacesUpdateForUserResourcesAttributesMetadata(fields CopilotSpacesUpdateForUserResourcesAttributesMetadata) (*CopilotSpacesUpdateForUserResourcesAttributesMetadata, error) {
+	return ConstructModel(fields)
 }

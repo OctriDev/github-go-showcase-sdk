@@ -722,3 +722,19 @@ func (value *WebhookIssuesLockedIssueMilestoneCreator) UnmarshalJSON(data []byte
 	}
 	return nil
 }
+
+// NewWebhookIssuesLockedIssueMilestoneCreator returns a validated WebhookIssuesLockedIssueMilestoneCreator built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewWebhookIssuesLockedIssueMilestoneCreator(fields WebhookIssuesLockedIssueMilestoneCreator) (*WebhookIssuesLockedIssueMilestoneCreator, error) {
+	return ConstructModel(fields)
+}
+
+// WebhookIssuesLockedIssueMilestoneCreatorTypeEnum Optional enumerated value serialized in the `type` wire field.
+type WebhookIssuesLockedIssueMilestoneCreatorTypeEnum string
+
+const (
+	WebhookIssuesLockedIssueMilestoneCreatorTypeEnumBot          WebhookIssuesLockedIssueMilestoneCreatorTypeEnum = "Bot"
+	WebhookIssuesLockedIssueMilestoneCreatorTypeEnumUser         WebhookIssuesLockedIssueMilestoneCreatorTypeEnum = "User"
+	WebhookIssuesLockedIssueMilestoneCreatorTypeEnumOrganization WebhookIssuesLockedIssueMilestoneCreatorTypeEnum = "Organization"
+)
