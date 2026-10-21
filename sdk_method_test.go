@@ -1176,8 +1176,6 @@ func sdkMethodByName(name string) any {
 		return GitGetTag
 	case "GitGetTree":
 		return GitGetTree
-	case "GitignoreGetAllTemplates":
-		return GitignoreGetAllTemplates
 	case "GitignoreGetTemplate":
 		return GitignoreGetTemplate
 	case "GitListMatchingRefs":
@@ -1356,6 +1354,8 @@ func sdkMethodByName(name string) any {
 		return LicensesGetAllCommonlyUsed
 	case "LicensesGetForRepo":
 		return LicensesGetForRepo
+	case "ListTemplates":
+		return ListTemplates
 	case "MarkdownRender":
 		return MarkdownRender
 	case "MarkdownRenderRaw":

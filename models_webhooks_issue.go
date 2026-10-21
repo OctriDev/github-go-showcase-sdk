@@ -8,282 +8,6 @@ import (
 	"encoding/json"
 )
 
-// WebhooksIssueComment The [comment](https://docs.github.com/rest/issues/comments#get-an-issue-comment) itself.
-type WebhooksIssueComment struct {
-	// AuthorAssociation How the author is associated with the repository.
-	AuthorAssociation WebhooksIssueCommentAuthorAssociationEnum `json:"author_association"`
-	// Body Contents of the issue comment
-	Body string `json:"body"`
-	// CreatedAt Required `date-time`-formatted value serialized in the `created_at` wire field.
-	CreatedAt string `json:"created_at"`
-	// HtmlUrl Required `uri`-formatted value serialized in the `html_url` wire field.
-	HtmlUrl string `json:"html_url"`
-	// Id Unique identifier of the issue comment
-	Id int64 `json:"id"`
-	// IssueUrl Required `uri`-formatted value serialized in the `issue_url` wire field.
-	IssueUrl string `json:"issue_url"`
-	// NodeId Required `string` value serialized in the `node_id` wire field.
-	NodeId string `json:"node_id"`
-	// PerformedViaGithubApp GitHub apps are a new way to extend GitHub. They can be installed directly on organizations and user accounts and granted access to specific repositories. They come with granular permissions and built-in webhooks. GitHub apps are first class actors within GitHub.
-	PerformedViaGithubApp NullableValue[Integration] `json:"performed_via_github_app"`
-	// Reactions Required object value serialized in the `reactions` wire field.
-	Reactions WebhooksIssueCommentReactions `json:"reactions"`
-	// UpdatedAt Required `date-time`-formatted value serialized in the `updated_at` wire field.
-	UpdatedAt string `json:"updated_at"`
-	// Url URL for the issue comment
-	Url string `json:"url"`
-	// User Required object value serialized in the `user` wire field.
-	User NullableValue[WebhooksIssueCommentUser] `json:"user"`
-	// Pin Context around who pinned an issue comment and when it was pinned.
-	Pin *NullableValue[NullablePinnedIssueComment] `json:"pin,omitempty"`
-	// Minimized Details about why an issue comment was minimized.
-	Minimized *NullableValue[NullableIssueCommentMinimized] `json:"minimized,omitempty"`
-}
-
-func (value *WebhooksIssueComment) UnmarshalJSON(data []byte) error {
-	type WebhooksIssueCommentAlias WebhooksIssueComment
-	var decoded WebhooksIssueCommentAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = WebhooksIssueComment(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"url", "html_url", "issue_url", "id", "node_id", "user", "created_at", "updated_at", "author_association", "performed_via_github_app", "body", "reactions"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"url", "html_url", "issue_url", "id", "node_id", "created_at", "updated_at", "author_association", "body", "reactions"}); err != nil {
-		return err
-	}
-	if err := ValidateModelDateTime("created_at", value.CreatedAt); err != nil {
-		return err
-	}
-	if err := ValidateUri("html_url", value.HtmlUrl); err != nil {
-		return err
-	}
-	if err := ValidateUri("issue_url", value.IssueUrl); err != nil {
-		return err
-	}
-	if err := ValidateModelDateTime("updated_at", value.UpdatedAt); err != nil {
-		return err
-	}
-	if err := ValidateUri("url", value.Url); err != nil {
-		return err
-	}
-	if raw, ok := rawFields["pin"]; ok && bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
-		value.Pin = &NullableValue[NullablePinnedIssueComment]{}
-	}
-	if raw, ok := rawFields["minimized"]; ok && bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
-		value.Minimized = &NullableValue[NullableIssueCommentMinimized]{}
-	}
-	return nil
-}
-
-// NewWebhooksIssueComment returns a validated WebhooksIssueComment built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewWebhooksIssueComment(fields WebhooksIssueComment) (*WebhooksIssueComment, error) {
-	return ConstructModel(fields)
-}
-
-// WebhooksIssueCommentAuthorAssociationEnum How the author is associated with the repository.
-type WebhooksIssueCommentAuthorAssociationEnum string
-
-const (
-	WebhooksIssueCommentAuthorAssociationEnumCollaborator         WebhooksIssueCommentAuthorAssociationEnum = "COLLABORATOR"
-	WebhooksIssueCommentAuthorAssociationEnumContributor          WebhooksIssueCommentAuthorAssociationEnum = "CONTRIBUTOR"
-	WebhooksIssueCommentAuthorAssociationEnumFirstTimer           WebhooksIssueCommentAuthorAssociationEnum = "FIRST_TIMER"
-	WebhooksIssueCommentAuthorAssociationEnumFirstTimeContributor WebhooksIssueCommentAuthorAssociationEnum = "FIRST_TIME_CONTRIBUTOR"
-	WebhooksIssueCommentAuthorAssociationEnumMannequin            WebhooksIssueCommentAuthorAssociationEnum = "MANNEQUIN"
-	WebhooksIssueCommentAuthorAssociationEnumMember               WebhooksIssueCommentAuthorAssociationEnum = "MEMBER"
-	WebhooksIssueCommentAuthorAssociationEnumNone                 WebhooksIssueCommentAuthorAssociationEnum = "NONE"
-	WebhooksIssueCommentAuthorAssociationEnumOwner                WebhooksIssueCommentAuthorAssociationEnum = "OWNER"
-)
-
-// WebhooksIssueCommentReactions Required object value serialized in the `reactions` wire field.
-type WebhooksIssueCommentReactions struct {
-	// Plus1 Required `integer` value serialized in the `+1` wire field.
-	Plus1 int64 `json:"+1"`
-	// Minus1 Required `integer` value serialized in the `-1` wire field.
-	Minus1 int64 `json:"-1"`
-	// Confused Required `integer` value serialized in the `confused` wire field.
-	Confused int64 `json:"confused"`
-	// Eyes Required `integer` value serialized in the `eyes` wire field.
-	Eyes int64 `json:"eyes"`
-	// Heart Required `integer` value serialized in the `heart` wire field.
-	Heart int64 `json:"heart"`
-	// Hooray Required `integer` value serialized in the `hooray` wire field.
-	Hooray int64 `json:"hooray"`
-	// Laugh Required `integer` value serialized in the `laugh` wire field.
-	Laugh int64 `json:"laugh"`
-	// Rocket Required `integer` value serialized in the `rocket` wire field.
-	Rocket int64 `json:"rocket"`
-	// TotalCount Required `integer` value serialized in the `total_count` wire field.
-	TotalCount int64 `json:"total_count"`
-	// Url Required `uri`-formatted value serialized in the `url` wire field.
-	Url string `json:"url"`
-}
-
-func (value *WebhooksIssueCommentReactions) UnmarshalJSON(data []byte) error {
-	type WebhooksIssueCommentReactionsAlias WebhooksIssueCommentReactions
-	var decoded WebhooksIssueCommentReactionsAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = WebhooksIssueCommentReactions(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"url", "total_count", "+1", "-1", "laugh", "confused", "heart", "hooray", "eyes", "rocket"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"url", "total_count", "+1", "-1", "laugh", "confused", "heart", "hooray", "eyes", "rocket"}); err != nil {
-		return err
-	}
-	if err := ValidateUri("url", value.Url); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewWebhooksIssueCommentReactions returns a validated WebhooksIssueCommentReactions built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewWebhooksIssueCommentReactions(fields WebhooksIssueCommentReactions) (*WebhooksIssueCommentReactions, error) {
-	return ConstructModel(fields)
-}
-
-// WebhooksIssueCommentUser Required object value serialized in the `user` wire field.
-type WebhooksIssueCommentUser struct {
-	// AvatarUrl Optional `uri`-formatted value serialized in the `avatar_url` wire field.
-	AvatarUrl *string `json:"avatar_url,omitempty"`
-	// Deleted Optional `boolean` value serialized in the `deleted` wire field.
-	Deleted *bool `json:"deleted,omitempty"`
-	// Email Optional `string` value serialized in the `email` wire field.
-	Email *NullableValue[string] `json:"email,omitempty"`
-	// EventsUrl Optional `uri-template`-formatted value serialized in the `events_url` wire field.
-	EventsUrl *string `json:"events_url,omitempty"`
-	// FollowersUrl Optional `uri`-formatted value serialized in the `followers_url` wire field.
-	FollowersUrl *string `json:"followers_url,omitempty"`
-	// FollowingUrl Optional `uri-template`-formatted value serialized in the `following_url` wire field.
-	FollowingUrl *string `json:"following_url,omitempty"`
-	// GistsUrl Optional `uri-template`-formatted value serialized in the `gists_url` wire field.
-	GistsUrl *string `json:"gists_url,omitempty"`
-	// GravatarId Optional `string` value serialized in the `gravatar_id` wire field.
-	GravatarId *string `json:"gravatar_id,omitempty"`
-	// HtmlUrl Optional `uri`-formatted value serialized in the `html_url` wire field.
-	HtmlUrl *string `json:"html_url,omitempty"`
-	// Id Required `int64`-formatted value serialized in the `id` wire field.
-	Id int64 `json:"id"`
-	// Login Required `string` value serialized in the `login` wire field.
-	Login string `json:"login"`
-	// Name Optional `string` value serialized in the `name` wire field.
-	Name *string `json:"name,omitempty"`
-	// NodeId Optional `string` value serialized in the `node_id` wire field.
-	NodeId *string `json:"node_id,omitempty"`
-	// OrganizationsUrl Optional `uri`-formatted value serialized in the `organizations_url` wire field.
-	OrganizationsUrl *string `json:"organizations_url,omitempty"`
-	// ReceivedEventsUrl Optional `uri`-formatted value serialized in the `received_events_url` wire field.
-	ReceivedEventsUrl *string `json:"received_events_url,omitempty"`
-	// ReposUrl Optional `uri`-formatted value serialized in the `repos_url` wire field.
-	ReposUrl *string `json:"repos_url,omitempty"`
-	// SiteAdmin Optional `boolean` value serialized in the `site_admin` wire field.
-	SiteAdmin *bool `json:"site_admin,omitempty"`
-	// StarredUrl Optional `uri-template`-formatted value serialized in the `starred_url` wire field.
-	StarredUrl *string `json:"starred_url,omitempty"`
-	// SubscriptionsUrl Optional `uri`-formatted value serialized in the `subscriptions_url` wire field.
-	SubscriptionsUrl *string `json:"subscriptions_url,omitempty"`
-	// Type Optional enumerated value serialized in the `type` wire field.
-	Type *WebhooksIssueCommentUserTypeEnum `json:"type,omitempty"`
-	// Url Optional `uri`-formatted value serialized in the `url` wire field.
-	Url *string `json:"url,omitempty"`
-	// UserViewType Optional `string` value serialized in the `user_view_type` wire field.
-	UserViewType *string `json:"user_view_type,omitempty"`
-}
-
-func (value *WebhooksIssueCommentUser) UnmarshalJSON(data []byte) error {
-	type WebhooksIssueCommentUserAlias WebhooksIssueCommentUser
-	var decoded WebhooksIssueCommentUserAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = WebhooksIssueCommentUser(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"login", "id"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"login", "id"}); err != nil {
-		return err
-	}
-	if value.AvatarUrl != nil {
-		if err := ValidateUri("avatar_url", *value.AvatarUrl); err != nil {
-			return err
-		}
-	}
-	if value.FollowersUrl != nil {
-		if err := ValidateUri("followers_url", *value.FollowersUrl); err != nil {
-			return err
-		}
-	}
-	if value.HtmlUrl != nil {
-		if err := ValidateUri("html_url", *value.HtmlUrl); err != nil {
-			return err
-		}
-	}
-	if value.OrganizationsUrl != nil {
-		if err := ValidateUri("organizations_url", *value.OrganizationsUrl); err != nil {
-			return err
-		}
-	}
-	if value.ReceivedEventsUrl != nil {
-		if err := ValidateUri("received_events_url", *value.ReceivedEventsUrl); err != nil {
-			return err
-		}
-	}
-	if value.ReposUrl != nil {
-		if err := ValidateUri("repos_url", *value.ReposUrl); err != nil {
-			return err
-		}
-	}
-	if value.SubscriptionsUrl != nil {
-		if err := ValidateUri("subscriptions_url", *value.SubscriptionsUrl); err != nil {
-			return err
-		}
-	}
-	if value.Url != nil {
-		if err := ValidateUri("url", *value.Url); err != nil {
-			return err
-		}
-	}
-	if raw, ok := rawFields["email"]; ok && bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
-		value.Email = &NullableValue[string]{}
-	}
-	return nil
-}
-
-// NewWebhooksIssueCommentUser returns a validated WebhooksIssueCommentUser built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewWebhooksIssueCommentUser(fields WebhooksIssueCommentUser) (*WebhooksIssueCommentUser, error) {
-	return ConstructModel(fields)
-}
-
-// WebhooksIssueCommentUserTypeEnum Optional enumerated value serialized in the `type` wire field.
-type WebhooksIssueCommentUserTypeEnum string
-
-const (
-	WebhooksIssueCommentUserTypeEnumBot          WebhooksIssueCommentUserTypeEnum = "Bot"
-	WebhooksIssueCommentUserTypeEnumUser         WebhooksIssueCommentUserTypeEnum = "User"
-	WebhooksIssueCommentUserTypeEnumOrganization WebhooksIssueCommentUserTypeEnum = "Organization"
-	WebhooksIssueCommentUserTypeEnumMannequin    WebhooksIssueCommentUserTypeEnum = "Mannequin"
-)
-
 // WebhooksIssue The [issue](https://docs.github.com/rest/issues/issues#get-an-issue) itself.
 type WebhooksIssue struct {
 	// ActiveLockReason Required enumerated value serialized in the `active_lock_reason` wire field.
@@ -723,3 +447,247 @@ type WebhooksIssueLabels struct {
 	// Url URL for the label
 	Url string `json:"url"`
 }
+
+func (value *WebhooksIssueLabels) UnmarshalJSON(data []byte) error {
+	type WebhooksIssueLabelsAlias WebhooksIssueLabels
+	var decoded WebhooksIssueLabelsAlias
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		return err
+	}
+	*value = WebhooksIssueLabels(decoded)
+	var rawFields map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawFields); err != nil {
+		return err
+	}
+	if err := ValidateRequired(rawFields, []string{"id", "node_id", "url", "name", "color", "default", "description"}); err != nil {
+		return err
+	}
+	if err := ValidateNotNull(rawFields, []string{"id", "node_id", "url", "name", "color", "default"}); err != nil {
+		return err
+	}
+	if err := ValidateUri("url", value.Url); err != nil {
+		return err
+	}
+	return nil
+}
+
+// NewWebhooksIssueLabels returns a validated WebhooksIssueLabels built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewWebhooksIssueLabels(fields WebhooksIssueLabels) (*WebhooksIssueLabels, error) {
+	return ConstructModel(fields)
+}
+
+// WebhooksIssueMilestone A collection of related issues and pull requests.
+type WebhooksIssueMilestone struct {
+	// ClosedAt Required `date-time`-formatted value serialized in the `closed_at` wire field.
+	ClosedAt NullableValue[string] `json:"closed_at"`
+	// ClosedIssues Required `integer` value serialized in the `closed_issues` wire field.
+	ClosedIssues int64 `json:"closed_issues"`
+	// CreatedAt Required `date-time`-formatted value serialized in the `created_at` wire field.
+	CreatedAt string `json:"created_at"`
+	// Creator Required object value serialized in the `creator` wire field.
+	Creator NullableValue[WebhooksIssueMilestoneCreator] `json:"creator"`
+	// Description Required `string` value serialized in the `description` wire field.
+	Description NullableValue[string] `json:"description"`
+	// DueOn Required `date-time`-formatted value serialized in the `due_on` wire field.
+	DueOn NullableValue[string] `json:"due_on"`
+	// HtmlUrl Required `uri`-formatted value serialized in the `html_url` wire field.
+	HtmlUrl string `json:"html_url"`
+	// Id Required `integer` value serialized in the `id` wire field.
+	Id int64 `json:"id"`
+	// LabelsUrl Required `uri`-formatted value serialized in the `labels_url` wire field.
+	LabelsUrl string `json:"labels_url"`
+	// NodeId Required `string` value serialized in the `node_id` wire field.
+	NodeId string `json:"node_id"`
+	// Number The number of the milestone.
+	Number int64 `json:"number"`
+	// OpenIssues Required `integer` value serialized in the `open_issues` wire field.
+	OpenIssues int64 `json:"open_issues"`
+	// State The state of the milestone.
+	State WebhooksIssueMilestoneStateEnum `json:"state"`
+	// Title The title of the milestone.
+	Title string `json:"title"`
+	// UpdatedAt Required `date-time`-formatted value serialized in the `updated_at` wire field.
+	UpdatedAt string `json:"updated_at"`
+	// Url Required `uri`-formatted value serialized in the `url` wire field.
+	Url string `json:"url"`
+}
+
+func (value *WebhooksIssueMilestone) UnmarshalJSON(data []byte) error {
+	type WebhooksIssueMilestoneAlias WebhooksIssueMilestone
+	var decoded WebhooksIssueMilestoneAlias
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		return err
+	}
+	*value = WebhooksIssueMilestone(decoded)
+	var rawFields map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawFields); err != nil {
+		return err
+	}
+	if err := ValidateRequired(rawFields, []string{"url", "html_url", "labels_url", "id", "node_id", "number", "title", "description", "creator", "open_issues", "closed_issues", "state", "created_at", "updated_at", "due_on", "closed_at"}); err != nil {
+		return err
+	}
+	if err := ValidateNotNull(rawFields, []string{"url", "html_url", "labels_url", "id", "node_id", "number", "title", "open_issues", "closed_issues", "state", "created_at", "updated_at"}); err != nil {
+		return err
+	}
+	if err := ValidateModelDateTime("created_at", value.CreatedAt); err != nil {
+		return err
+	}
+	if err := ValidateUri("html_url", value.HtmlUrl); err != nil {
+		return err
+	}
+	if err := ValidateUri("labels_url", value.LabelsUrl); err != nil {
+		return err
+	}
+	if err := ValidateModelDateTime("updated_at", value.UpdatedAt); err != nil {
+		return err
+	}
+	if err := ValidateUri("url", value.Url); err != nil {
+		return err
+	}
+	return nil
+}
+
+// NewWebhooksIssueMilestone returns a validated WebhooksIssueMilestone built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewWebhooksIssueMilestone(fields WebhooksIssueMilestone) (*WebhooksIssueMilestone, error) {
+	return ConstructModel(fields)
+}
+
+// WebhooksIssueMilestoneCreator Required object value serialized in the `creator` wire field.
+type WebhooksIssueMilestoneCreator struct {
+	// AvatarUrl Optional `uri`-formatted value serialized in the `avatar_url` wire field.
+	AvatarUrl *string `json:"avatar_url,omitempty"`
+	// Deleted Optional `boolean` value serialized in the `deleted` wire field.
+	Deleted *bool `json:"deleted,omitempty"`
+	// Email Optional `string` value serialized in the `email` wire field.
+	Email *NullableValue[string] `json:"email,omitempty"`
+	// EventsUrl Optional `uri-template`-formatted value serialized in the `events_url` wire field.
+	EventsUrl *string `json:"events_url,omitempty"`
+	// FollowersUrl Optional `uri`-formatted value serialized in the `followers_url` wire field.
+	FollowersUrl *string `json:"followers_url,omitempty"`
+	// FollowingUrl Optional `uri-template`-formatted value serialized in the `following_url` wire field.
+	FollowingUrl *string `json:"following_url,omitempty"`
+	// GistsUrl Optional `uri-template`-formatted value serialized in the `gists_url` wire field.
+	GistsUrl *string `json:"gists_url,omitempty"`
+	// GravatarId Optional `string` value serialized in the `gravatar_id` wire field.
+	GravatarId *string `json:"gravatar_id,omitempty"`
+	// HtmlUrl Optional `uri`-formatted value serialized in the `html_url` wire field.
+	HtmlUrl *string `json:"html_url,omitempty"`
+	// Id Required `integer` value serialized in the `id` wire field.
+	Id int64 `json:"id"`
+	// Login Required `string` value serialized in the `login` wire field.
+	Login string `json:"login"`
+	// Name Optional `string` value serialized in the `name` wire field.
+	Name *string `json:"name,omitempty"`
+	// NodeId Optional `string` value serialized in the `node_id` wire field.
+	NodeId *string `json:"node_id,omitempty"`
+	// OrganizationsUrl Optional `uri`-formatted value serialized in the `organizations_url` wire field.
+	OrganizationsUrl *string `json:"organizations_url,omitempty"`
+	// ReceivedEventsUrl Optional `uri`-formatted value serialized in the `received_events_url` wire field.
+	ReceivedEventsUrl *string `json:"received_events_url,omitempty"`
+	// ReposUrl Optional `uri`-formatted value serialized in the `repos_url` wire field.
+	ReposUrl *string `json:"repos_url,omitempty"`
+	// SiteAdmin Optional `boolean` value serialized in the `site_admin` wire field.
+	SiteAdmin *bool `json:"site_admin,omitempty"`
+	// StarredUrl Optional `uri-template`-formatted value serialized in the `starred_url` wire field.
+	StarredUrl *string `json:"starred_url,omitempty"`
+	// SubscriptionsUrl Optional `uri`-formatted value serialized in the `subscriptions_url` wire field.
+	SubscriptionsUrl *string `json:"subscriptions_url,omitempty"`
+	// Type Optional enumerated value serialized in the `type` wire field.
+	Type *WebhooksIssueMilestoneCreatorTypeEnum `json:"type,omitempty"`
+	// Url Optional `uri`-formatted value serialized in the `url` wire field.
+	Url *string `json:"url,omitempty"`
+	// UserViewType Optional `string` value serialized in the `user_view_type` wire field.
+	UserViewType *string `json:"user_view_type,omitempty"`
+}
+
+func (value *WebhooksIssueMilestoneCreator) UnmarshalJSON(data []byte) error {
+	type WebhooksIssueMilestoneCreatorAlias WebhooksIssueMilestoneCreator
+	var decoded WebhooksIssueMilestoneCreatorAlias
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		return err
+	}
+	*value = WebhooksIssueMilestoneCreator(decoded)
+	var rawFields map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawFields); err != nil {
+		return err
+	}
+	if err := ValidateRequired(rawFields, []string{"login", "id"}); err != nil {
+		return err
+	}
+	if err := ValidateNotNull(rawFields, []string{"login", "id"}); err != nil {
+		return err
+	}
+	if value.AvatarUrl != nil {
+		if err := ValidateUri("avatar_url", *value.AvatarUrl); err != nil {
+			return err
+		}
+	}
+	if value.FollowersUrl != nil {
+		if err := ValidateUri("followers_url", *value.FollowersUrl); err != nil {
+			return err
+		}
+	}
+	if value.HtmlUrl != nil {
+		if err := ValidateUri("html_url", *value.HtmlUrl); err != nil {
+			return err
+		}
+	}
+	if value.OrganizationsUrl != nil {
+		if err := ValidateUri("organizations_url", *value.OrganizationsUrl); err != nil {
+			return err
+		}
+	}
+	if value.ReceivedEventsUrl != nil {
+		if err := ValidateUri("received_events_url", *value.ReceivedEventsUrl); err != nil {
+			return err
+		}
+	}
+	if value.ReposUrl != nil {
+		if err := ValidateUri("repos_url", *value.ReposUrl); err != nil {
+			return err
+		}
+	}
+	if value.SubscriptionsUrl != nil {
+		if err := ValidateUri("subscriptions_url", *value.SubscriptionsUrl); err != nil {
+			return err
+		}
+	}
+	if value.Url != nil {
+		if err := ValidateUri("url", *value.Url); err != nil {
+			return err
+		}
+	}
+	if raw, ok := rawFields["email"]; ok && bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
+		value.Email = &NullableValue[string]{}
+	}
+	return nil
+}
+
+// NewWebhooksIssueMilestoneCreator returns a validated WebhooksIssueMilestoneCreator built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewWebhooksIssueMilestoneCreator(fields WebhooksIssueMilestoneCreator) (*WebhooksIssueMilestoneCreator, error) {
+	return ConstructModel(fields)
+}
+
+// WebhooksIssueMilestoneCreatorTypeEnum Optional enumerated value serialized in the `type` wire field.
+type WebhooksIssueMilestoneCreatorTypeEnum string
+
+const (
+	WebhooksIssueMilestoneCreatorTypeEnumBot          WebhooksIssueMilestoneCreatorTypeEnum = "Bot"
+	WebhooksIssueMilestoneCreatorTypeEnumUser         WebhooksIssueMilestoneCreatorTypeEnum = "User"
+	WebhooksIssueMilestoneCreatorTypeEnumOrganization WebhooksIssueMilestoneCreatorTypeEnum = "Organization"
+	WebhooksIssueMilestoneCreatorTypeEnumMannequin    WebhooksIssueMilestoneCreatorTypeEnum = "Mannequin"
+)
+
+// WebhooksIssueMilestoneStateEnum The state of the milestone.
+type WebhooksIssueMilestoneStateEnum string
+
+const (
+	WebhooksIssueMilestoneStateEnumOpen   WebhooksIssueMilestoneStateEnum = "open"
+	WebhooksIssueMilestoneStateEnumClosed WebhooksIssueMilestoneStateEnum = "closed"
+)

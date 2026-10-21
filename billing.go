@@ -8,34 +8,6 @@ import (
 	"fmt"
 )
 
-type BillingCreateOrganizationBudgetBudgetAlerting struct {
-	// WillAlert Whether alerts are enabled for this budget. Rejected for user-scope as alerting is always disabled for them.
-	WillAlert *bool `json:"will_alert,omitempty"`
-	// AlertRecipients Array of user login names who will receive alerts. Rejected for user-scope as alerting is always disabled for them.
-	AlertRecipients []string `json:"alert_recipients,omitempty"`
-}
-
-// NewBillingCreateOrganizationBudgetBudgetAlerting returns a validated BillingCreateOrganizationBudgetBudgetAlerting built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewBillingCreateOrganizationBudgetBudgetAlerting(fields BillingCreateOrganizationBudgetBudgetAlerting) (*BillingCreateOrganizationBudgetBudgetAlerting, error) {
-	return ConstructModel(fields)
-}
-
-type BillingUpdateBudgetOrgBudgetAlerting struct {
-	// WillAlert Whether alerts are enabled for this budget. Ignored for user-scopes as alerting is always disabled for them.
-	WillAlert *bool `json:"will_alert,omitempty"`
-	// AlertRecipients Array of user login names who will receive alerts. Ignored for user-scopes as alerting is always disabled for them.
-	AlertRecipients []string `json:"alert_recipients,omitempty"`
-}
-
-// NewBillingUpdateBudgetOrgBudgetAlerting returns a validated BillingUpdateBudgetOrgBudgetAlerting built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewBillingUpdateBudgetOrgBudgetAlerting(fields BillingUpdateBudgetOrgBudgetAlerting) (*BillingUpdateBudgetOrgBudgetAlerting, error) {
-	return ConstructModel(fields)
-}
-
 type BillingGetGithubBillingAiCreditUsageReportOrgParams struct {
 	Org     string
 	Year    *int64
@@ -683,4 +655,32 @@ func BillingGetGithubBillingUsageSummaryReportUser(ctx context.Context, clientCo
 		return nil, err
 	}
 	return &resp.Data, nil
+}
+
+type BillingCreateOrganizationBudgetBudgetAlerting struct {
+	// WillAlert Whether alerts are enabled for this budget. Rejected for user-scope as alerting is always disabled for them.
+	WillAlert *bool `json:"will_alert,omitempty"`
+	// AlertRecipients Array of user login names who will receive alerts. Rejected for user-scope as alerting is always disabled for them.
+	AlertRecipients []string `json:"alert_recipients,omitempty"`
+}
+
+// NewBillingCreateOrganizationBudgetBudgetAlerting returns a validated BillingCreateOrganizationBudgetBudgetAlerting built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewBillingCreateOrganizationBudgetBudgetAlerting(fields BillingCreateOrganizationBudgetBudgetAlerting) (*BillingCreateOrganizationBudgetBudgetAlerting, error) {
+	return ConstructModel(fields)
+}
+
+type BillingUpdateBudgetOrgBudgetAlerting struct {
+	// WillAlert Whether alerts are enabled for this budget. Ignored for user-scopes as alerting is always disabled for them.
+	WillAlert *bool `json:"will_alert,omitempty"`
+	// AlertRecipients Array of user login names who will receive alerts. Ignored for user-scopes as alerting is always disabled for them.
+	AlertRecipients []string `json:"alert_recipients,omitempty"`
+}
+
+// NewBillingUpdateBudgetOrgBudgetAlerting returns a validated BillingUpdateBudgetOrgBudgetAlerting built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewBillingUpdateBudgetOrgBudgetAlerting(fields BillingUpdateBudgetOrgBudgetAlerting) (*BillingUpdateBudgetOrgBudgetAlerting, error) {
+	return ConstructModel(fields)
 }

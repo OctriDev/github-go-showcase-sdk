@@ -715,3 +715,13 @@ func (value *WebhookStatusCommitParents) UnmarshalJSON(data []byte) error {
 func NewWebhookStatusCommitParents(fields WebhookStatusCommitParents) (*WebhookStatusCommitParents, error) {
 	return ConstructModel(fields)
 }
+
+// WebhookStatusStateEnum The new state. Can be `pending`, `success`, `failure`, or `error`.
+type WebhookStatusStateEnum string
+
+const (
+	WebhookStatusStateEnumPending WebhookStatusStateEnum = "pending"
+	WebhookStatusStateEnumSuccess WebhookStatusStateEnum = "success"
+	WebhookStatusStateEnumFailure WebhookStatusStateEnum = "failure"
+	WebhookStatusStateEnumError   WebhookStatusStateEnum = "error"
+)

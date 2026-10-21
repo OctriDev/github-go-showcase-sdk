@@ -9,38 +9,6 @@ import (
 	"fmt"
 )
 
-type HostedComputeListNetworkConfigurationsForOrgResponse struct {
-	TotalCount            int64                  `json:"total_count"`
-	NetworkConfigurations []NetworkConfiguration `json:"network_configurations"`
-}
-
-func (value *HostedComputeListNetworkConfigurationsForOrgResponse) UnmarshalJSON(data []byte) error {
-	type HostedComputeListNetworkConfigurationsForOrgResponseAlias HostedComputeListNetworkConfigurationsForOrgResponse
-	var decoded HostedComputeListNetworkConfigurationsForOrgResponseAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = HostedComputeListNetworkConfigurationsForOrgResponse(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"total_count", "network_configurations"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"total_count", "network_configurations"}); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewHostedComputeListNetworkConfigurationsForOrgResponse returns a validated HostedComputeListNetworkConfigurationsForOrgResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewHostedComputeListNetworkConfigurationsForOrgResponse(fields HostedComputeListNetworkConfigurationsForOrgResponse) (*HostedComputeListNetworkConfigurationsForOrgResponse, error) {
-	return ConstructModel(fields)
-}
-
 type HostedComputeListNetworkConfigurationsForOrgParams struct {
 	Org     string
 	PerPage *int64
@@ -284,4 +252,36 @@ func HostedComputeGetNetworkSettingsForOrg(ctx context.Context, clientConfig Cli
 		return nil, err
 	}
 	return &resp.Data, nil
+}
+
+type HostedComputeListNetworkConfigurationsForOrgResponse struct {
+	TotalCount            int64                  `json:"total_count"`
+	NetworkConfigurations []NetworkConfiguration `json:"network_configurations"`
+}
+
+func (value *HostedComputeListNetworkConfigurationsForOrgResponse) UnmarshalJSON(data []byte) error {
+	type HostedComputeListNetworkConfigurationsForOrgResponseAlias HostedComputeListNetworkConfigurationsForOrgResponse
+	var decoded HostedComputeListNetworkConfigurationsForOrgResponseAlias
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		return err
+	}
+	*value = HostedComputeListNetworkConfigurationsForOrgResponse(decoded)
+	var rawFields map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawFields); err != nil {
+		return err
+	}
+	if err := ValidateRequired(rawFields, []string{"total_count", "network_configurations"}); err != nil {
+		return err
+	}
+	if err := ValidateNotNull(rawFields, []string{"total_count", "network_configurations"}); err != nil {
+		return err
+	}
+	return nil
+}
+
+// NewHostedComputeListNetworkConfigurationsForOrgResponse returns a validated HostedComputeListNetworkConfigurationsForOrgResponse built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewHostedComputeListNetworkConfigurationsForOrgResponse(fields HostedComputeListNetworkConfigurationsForOrgResponse) (*HostedComputeListNetworkConfigurationsForOrgResponse, error) {
+	return ConstructModel(fields)
 }

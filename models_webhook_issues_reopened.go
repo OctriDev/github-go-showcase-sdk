@@ -726,3 +726,21 @@ func (value *WebhookIssuesReopenedIssueMilestoneCreator) UnmarshalJSON(data []by
 func NewWebhookIssuesReopenedIssueMilestoneCreator(fields WebhookIssuesReopenedIssueMilestoneCreator) (*WebhookIssuesReopenedIssueMilestoneCreator, error) {
 	return ConstructModel(fields)
 }
+
+// WebhookIssuesReopenedIssueMilestoneCreatorTypeEnum Optional enumerated value serialized in the `type` wire field.
+type WebhookIssuesReopenedIssueMilestoneCreatorTypeEnum string
+
+const (
+	WebhookIssuesReopenedIssueMilestoneCreatorTypeEnumBot          WebhookIssuesReopenedIssueMilestoneCreatorTypeEnum = "Bot"
+	WebhookIssuesReopenedIssueMilestoneCreatorTypeEnumUser         WebhookIssuesReopenedIssueMilestoneCreatorTypeEnum = "User"
+	WebhookIssuesReopenedIssueMilestoneCreatorTypeEnumOrganization WebhookIssuesReopenedIssueMilestoneCreatorTypeEnum = "Organization"
+	WebhookIssuesReopenedIssueMilestoneCreatorTypeEnumMannequin    WebhookIssuesReopenedIssueMilestoneCreatorTypeEnum = "Mannequin"
+)
+
+// WebhookIssuesReopenedIssueMilestoneStateEnum The state of the milestone.
+type WebhookIssuesReopenedIssueMilestoneStateEnum string
+
+const (
+	WebhookIssuesReopenedIssueMilestoneStateEnumOpen   WebhookIssuesReopenedIssueMilestoneStateEnum = "open"
+	WebhookIssuesReopenedIssueMilestoneStateEnumClosed WebhookIssuesReopenedIssueMilestoneStateEnum = "closed"
+)

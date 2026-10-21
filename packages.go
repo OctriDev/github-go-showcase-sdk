@@ -8,29 +8,6 @@ import (
 	"fmt"
 )
 
-type PackagesListDockerMigrationConflictingPackagesForOrganizationParams struct {
-	Org string
-}
-
-// PackagesListDockerMigrationConflictingPackagesForOrganization lists all packages that are in a specific organization, are readable by the requesting user, and that encountered a conflict during a Docker migration. OAuth app tokens and personal access tokens (classic) need the `read:packages` scope to use this endpoint.
-//
-// Parameters:
-//
-//	org: The organization name. The name is not case sensitive.
-func PackagesListDockerMigrationConflictingPackagesForOrganization(ctx context.Context, clientConfig ClientConfig, params PackagesListDockerMigrationConflictingPackagesForOrganizationParams, opts ...RequestOption) ([]Package, error) {
-	org := params.Org
-
-	resp, err := DoCfg[[]Package](ctx, &clientConfig, "GET", fmt.Sprintf("/orgs/%s/docker/conflicts", EncodePathSegment(org)), &RequestOpts{
-		OperationID: "PackagesListDockerMigrationConflictingPackagesForOrganization",
-		Errors:      ErrorDecoders{"401": decodeErrorData[BasicError], "403": decodeErrorData[BasicError]},
-		Options:     opts,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return resp.Data, nil
-}
-
 type PackagesListPackagesForOrganizationParams struct {
 	Org         string
 	PackageType string
@@ -158,223 +135,6 @@ func PackagesDeletePackageForOrg(ctx context.Context, clientConfig ClientConfig,
 	return nil, nil
 }
 
-type PackagesRestorePackageForOrgParams struct {
-	PackageType string
-	PackageName string
-	Org         string
-	Token       *string
-}
-
-// PackagesRestorePackageForOrg restores an entire package in an organization. You can restore a deleted package under the following conditions: - The package was deleted within the last 30 days. - The same package namespace and version is still available and not reused for a new package. If the same package namespace is not available, you will not be able to restore your package. In this scenario, to restore the deleted package, you must delete the new package that uses the deleted package's namespace first. The authenticated user must have admin permissions in the organization to use this endpoint. If the `package_type` belongs to a GitHub Packages registry that supports granular permissions, the authenticated user must also have admin permissions to the package. For the list of these registries, see "[About permissions for GitHub Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#granular-permissions-for-userorganization-scoped-packages)." OAuth app tokens and personal access tokens (classic) need the `read:packages` and `write:packages` scopes to use this endpoint. For more information, see "[About permissions for GitHub Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
-//
-// Parameters:
-//
-//	packageType: The type of supported package. Packages in GitHub's Gradle
-//	registry have the type `maven`. Docker images pushed to GitHub's Container
-//	registry (`ghcr.io`) have the type `container`. You can use the type
-//	`docker` to find images that were pushed to GitHub's Docker registry
-//	(`docker.pkg.github.com`), even if these have now been migrated to the
-//	Container registry.
-//	packageName: The name of the package.
-//	org: The organization name. The name is not case sensitive.
-//	token: package token
-func PackagesRestorePackageForOrg(ctx context.Context, clientConfig ClientConfig, params PackagesRestorePackageForOrgParams, opts ...RequestOption) (any, error) {
-	packageType := params.PackageType
-	packageName := params.PackageName
-	org := params.Org
-	token := params.Token
-
-	_, err := DoEmptyCfg(ctx, &clientConfig, "POST", fmt.Sprintf("/orgs/%s/packages/%s/%s/restore", EncodePathSegment(org), EncodePathSegment(packageType), EncodePathSegment(packageName)), &RequestOpts{
-		Query: map[string]any{
-			"token": QueryValue{Value: token, Style: "form", Explode: true},
-		},
-		OperationID: "PackagesRestorePackageForOrg",
-		Errors:      ErrorDecoders{"401": decodeErrorData[BasicError], "403": decodeErrorData[BasicError], "404": decodeErrorData[BasicError]},
-		Options:     opts,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return nil, nil
-}
-
-type PackagesGetAllPackageVersionsForPackageOwnedByOrgParams struct {
-	PackageType string
-	PackageName string
-	Org         string
-	Page        *int64
-	PerPage     *int64
-	State       *string
-}
-
-// PackagesGetAllPackageVersionsForPackageOwnedByOrg lists package versions for a package owned by an organization. OAuth app tokens and personal access tokens (classic) need the `read:packages` scope to use this endpoint. For more information, see "[About permissions for GitHub Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
-//
-// Parameters:
-//
-//	packageType: The type of supported package. Packages in GitHub's Gradle
-//	registry have the type `maven`. Docker images pushed to GitHub's Container
-//	registry (`ghcr.io`) have the type `container`. You can use the type
-//	`docker` to find images that were pushed to GitHub's Docker registry
-//	(`docker.pkg.github.com`), even if these have now been migrated to the
-//	Container registry.
-//	packageName: The name of the package.
-//	org: The organization name. The name is not case sensitive.
-//	page: The page number of the results to fetch. For more information, see
-//	"[Using pagination in the REST
-//	API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the
-//	-rest-api)."
-//	perPage: The number of results per page (max 100). For more information, see
-//	"[Using pagination in the REST
-//	API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the
-//	-rest-api)."
-//	state: The state of the package, either active or deleted.
-func PackagesGetAllPackageVersionsForPackageOwnedByOrg(ctx context.Context, clientConfig ClientConfig, params PackagesGetAllPackageVersionsForPackageOwnedByOrgParams, opts ...RequestOption) ([]PackageVersion, error) {
-	packageType := params.PackageType
-	packageName := params.PackageName
-	org := params.Org
-	page := params.Page
-	perPage := params.PerPage
-	state := params.State
-
-	resp, err := DoCfg[[]PackageVersion](ctx, &clientConfig, "GET", fmt.Sprintf("/orgs/%s/packages/%s/%s/versions", EncodePathSegment(org), EncodePathSegment(packageType), EncodePathSegment(packageName)), &RequestOpts{
-		Query: map[string]any{
-			"page":     QueryValue{Value: page, Style: "form", Explode: true},
-			"per_page": QueryValue{Value: perPage, Style: "form", Explode: true},
-			"state":    QueryValue{Value: state, Style: "form", Explode: true},
-		},
-		OperationID: "PackagesGetAllPackageVersionsForPackageOwnedByOrg",
-		Errors:      ErrorDecoders{"401": decodeErrorData[BasicError], "403": decodeErrorData[BasicError], "404": decodeErrorData[BasicError]},
-		Options:     opts,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return resp.Data, nil
-}
-
-type PackagesGetPackageVersionForOrganizationParams struct {
-	PackageType      string
-	PackageName      string
-	Org              string
-	PackageVersionId int64
-}
-
-// PackagesGetPackageVersionForOrganization gets a specific package version in an organization. OAuth app tokens and personal access tokens (classic) need the `read:packages` scope to use this endpoint. For more information, see "[About permissions for GitHub Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
-//
-// Parameters:
-//
-//	packageType: The type of supported package. Packages in GitHub's Gradle
-//	registry have the type `maven`. Docker images pushed to GitHub's Container
-//	registry (`ghcr.io`) have the type `container`. You can use the type
-//	`docker` to find images that were pushed to GitHub's Docker registry
-//	(`docker.pkg.github.com`), even if these have now been migrated to the
-//	Container registry.
-//	packageName: The name of the package.
-//	org: The organization name. The name is not case sensitive.
-//	packageVersionId: Unique identifier of the package version.
-func PackagesGetPackageVersionForOrganization(ctx context.Context, clientConfig ClientConfig, params PackagesGetPackageVersionForOrganizationParams, opts ...RequestOption) (*PackageVersion, error) {
-	packageType := params.PackageType
-	packageName := params.PackageName
-	org := params.Org
-	packageVersionId := params.PackageVersionId
-
-	resp, err := DoCfg[PackageVersion](ctx, &clientConfig, "GET", fmt.Sprintf("/orgs/%s/packages/%s/%s/versions/%s", EncodePathSegment(org), EncodePathSegment(packageType), EncodePathSegment(packageName), EncodePathSegment(packageVersionId)), &RequestOpts{
-		OperationID: "PackagesGetPackageVersionForOrganization",
-		Options:     opts,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return &resp.Data, nil
-}
-
-type PackagesDeletePackageVersionForOrgParams struct {
-	PackageType      string
-	PackageName      string
-	Org              string
-	PackageVersionId int64
-}
-
-// PackagesDeletePackageVersionForOrg deletes a specific package version in an organization. If the package is public and the package version has more than 5,000 downloads, you cannot delete the package version. In this scenario, contact GitHub support for further assistance. The authenticated user must have admin permissions in the organization to use this endpoint. If the `package_type` belongs to a GitHub Packages registry that supports granular permissions, the authenticated user must also have admin permissions to the package. For the list of these registries, see "[About permissions for GitHub Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#granular-permissions-for-userorganization-scoped-packages)." OAuth app tokens and personal access tokens (classic) need the `read:packages` and `delete:packages` scopes to use this endpoint. For more information, see "[About permissions for GitHub Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
-//
-// Parameters:
-//
-//	packageType: The type of supported package. Packages in GitHub's Gradle
-//	registry have the type `maven`. Docker images pushed to GitHub's Container
-//	registry (`ghcr.io`) have the type `container`. You can use the type
-//	`docker` to find images that were pushed to GitHub's Docker registry
-//	(`docker.pkg.github.com`), even if these have now been migrated to the
-//	Container registry.
-//	packageName: The name of the package.
-//	org: The organization name. The name is not case sensitive.
-//	packageVersionId: Unique identifier of the package version.
-func PackagesDeletePackageVersionForOrg(ctx context.Context, clientConfig ClientConfig, params PackagesDeletePackageVersionForOrgParams, opts ...RequestOption) (any, error) {
-	packageType := params.PackageType
-	packageName := params.PackageName
-	org := params.Org
-	packageVersionId := params.PackageVersionId
-
-	_, err := DoEmptyCfg(ctx, &clientConfig, "DELETE", fmt.Sprintf("/orgs/%s/packages/%s/%s/versions/%s", EncodePathSegment(org), EncodePathSegment(packageType), EncodePathSegment(packageName), EncodePathSegment(packageVersionId)), &RequestOpts{
-		OperationID: "PackagesDeletePackageVersionForOrg",
-		Errors:      ErrorDecoders{"401": decodeErrorData[BasicError], "403": decodeErrorData[BasicError], "404": decodeErrorData[BasicError]},
-		Options:     opts,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return nil, nil
-}
-
-type PackagesRestorePackageVersionForOrgParams struct {
-	PackageType      string
-	PackageName      string
-	Org              string
-	PackageVersionId int64
-}
-
-// PackagesRestorePackageVersionForOrg restores a specific package version in an organization. You can restore a deleted package under the following conditions: - The package was deleted within the last 30 days. - The same package namespace and version is still available and not reused for a new package. If the same package namespace is not available, you will not be able to restore your package. In this scenario, to restore the deleted package, you must delete the new package that uses the deleted package's namespace first. The authenticated user must have admin permissions in the organization to use this endpoint. If the `package_type` belongs to a GitHub Packages registry that supports granular permissions, the authenticated user must also have admin permissions to the package. For the list of these registries, see "[About permissions for GitHub Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#granular-permissions-for-userorganization-scoped-packages)." OAuth app tokens and personal access tokens (classic) need the `read:packages` and `write:packages` scopes to use this endpoint. For more information, see "[About permissions for GitHub Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
-//
-// Parameters:
-//
-//	packageType: The type of supported package. Packages in GitHub's Gradle
-//	registry have the type `maven`. Docker images pushed to GitHub's Container
-//	registry (`ghcr.io`) have the type `container`. You can use the type
-//	`docker` to find images that were pushed to GitHub's Docker registry
-//	(`docker.pkg.github.com`), even if these have now been migrated to the
-//	Container registry.
-//	packageName: The name of the package.
-//	org: The organization name. The name is not case sensitive.
-//	packageVersionId: Unique identifier of the package version.
-func PackagesRestorePackageVersionForOrg(ctx context.Context, clientConfig ClientConfig, params PackagesRestorePackageVersionForOrgParams, opts ...RequestOption) (any, error) {
-	packageType := params.PackageType
-	packageName := params.PackageName
-	org := params.Org
-	packageVersionId := params.PackageVersionId
-
-	_, err := DoEmptyCfg(ctx, &clientConfig, "POST", fmt.Sprintf("/orgs/%s/packages/%s/%s/versions/%s/restore", EncodePathSegment(org), EncodePathSegment(packageType), EncodePathSegment(packageName), EncodePathSegment(packageVersionId)), &RequestOpts{
-		OperationID: "PackagesRestorePackageVersionForOrg",
-		Errors:      ErrorDecoders{"401": decodeErrorData[BasicError], "403": decodeErrorData[BasicError], "404": decodeErrorData[BasicError]},
-		Options:     opts,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return nil, nil
-}
-
-// PackagesListDockerMigrationConflictingPackagesForAuthenticatedUser lists all packages that are owned by the authenticated user within the user's namespace, and that encountered a conflict during a Docker migration. OAuth app tokens and personal access tokens (classic) need the `read:packages` scope to use this endpoint.
-func PackagesListDockerMigrationConflictingPackagesForAuthenticatedUser(ctx context.Context, clientConfig ClientConfig, opts ...RequestOption) ([]Package, error) {
-
-	resp, err := DoCfg[[]Package](ctx, &clientConfig, "GET", "/user/docker/conflicts", &RequestOpts{
-		OperationID: "PackagesListDockerMigrationConflictingPackagesForAuthenticatedUser",
-		Options:     opts,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return resp.Data, nil
-}
-
 type PackagesListPackagesForAuthenticatedUserParams struct {
 	PackageType string
 	Visibility  *string
@@ -492,62 +252,34 @@ func PackagesDeletePackageForAuthenticatedUser(ctx context.Context, clientConfig
 	return nil, nil
 }
 
-type PackagesRestorePackageForAuthenticatedUserParams struct {
+type PackagesListPackagesForUserParams struct {
+	Username    string
 	PackageType string
-	PackageName string
-	Token       *string
-}
-
-// PackagesRestorePackageForAuthenticatedUser restores a package owned by the authenticated user. You can restore a deleted package under the following conditions: - The package was deleted within the last 30 days. - The same package namespace and version is still available and not reused for a new package. If the same package namespace is not available, you will not be able to restore your package. In this scenario, to restore the deleted package, you must delete the new package that uses the deleted package's namespace first. OAuth app tokens and personal access tokens (classic) need the `read:packages` and `write:packages` scopes to use this endpoint. For more information, see "[About permissions for GitHub Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
-//
-// Parameters:
-//
-//	packageType: The type of supported package. Packages in GitHub's Gradle
-//	registry have the type `maven`. Docker images pushed to GitHub's Container
-//	registry (`ghcr.io`) have the type `container`. You can use the type
-//	`docker` to find images that were pushed to GitHub's Docker registry
-//	(`docker.pkg.github.com`), even if these have now been migrated to the
-//	Container registry.
-//	packageName: The name of the package.
-//	token: package token
-func PackagesRestorePackageForAuthenticatedUser(ctx context.Context, clientConfig ClientConfig, params PackagesRestorePackageForAuthenticatedUserParams, opts ...RequestOption) (any, error) {
-	packageType := params.PackageType
-	packageName := params.PackageName
-	token := params.Token
-
-	_, err := DoEmptyCfg(ctx, &clientConfig, "POST", fmt.Sprintf("/user/packages/%s/%s/restore", EncodePathSegment(packageType), EncodePathSegment(packageName)), &RequestOpts{
-		Query: map[string]any{
-			"token": QueryValue{Value: token, Style: "form", Explode: true},
-		},
-		OperationID: "PackagesRestorePackageForAuthenticatedUser",
-		Errors:      ErrorDecoders{"401": decodeErrorData[BasicError], "403": decodeErrorData[BasicError], "404": decodeErrorData[BasicError]},
-		Options:     opts,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return nil, nil
-}
-
-type PackagesGetAllPackageVersionsForPackageOwnedByAuthenticatedUserParams struct {
-	PackageType string
-	PackageName string
+	Visibility  *string
 	Page        *int64
 	PerPage     *int64
-	State       *string
 }
 
-// PackagesGetAllPackageVersionsForPackageOwnedByAuthenticatedUser lists package versions for a package owned by the authenticated user. OAuth app tokens and personal access tokens (classic) need the `read:packages` scope to use this endpoint. For more information, see "[About permissions for GitHub Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
+// PackagesListPackagesForUser lists all packages in a user's namespace for which the requesting user has access. OAuth app tokens and personal access tokens (classic) need the `read:packages` scope to use this endpoint. For more information, see "[About permissions for GitHub Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
 //
 // Parameters:
 //
+//	username: The handle for the GitHub user account.
 //	packageType: The type of supported package. Packages in GitHub's Gradle
 //	registry have the type `maven`. Docker images pushed to GitHub's Container
 //	registry (`ghcr.io`) have the type `container`. You can use the type
 //	`docker` to find images that were pushed to GitHub's Docker registry
 //	(`docker.pkg.github.com`), even if these have now been migrated to the
 //	Container registry.
-//	packageName: The name of the package.
+//	visibility: The selected visibility of the packages. This parameter is
+//	optional and only filters an existing result set. The `internal` visibility
+//	is only supported for GitHub Packages registries that allow for granular
+//	permissions. For other ecosystems `internal` is synonymous with `private`.
+//	For the list of GitHub Packages registries that support granular
+//	permissions, see "[About permissions for GitHub
+//	Packages](https://docs.github.com/packages/learn-github-packages/about-permi
+//	ssions-for-github-packages#granular-permissions-for-userorganization-scoped-
+//	packages)."
 //	page: The page number of the results to fetch. For more information, see
 //	"[Using pagination in the REST
 //	API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the
@@ -556,145 +288,21 @@ type PackagesGetAllPackageVersionsForPackageOwnedByAuthenticatedUserParams struc
 //	"[Using pagination in the REST
 //	API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the
 //	-rest-api)."
-//	state: The state of the package, either active or deleted.
-func PackagesGetAllPackageVersionsForPackageOwnedByAuthenticatedUser(ctx context.Context, clientConfig ClientConfig, params PackagesGetAllPackageVersionsForPackageOwnedByAuthenticatedUserParams, opts ...RequestOption) ([]PackageVersion, error) {
+func PackagesListPackagesForUser(ctx context.Context, clientConfig ClientConfig, params PackagesListPackagesForUserParams, opts ...RequestOption) ([]Package, error) {
+	username := params.Username
 	packageType := params.PackageType
-	packageName := params.PackageName
+	visibility := params.Visibility
 	page := params.Page
 	perPage := params.PerPage
-	state := params.State
 
-	resp, err := DoCfg[[]PackageVersion](ctx, &clientConfig, "GET", fmt.Sprintf("/user/packages/%s/%s/versions", EncodePathSegment(packageType), EncodePathSegment(packageName)), &RequestOpts{
+	resp, err := DoCfg[[]Package](ctx, &clientConfig, "GET", fmt.Sprintf("/users/%s/packages", EncodePathSegment(username)), &RequestOpts{
 		Query: map[string]any{
-			"page":     QueryValue{Value: page, Style: "form", Explode: true},
-			"per_page": QueryValue{Value: perPage, Style: "form", Explode: true},
-			"state":    QueryValue{Value: state, Style: "form", Explode: true},
+			"package_type": QueryValue{Value: packageType, Style: "form", Explode: true},
+			"visibility":   QueryValue{Value: visibility, Style: "form", Explode: true},
+			"page":         QueryValue{Value: page, Style: "form", Explode: true},
+			"per_page":     QueryValue{Value: perPage, Style: "form", Explode: true},
 		},
-		OperationID: "PackagesGetAllPackageVersionsForPackageOwnedByAuthenticatedUser",
-		Errors:      ErrorDecoders{"401": decodeErrorData[BasicError], "403": decodeErrorData[BasicError], "404": decodeErrorData[BasicError]},
-		Options:     opts,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return resp.Data, nil
-}
-
-type PackagesGetPackageVersionForAuthenticatedUserParams struct {
-	PackageType      string
-	PackageName      string
-	PackageVersionId int64
-}
-
-// PackagesGetPackageVersionForAuthenticatedUser gets a specific package version for a package owned by the authenticated user. OAuth app tokens and personal access tokens (classic) need the `read:packages` scope to use this endpoint. For more information, see "[About permissions for GitHub Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
-//
-// Parameters:
-//
-//	packageType: The type of supported package. Packages in GitHub's Gradle
-//	registry have the type `maven`. Docker images pushed to GitHub's Container
-//	registry (`ghcr.io`) have the type `container`. You can use the type
-//	`docker` to find images that were pushed to GitHub's Docker registry
-//	(`docker.pkg.github.com`), even if these have now been migrated to the
-//	Container registry.
-//	packageName: The name of the package.
-//	packageVersionId: Unique identifier of the package version.
-func PackagesGetPackageVersionForAuthenticatedUser(ctx context.Context, clientConfig ClientConfig, params PackagesGetPackageVersionForAuthenticatedUserParams, opts ...RequestOption) (*PackageVersion, error) {
-	packageType := params.PackageType
-	packageName := params.PackageName
-	packageVersionId := params.PackageVersionId
-
-	resp, err := DoCfg[PackageVersion](ctx, &clientConfig, "GET", fmt.Sprintf("/user/packages/%s/%s/versions/%s", EncodePathSegment(packageType), EncodePathSegment(packageName), EncodePathSegment(packageVersionId)), &RequestOpts{
-		OperationID: "PackagesGetPackageVersionForAuthenticatedUser",
-		Options:     opts,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return &resp.Data, nil
-}
-
-type PackagesDeletePackageVersionForAuthenticatedUserParams struct {
-	PackageType      string
-	PackageName      string
-	PackageVersionId int64
-}
-
-// PackagesDeletePackageVersionForAuthenticatedUser deletes a specific package version for a package owned by the authenticated user. If the package is public and the package version has more than 5,000 downloads, you cannot delete the package version. In this scenario, contact GitHub support for further assistance. The authenticated user must have admin permissions in the organization to use this endpoint. OAuth app tokens and personal access tokens (classic) need the `read:packages` and `delete:packages` scopes to use this endpoint. For more information, see "[About permissions for GitHub Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
-//
-// Parameters:
-//
-//	packageType: The type of supported package. Packages in GitHub's Gradle
-//	registry have the type `maven`. Docker images pushed to GitHub's Container
-//	registry (`ghcr.io`) have the type `container`. You can use the type
-//	`docker` to find images that were pushed to GitHub's Docker registry
-//	(`docker.pkg.github.com`), even if these have now been migrated to the
-//	Container registry.
-//	packageName: The name of the package.
-//	packageVersionId: Unique identifier of the package version.
-func PackagesDeletePackageVersionForAuthenticatedUser(ctx context.Context, clientConfig ClientConfig, params PackagesDeletePackageVersionForAuthenticatedUserParams, opts ...RequestOption) (any, error) {
-	packageType := params.PackageType
-	packageName := params.PackageName
-	packageVersionId := params.PackageVersionId
-
-	_, err := DoEmptyCfg(ctx, &clientConfig, "DELETE", fmt.Sprintf("/user/packages/%s/%s/versions/%s", EncodePathSegment(packageType), EncodePathSegment(packageName), EncodePathSegment(packageVersionId)), &RequestOpts{
-		OperationID: "PackagesDeletePackageVersionForAuthenticatedUser",
-		Errors:      ErrorDecoders{"401": decodeErrorData[BasicError], "403": decodeErrorData[BasicError], "404": decodeErrorData[BasicError]},
-		Options:     opts,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return nil, nil
-}
-
-type PackagesRestorePackageVersionForAuthenticatedUserParams struct {
-	PackageType      string
-	PackageName      string
-	PackageVersionId int64
-}
-
-// PackagesRestorePackageVersionForAuthenticatedUser restores a package version owned by the authenticated user. You can restore a deleted package version under the following conditions: - The package was deleted within the last 30 days. - The same package namespace and version is still available and not reused for a new package. If the same package namespace is not available, you will not be able to restore your package. In this scenario, to restore the deleted package, you must delete the new package that uses the deleted package's namespace first. OAuth app tokens and personal access tokens (classic) need the `read:packages` and `write:packages` scopes to use this endpoint. For more information, see "[About permissions for GitHub Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
-//
-// Parameters:
-//
-//	packageType: The type of supported package. Packages in GitHub's Gradle
-//	registry have the type `maven`. Docker images pushed to GitHub's Container
-//	registry (`ghcr.io`) have the type `container`. You can use the type
-//	`docker` to find images that were pushed to GitHub's Docker registry
-//	(`docker.pkg.github.com`), even if these have now been migrated to the
-//	Container registry.
-//	packageName: The name of the package.
-//	packageVersionId: Unique identifier of the package version.
-func PackagesRestorePackageVersionForAuthenticatedUser(ctx context.Context, clientConfig ClientConfig, params PackagesRestorePackageVersionForAuthenticatedUserParams, opts ...RequestOption) (any, error) {
-	packageType := params.PackageType
-	packageName := params.PackageName
-	packageVersionId := params.PackageVersionId
-
-	_, err := DoEmptyCfg(ctx, &clientConfig, "POST", fmt.Sprintf("/user/packages/%s/%s/versions/%s/restore", EncodePathSegment(packageType), EncodePathSegment(packageName), EncodePathSegment(packageVersionId)), &RequestOpts{
-		OperationID: "PackagesRestorePackageVersionForAuthenticatedUser",
-		Errors:      ErrorDecoders{"401": decodeErrorData[BasicError], "403": decodeErrorData[BasicError], "404": decodeErrorData[BasicError]},
-		Options:     opts,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return nil, nil
-}
-
-type PackagesListDockerMigrationConflictingPackagesForUserParams struct {
-	Username string
-}
-
-// PackagesListDockerMigrationConflictingPackagesForUser lists all packages that are in a specific user's namespace, that the requesting user has access to, and that encountered a conflict during Docker migration. OAuth app tokens and personal access tokens (classic) need the `read:packages` scope to use this endpoint.
-//
-// Parameters:
-//
-//	username: The handle for the GitHub user account.
-func PackagesListDockerMigrationConflictingPackagesForUser(ctx context.Context, clientConfig ClientConfig, params PackagesListDockerMigrationConflictingPackagesForUserParams, opts ...RequestOption) ([]Package, error) {
-	username := params.Username
-
-	resp, err := DoCfg[[]Package](ctx, &clientConfig, "GET", fmt.Sprintf("/users/%s/docker/conflicts", EncodePathSegment(username)), &RequestOpts{
-		OperationID: "PackagesListDockerMigrationConflictingPackagesForUser",
+		OperationID: "PackagesListPackagesForUser",
 		Errors:      ErrorDecoders{"401": decodeErrorData[BasicError], "403": decodeErrorData[BasicError]},
 		Options:     opts,
 	})
@@ -704,10 +312,69 @@ func PackagesListDockerMigrationConflictingPackagesForUser(ctx context.Context, 
 	return resp.Data, nil
 }
 
-type PackagesListPackagesForUserParams struct {
-	Username    string
+type PackagesGetPackageForUserParams struct {
 	PackageType string
-	Visibility  *string
-	Page        *int64
-	PerPage     *int64
+	PackageName string
+	Username    string
+}
+
+// PackagesGetPackageForUser gets a specific package metadata for a public package owned by a user. OAuth app tokens and personal access tokens (classic) need the `read:packages` scope to use this endpoint. For more information, see "[About permissions for GitHub Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
+//
+// Parameters:
+//
+//	packageType: The type of supported package. Packages in GitHub's Gradle
+//	registry have the type `maven`. Docker images pushed to GitHub's Container
+//	registry (`ghcr.io`) have the type `container`. You can use the type
+//	`docker` to find images that were pushed to GitHub's Docker registry
+//	(`docker.pkg.github.com`), even if these have now been migrated to the
+//	Container registry.
+//	packageName: The name of the package.
+//	username: The handle for the GitHub user account.
+func PackagesGetPackageForUser(ctx context.Context, clientConfig ClientConfig, params PackagesGetPackageForUserParams, opts ...RequestOption) (*Package, error) {
+	packageType := params.PackageType
+	packageName := params.PackageName
+	username := params.Username
+
+	resp, err := DoCfg[Package](ctx, &clientConfig, "GET", fmt.Sprintf("/users/%s/packages/%s/%s", EncodePathSegment(username), EncodePathSegment(packageType), EncodePathSegment(packageName)), &RequestOpts{
+		OperationID: "PackagesGetPackageForUser",
+		Options:     opts,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &resp.Data, nil
+}
+
+type PackagesDeletePackageForUserParams struct {
+	PackageType string
+	PackageName string
+	Username    string
+}
+
+// PackagesDeletePackageForUser deletes an entire package for a user. You cannot delete a public package if any version of the package has more than 5,000 downloads. In this scenario, contact GitHub support for further assistance. If the `package_type` belongs to a GitHub Packages registry that supports granular permissions, the authenticated user must have admin permissions to the package. For the list of these registries, see "[About permissions for GitHub Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#granular-permissions-for-userorganization-scoped-packages)." OAuth app tokens and personal access tokens (classic) need the `read:packages` and `delete:packages` scopes to use this endpoint. For more information, see "[About permissions for GitHub Packages](https://docs.github.com/packages/learn-github-packages/about-permissions-for-github-packages#permissions-for-repository-scoped-packages)."
+//
+// Parameters:
+//
+//	packageType: The type of supported package. Packages in GitHub's Gradle
+//	registry have the type `maven`. Docker images pushed to GitHub's Container
+//	registry (`ghcr.io`) have the type `container`. You can use the type
+//	`docker` to find images that were pushed to GitHub's Docker registry
+//	(`docker.pkg.github.com`), even if these have now been migrated to the
+//	Container registry.
+//	packageName: The name of the package.
+//	username: The handle for the GitHub user account.
+func PackagesDeletePackageForUser(ctx context.Context, clientConfig ClientConfig, params PackagesDeletePackageForUserParams, opts ...RequestOption) (any, error) {
+	packageType := params.PackageType
+	packageName := params.PackageName
+	username := params.Username
+
+	_, err := DoEmptyCfg(ctx, &clientConfig, "DELETE", fmt.Sprintf("/users/%s/packages/%s/%s", EncodePathSegment(username), EncodePathSegment(packageType), EncodePathSegment(packageName)), &RequestOpts{
+		OperationID: "PackagesDeletePackageForUser",
+		Errors:      ErrorDecoders{"401": decodeErrorData[BasicError], "403": decodeErrorData[BasicError], "404": decodeErrorData[BasicError]},
+		Options:     opts,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return nil, nil
 }

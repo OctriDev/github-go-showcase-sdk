@@ -8,11 +8,11 @@ import (
 	"fmt"
 )
 
-// GitignoreGetAllTemplates list all templates available to pass as an option when [creating a repository](https://docs.github.com/rest/repos/repos#create-a-repository-for-the-authenticated-user).
-func GitignoreGetAllTemplates(ctx context.Context, clientConfig ClientConfig, opts ...RequestOption) ([]string, error) {
+// ListTemplates list all templates available to pass as an option when [creating a repository](https://docs.github.com/rest/repos/repos#create-a-repository-for-the-authenticated-user).
+func ListTemplates(ctx context.Context, clientConfig ClientConfig, opts ...RequestOption) ([]string, error) {
 
 	resp, err := DoCfg[[]string](ctx, &clientConfig, "GET", "/gitignore/templates", &RequestOpts{
-		OperationID: "GitignoreGetAllTemplates",
+		OperationID: "ListTemplates",
 		Options:     opts,
 	})
 	if err != nil {

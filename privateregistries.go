@@ -9,72 +9,6 @@ import (
 	"fmt"
 )
 
-type PrivateRegistriesListOrgPrivateRegistriesResponse struct {
-	TotalCount     int64                             `json:"total_count"`
-	Configurations []OrgPrivateRegistryConfiguration `json:"configurations"`
-}
-
-func (value *PrivateRegistriesListOrgPrivateRegistriesResponse) UnmarshalJSON(data []byte) error {
-	type PrivateRegistriesListOrgPrivateRegistriesResponseAlias PrivateRegistriesListOrgPrivateRegistriesResponse
-	var decoded PrivateRegistriesListOrgPrivateRegistriesResponseAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = PrivateRegistriesListOrgPrivateRegistriesResponse(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"total_count", "configurations"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"total_count", "configurations"}); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewPrivateRegistriesListOrgPrivateRegistriesResponse returns a validated PrivateRegistriesListOrgPrivateRegistriesResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewPrivateRegistriesListOrgPrivateRegistriesResponse(fields PrivateRegistriesListOrgPrivateRegistriesResponse) (*PrivateRegistriesListOrgPrivateRegistriesResponse, error) {
-	return ConstructModel(fields)
-}
-
-type PrivateRegistriesGetOrgPublicKeyResponse struct {
-	// KeyId The identifier for the key.
-	KeyId string `json:"key_id"`
-	// Key The Base64 encoded public key.
-	Key string `json:"key"`
-}
-
-func (value *PrivateRegistriesGetOrgPublicKeyResponse) UnmarshalJSON(data []byte) error {
-	type PrivateRegistriesGetOrgPublicKeyResponseAlias PrivateRegistriesGetOrgPublicKeyResponse
-	var decoded PrivateRegistriesGetOrgPublicKeyResponseAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = PrivateRegistriesGetOrgPublicKeyResponse(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"key_id", "key"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"key_id", "key"}); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewPrivateRegistriesGetOrgPublicKeyResponse returns a validated PrivateRegistriesGetOrgPublicKeyResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewPrivateRegistriesGetOrgPublicKeyResponse(fields PrivateRegistriesGetOrgPublicKeyResponse) (*PrivateRegistriesGetOrgPublicKeyResponse, error) {
-	return ConstructModel(fields)
-}
-
 type PrivateRegistriesListOrgPrivateRegistriesParams struct {
 	Org     string
 	PerPage *int64
@@ -531,4 +465,70 @@ func PrivateRegistriesDeleteOrgPrivateRegistry(ctx context.Context, clientConfig
 		return nil, err
 	}
 	return nil, nil
+}
+
+type PrivateRegistriesListOrgPrivateRegistriesResponse struct {
+	TotalCount     int64                             `json:"total_count"`
+	Configurations []OrgPrivateRegistryConfiguration `json:"configurations"`
+}
+
+func (value *PrivateRegistriesListOrgPrivateRegistriesResponse) UnmarshalJSON(data []byte) error {
+	type PrivateRegistriesListOrgPrivateRegistriesResponseAlias PrivateRegistriesListOrgPrivateRegistriesResponse
+	var decoded PrivateRegistriesListOrgPrivateRegistriesResponseAlias
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		return err
+	}
+	*value = PrivateRegistriesListOrgPrivateRegistriesResponse(decoded)
+	var rawFields map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawFields); err != nil {
+		return err
+	}
+	if err := ValidateRequired(rawFields, []string{"total_count", "configurations"}); err != nil {
+		return err
+	}
+	if err := ValidateNotNull(rawFields, []string{"total_count", "configurations"}); err != nil {
+		return err
+	}
+	return nil
+}
+
+// NewPrivateRegistriesListOrgPrivateRegistriesResponse returns a validated PrivateRegistriesListOrgPrivateRegistriesResponse built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewPrivateRegistriesListOrgPrivateRegistriesResponse(fields PrivateRegistriesListOrgPrivateRegistriesResponse) (*PrivateRegistriesListOrgPrivateRegistriesResponse, error) {
+	return ConstructModel(fields)
+}
+
+type PrivateRegistriesGetOrgPublicKeyResponse struct {
+	// KeyId The identifier for the key.
+	KeyId string `json:"key_id"`
+	// Key The Base64 encoded public key.
+	Key string `json:"key"`
+}
+
+func (value *PrivateRegistriesGetOrgPublicKeyResponse) UnmarshalJSON(data []byte) error {
+	type PrivateRegistriesGetOrgPublicKeyResponseAlias PrivateRegistriesGetOrgPublicKeyResponse
+	var decoded PrivateRegistriesGetOrgPublicKeyResponseAlias
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		return err
+	}
+	*value = PrivateRegistriesGetOrgPublicKeyResponse(decoded)
+	var rawFields map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawFields); err != nil {
+		return err
+	}
+	if err := ValidateRequired(rawFields, []string{"key_id", "key"}); err != nil {
+		return err
+	}
+	if err := ValidateNotNull(rawFields, []string{"key_id", "key"}); err != nil {
+		return err
+	}
+	return nil
+}
+
+// NewPrivateRegistriesGetOrgPublicKeyResponse returns a validated PrivateRegistriesGetOrgPublicKeyResponse built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewPrivateRegistriesGetOrgPublicKeyResponse(fields PrivateRegistriesGetOrgPublicKeyResponse) (*PrivateRegistriesGetOrgPublicKeyResponse, error) {
+	return ConstructModel(fields)
 }

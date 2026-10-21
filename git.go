@@ -10,187 +10,6 @@ import (
 	"fmt"
 )
 
-// GitCreateCommitAuthor Information about the author of the commit. By default, the `author` will be the authenticated user and the current date. See the `author` and `committer` object below for details.
-type GitCreateCommitAuthor struct {
-	// Name The name of the author (or committer) of the commit
-	Name string `json:"name"`
-	// Email The email of the author (or committer) of the commit
-	Email string `json:"email"`
-	// Date Indicates when this commit was authored (or committed). This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`.
-	Date *string `json:"date,omitempty"`
-}
-
-func (value *GitCreateCommitAuthor) UnmarshalJSON(data []byte) error {
-	type GitCreateCommitAuthorAlias GitCreateCommitAuthor
-	var decoded GitCreateCommitAuthorAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = GitCreateCommitAuthor(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"name", "email"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"name", "email"}); err != nil {
-		return err
-	}
-	if value.Date != nil {
-		if err := ValidateModelDateTime("date", *value.Date); err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-// NewGitCreateCommitAuthor returns a validated GitCreateCommitAuthor built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewGitCreateCommitAuthor(fields GitCreateCommitAuthor) (*GitCreateCommitAuthor, error) {
-	return ConstructModel(fields)
-}
-
-// GitCreateCommitCommitter Information about the person who is making the commit. By default, `committer` will use the information set in `author`. See the `author` and `committer` object below for details.
-type GitCreateCommitCommitter struct {
-	// Name The name of the author (or committer) of the commit
-	Name *string `json:"name,omitempty"`
-	// Email The email of the author (or committer) of the commit
-	Email *string `json:"email,omitempty"`
-	// Date Indicates when this commit was authored (or committed). This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`.
-	Date *string `json:"date,omitempty"`
-}
-
-func (value *GitCreateCommitCommitter) UnmarshalJSON(data []byte) error {
-	type GitCreateCommitCommitterAlias GitCreateCommitCommitter
-	var decoded GitCreateCommitCommitterAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = GitCreateCommitCommitter(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if value.Date != nil {
-		if err := ValidateModelDateTime("date", *value.Date); err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-// NewGitCreateCommitCommitter returns a validated GitCreateCommitCommitter built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewGitCreateCommitCommitter(fields GitCreateCommitCommitter) (*GitCreateCommitCommitter, error) {
-	return ConstructModel(fields)
-}
-
-// GitCreateTagTagger An object with information about the individual creating the tag.
-type GitCreateTagTagger struct {
-	// Name The name of the author of the tag
-	Name string `json:"name"`
-	// Email The email of the author of the tag
-	Email string `json:"email"`
-	// Date When this object was tagged. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`.
-	Date *string `json:"date,omitempty"`
-}
-
-func (value *GitCreateTagTagger) UnmarshalJSON(data []byte) error {
-	type GitCreateTagTaggerAlias GitCreateTagTagger
-	var decoded GitCreateTagTaggerAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = GitCreateTagTagger(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"name", "email"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"name", "email"}); err != nil {
-		return err
-	}
-	if value.Date != nil {
-		if err := ValidateModelDateTime("date", *value.Date); err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-// NewGitCreateTagTagger returns a validated GitCreateTagTagger built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewGitCreateTagTagger(fields GitCreateTagTagger) (*GitCreateTagTagger, error) {
-	return ConstructModel(fields)
-}
-
-type GitCreateTreeTree struct {
-	// Path The file referenced in the tree.
-	Path *string `json:"path,omitempty"`
-	// Mode The file mode; one of `100644` for file (blob), `100755` for executable (blob), `040000` for subdirectory (tree), `160000` for submodule (commit), or `120000` for a blob that specifies the path of a symlink.
-	Mode *GitCreateTreeTreeModeEnum `json:"mode,omitempty"`
-	// Type Either `blob`, `tree`, or `commit`.
-	Type *GitCreateTreeTreeTypeEnum `json:"type,omitempty"`
-	// Sha The SHA1 checksum ID of the object in the tree. Also called `tree.sha`. If the value is `null` then the file will be deleted.
-	//
-	// **Note:** Use either `tree.sha` or `content` to specify the contents of the entry. Using both `tree.sha` and `content` will return an error.
-	Sha *NullableValue[string] `json:"sha,omitempty"`
-	// Content The content you want this file to have. GitHub will write this blob out and use that SHA for this entry. Use either this, or `tree.sha`.
-	//
-	// **Note:** Use either `tree.sha` or `content` to specify the contents of the entry. Using both `tree.sha` and `content` will return an error.
-	Content *string `json:"content,omitempty"`
-}
-
-func (value *GitCreateTreeTree) UnmarshalJSON(data []byte) error {
-	type GitCreateTreeTreeAlias GitCreateTreeTree
-	var decoded GitCreateTreeTreeAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = GitCreateTreeTree(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if raw, ok := rawFields["sha"]; ok && bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
-		value.Sha = &NullableValue[string]{}
-	}
-	return nil
-}
-
-// NewGitCreateTreeTree returns a validated GitCreateTreeTree built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewGitCreateTreeTree(fields GitCreateTreeTree) (*GitCreateTreeTree, error) {
-	return ConstructModel(fields)
-}
-
-// GitCreateTreeTreeModeEnum The file mode; one of `100644` for file (blob), `100755` for executable (blob), `040000` for subdirectory (tree), `160000` for submodule (commit), or `120000` for a blob that specifies the path of a symlink.
-type GitCreateTreeTreeModeEnum string
-
-const (
-	GitCreateTreeTreeModeEnumV100644 GitCreateTreeTreeModeEnum = "100644"
-	GitCreateTreeTreeModeEnumV100755 GitCreateTreeTreeModeEnum = "100755"
-	GitCreateTreeTreeModeEnumV040000 GitCreateTreeTreeModeEnum = "040000"
-	GitCreateTreeTreeModeEnumV160000 GitCreateTreeTreeModeEnum = "160000"
-	GitCreateTreeTreeModeEnumV120000 GitCreateTreeTreeModeEnum = "120000"
-)
-
-// GitCreateTreeTreeTypeEnum Either `blob`, `tree`, or `commit`.
-type GitCreateTreeTreeTypeEnum string
-
-const (
-	GitCreateTreeTreeTypeEnumBlob   GitCreateTreeTreeTypeEnum = "blob"
-	GitCreateTreeTreeTypeEnumTree   GitCreateTreeTreeTypeEnum = "tree"
-	GitCreateTreeTreeTypeEnumCommit GitCreateTreeTreeTypeEnum = "commit"
-)
-
 type GitCreateBlobParams struct {
 	Owner    string
 	Repo     string
@@ -709,3 +528,184 @@ func GitGetTree(ctx context.Context, clientConfig ClientConfig, params GitGetTre
 	}
 	return &resp.Data, nil
 }
+
+// GitCreateCommitAuthor Information about the author of the commit. By default, the `author` will be the authenticated user and the current date. See the `author` and `committer` object below for details.
+type GitCreateCommitAuthor struct {
+	// Name The name of the author (or committer) of the commit
+	Name string `json:"name"`
+	// Email The email of the author (or committer) of the commit
+	Email string `json:"email"`
+	// Date Indicates when this commit was authored (or committed). This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`.
+	Date *string `json:"date,omitempty"`
+}
+
+func (value *GitCreateCommitAuthor) UnmarshalJSON(data []byte) error {
+	type GitCreateCommitAuthorAlias GitCreateCommitAuthor
+	var decoded GitCreateCommitAuthorAlias
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		return err
+	}
+	*value = GitCreateCommitAuthor(decoded)
+	var rawFields map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawFields); err != nil {
+		return err
+	}
+	if err := ValidateRequired(rawFields, []string{"name", "email"}); err != nil {
+		return err
+	}
+	if err := ValidateNotNull(rawFields, []string{"name", "email"}); err != nil {
+		return err
+	}
+	if value.Date != nil {
+		if err := ValidateModelDateTime("date", *value.Date); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// NewGitCreateCommitAuthor returns a validated GitCreateCommitAuthor built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewGitCreateCommitAuthor(fields GitCreateCommitAuthor) (*GitCreateCommitAuthor, error) {
+	return ConstructModel(fields)
+}
+
+// GitCreateCommitCommitter Information about the person who is making the commit. By default, `committer` will use the information set in `author`. See the `author` and `committer` object below for details.
+type GitCreateCommitCommitter struct {
+	// Name The name of the author (or committer) of the commit
+	Name *string `json:"name,omitempty"`
+	// Email The email of the author (or committer) of the commit
+	Email *string `json:"email,omitempty"`
+	// Date Indicates when this commit was authored (or committed). This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`.
+	Date *string `json:"date,omitempty"`
+}
+
+func (value *GitCreateCommitCommitter) UnmarshalJSON(data []byte) error {
+	type GitCreateCommitCommitterAlias GitCreateCommitCommitter
+	var decoded GitCreateCommitCommitterAlias
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		return err
+	}
+	*value = GitCreateCommitCommitter(decoded)
+	var rawFields map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawFields); err != nil {
+		return err
+	}
+	if value.Date != nil {
+		if err := ValidateModelDateTime("date", *value.Date); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// NewGitCreateCommitCommitter returns a validated GitCreateCommitCommitter built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewGitCreateCommitCommitter(fields GitCreateCommitCommitter) (*GitCreateCommitCommitter, error) {
+	return ConstructModel(fields)
+}
+
+// GitCreateTagTagger An object with information about the individual creating the tag.
+type GitCreateTagTagger struct {
+	// Name The name of the author of the tag
+	Name string `json:"name"`
+	// Email The email of the author of the tag
+	Email string `json:"email"`
+	// Date When this object was tagged. This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: `YYYY-MM-DDTHH:MM:SSZ`.
+	Date *string `json:"date,omitempty"`
+}
+
+func (value *GitCreateTagTagger) UnmarshalJSON(data []byte) error {
+	type GitCreateTagTaggerAlias GitCreateTagTagger
+	var decoded GitCreateTagTaggerAlias
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		return err
+	}
+	*value = GitCreateTagTagger(decoded)
+	var rawFields map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawFields); err != nil {
+		return err
+	}
+	if err := ValidateRequired(rawFields, []string{"name", "email"}); err != nil {
+		return err
+	}
+	if err := ValidateNotNull(rawFields, []string{"name", "email"}); err != nil {
+		return err
+	}
+	if value.Date != nil {
+		if err := ValidateModelDateTime("date", *value.Date); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// NewGitCreateTagTagger returns a validated GitCreateTagTagger built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewGitCreateTagTagger(fields GitCreateTagTagger) (*GitCreateTagTagger, error) {
+	return ConstructModel(fields)
+}
+
+type GitCreateTreeTree struct {
+	// Path The file referenced in the tree.
+	Path *string `json:"path,omitempty"`
+	// Mode The file mode; one of `100644` for file (blob), `100755` for executable (blob), `040000` for subdirectory (tree), `160000` for submodule (commit), or `120000` for a blob that specifies the path of a symlink.
+	Mode *GitCreateTreeTreeModeEnum `json:"mode,omitempty"`
+	// Type Either `blob`, `tree`, or `commit`.
+	Type *GitCreateTreeTreeTypeEnum `json:"type,omitempty"`
+	// Sha The SHA1 checksum ID of the object in the tree. Also called `tree.sha`. If the value is `null` then the file will be deleted.
+	//
+	// **Note:** Use either `tree.sha` or `content` to specify the contents of the entry. Using both `tree.sha` and `content` will return an error.
+	Sha *NullableValue[string] `json:"sha,omitempty"`
+	// Content The content you want this file to have. GitHub will write this blob out and use that SHA for this entry. Use either this, or `tree.sha`.
+	//
+	// **Note:** Use either `tree.sha` or `content` to specify the contents of the entry. Using both `tree.sha` and `content` will return an error.
+	Content *string `json:"content,omitempty"`
+}
+
+func (value *GitCreateTreeTree) UnmarshalJSON(data []byte) error {
+	type GitCreateTreeTreeAlias GitCreateTreeTree
+	var decoded GitCreateTreeTreeAlias
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		return err
+	}
+	*value = GitCreateTreeTree(decoded)
+	var rawFields map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawFields); err != nil {
+		return err
+	}
+	if raw, ok := rawFields["sha"]; ok && bytes.Equal(bytes.TrimSpace(raw), []byte("null")) {
+		value.Sha = &NullableValue[string]{}
+	}
+	return nil
+}
+
+// NewGitCreateTreeTree returns a validated GitCreateTreeTree built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewGitCreateTreeTree(fields GitCreateTreeTree) (*GitCreateTreeTree, error) {
+	return ConstructModel(fields)
+}
+
+// GitCreateTreeTreeModeEnum The file mode; one of `100644` for file (blob), `100755` for executable (blob), `040000` for subdirectory (tree), `160000` for submodule (commit), or `120000` for a blob that specifies the path of a symlink.
+type GitCreateTreeTreeModeEnum string
+
+const (
+	GitCreateTreeTreeModeEnumV100644 GitCreateTreeTreeModeEnum = "100644"
+	GitCreateTreeTreeModeEnumV100755 GitCreateTreeTreeModeEnum = "100755"
+	GitCreateTreeTreeModeEnumV040000 GitCreateTreeTreeModeEnum = "040000"
+	GitCreateTreeTreeModeEnumV160000 GitCreateTreeTreeModeEnum = "160000"
+	GitCreateTreeTreeModeEnumV120000 GitCreateTreeTreeModeEnum = "120000"
+)
+
+// GitCreateTreeTreeTypeEnum Either `blob`, `tree`, or `commit`.
+type GitCreateTreeTreeTypeEnum string
+
+const (
+	GitCreateTreeTreeTypeEnumBlob   GitCreateTreeTreeTypeEnum = "blob"
+	GitCreateTreeTreeTypeEnumTree   GitCreateTreeTreeTypeEnum = "tree"
+	GitCreateTreeTreeTypeEnumCommit GitCreateTreeTreeTypeEnum = "commit"
+)

@@ -9,56 +9,6 @@ import (
 	"fmt"
 )
 
-type DependencyGraphGenerateSbomReportResponse struct {
-	// SbomUrl URL to poll for the SBOM export result.
-	SbomUrl *string `json:"sbom_url,omitempty"`
-}
-
-// NewDependencyGraphGenerateSbomReportResponse returns a validated DependencyGraphGenerateSbomReportResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewDependencyGraphGenerateSbomReportResponse(fields DependencyGraphGenerateSbomReportResponse) (*DependencyGraphGenerateSbomReportResponse, error) {
-	return ConstructModel(fields)
-}
-
-type DependencyGraphCreateRepositorySnapshotResponse struct {
-	// Id ID of the created snapshot.
-	Id int64 `json:"id"`
-	// CreatedAt The time at which the snapshot was created.
-	CreatedAt string `json:"created_at"`
-	// Result Either "SUCCESS", "ACCEPTED", or "INVALID". "SUCCESS" indicates that the snapshot was successfully created and the repository's dependencies were updated. "ACCEPTED" indicates that the snapshot was successfully created, but the repository's dependencies were not updated. "INVALID" indicates that the snapshot was malformed.
-	Result string `json:"result"`
-	// Message A message providing further details about the result, such as why the dependencies were not updated.
-	Message string `json:"message"`
-}
-
-func (value *DependencyGraphCreateRepositorySnapshotResponse) UnmarshalJSON(data []byte) error {
-	type DependencyGraphCreateRepositorySnapshotResponseAlias DependencyGraphCreateRepositorySnapshotResponse
-	var decoded DependencyGraphCreateRepositorySnapshotResponseAlias
-	if err := json.Unmarshal(data, &decoded); err != nil {
-		return err
-	}
-	*value = DependencyGraphCreateRepositorySnapshotResponse(decoded)
-	var rawFields map[string]json.RawMessage
-	if err := json.Unmarshal(data, &rawFields); err != nil {
-		return err
-	}
-	if err := ValidateRequired(rawFields, []string{"id", "created_at", "result", "message"}); err != nil {
-		return err
-	}
-	if err := ValidateNotNull(rawFields, []string{"id", "created_at", "result", "message"}); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewDependencyGraphCreateRepositorySnapshotResponse returns a validated DependencyGraphCreateRepositorySnapshotResponse built from named fields.
-// Optional fields may be left unset; a value that violates the schema is
-// reported as *SdkValidationError.
-func NewDependencyGraphCreateRepositorySnapshotResponse(fields DependencyGraphCreateRepositorySnapshotResponse) (*DependencyGraphCreateRepositorySnapshotResponse, error) {
-	return ConstructModel(fields)
-}
-
 type DependencyGraphDiffRangeParams struct {
 	Owner    string
 	Repo     string
@@ -261,4 +211,54 @@ func DependencyGraphCreateRepositorySnapshot(ctx context.Context, clientConfig C
 		return nil, err
 	}
 	return &resp.Data, nil
+}
+
+type DependencyGraphGenerateSbomReportResponse struct {
+	// SbomUrl URL to poll for the SBOM export result.
+	SbomUrl *string `json:"sbom_url,omitempty"`
+}
+
+// NewDependencyGraphGenerateSbomReportResponse returns a validated DependencyGraphGenerateSbomReportResponse built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewDependencyGraphGenerateSbomReportResponse(fields DependencyGraphGenerateSbomReportResponse) (*DependencyGraphGenerateSbomReportResponse, error) {
+	return ConstructModel(fields)
+}
+
+type DependencyGraphCreateRepositorySnapshotResponse struct {
+	// Id ID of the created snapshot.
+	Id int64 `json:"id"`
+	// CreatedAt The time at which the snapshot was created.
+	CreatedAt string `json:"created_at"`
+	// Result Either "SUCCESS", "ACCEPTED", or "INVALID". "SUCCESS" indicates that the snapshot was successfully created and the repository's dependencies were updated. "ACCEPTED" indicates that the snapshot was successfully created, but the repository's dependencies were not updated. "INVALID" indicates that the snapshot was malformed.
+	Result string `json:"result"`
+	// Message A message providing further details about the result, such as why the dependencies were not updated.
+	Message string `json:"message"`
+}
+
+func (value *DependencyGraphCreateRepositorySnapshotResponse) UnmarshalJSON(data []byte) error {
+	type DependencyGraphCreateRepositorySnapshotResponseAlias DependencyGraphCreateRepositorySnapshotResponse
+	var decoded DependencyGraphCreateRepositorySnapshotResponseAlias
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		return err
+	}
+	*value = DependencyGraphCreateRepositorySnapshotResponse(decoded)
+	var rawFields map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawFields); err != nil {
+		return err
+	}
+	if err := ValidateRequired(rawFields, []string{"id", "created_at", "result", "message"}); err != nil {
+		return err
+	}
+	if err := ValidateNotNull(rawFields, []string{"id", "created_at", "result", "message"}); err != nil {
+		return err
+	}
+	return nil
+}
+
+// NewDependencyGraphCreateRepositorySnapshotResponse returns a validated DependencyGraphCreateRepositorySnapshotResponse built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewDependencyGraphCreateRepositorySnapshotResponse(fields DependencyGraphCreateRepositorySnapshotResponse) (*DependencyGraphCreateRepositorySnapshotResponse, error) {
+	return ConstructModel(fields)
 }

@@ -713,3 +713,30 @@ type WebhookPullRequestReviewCommentCreatedPullRequestLinksComments struct {
 	// Href Required `uri-template`-formatted value serialized in the `href` wire field.
 	Href string `json:"href"`
 }
+
+func (value *WebhookPullRequestReviewCommentCreatedPullRequestLinksComments) UnmarshalJSON(data []byte) error {
+	type WebhookPullRequestReviewCommentCreatedPullRequestLinksCommentsAlias WebhookPullRequestReviewCommentCreatedPullRequestLinksComments
+	var decoded WebhookPullRequestReviewCommentCreatedPullRequestLinksCommentsAlias
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		return err
+	}
+	*value = WebhookPullRequestReviewCommentCreatedPullRequestLinksComments(decoded)
+	var rawFields map[string]json.RawMessage
+	if err := json.Unmarshal(data, &rawFields); err != nil {
+		return err
+	}
+	if err := ValidateRequired(rawFields, []string{"href"}); err != nil {
+		return err
+	}
+	if err := ValidateNotNull(rawFields, []string{"href"}); err != nil {
+		return err
+	}
+	return nil
+}
+
+// NewWebhookPullRequestReviewCommentCreatedPullRequestLinksComments returns a validated WebhookPullRequestReviewCommentCreatedPullRequestLinksComments built from named fields.
+// Optional fields may be left unset; a value that violates the schema is
+// reported as *SdkValidationError.
+func NewWebhookPullRequestReviewCommentCreatedPullRequestLinksComments(fields WebhookPullRequestReviewCommentCreatedPullRequestLinksComments) (*WebhookPullRequestReviewCommentCreatedPullRequestLinksComments, error) {
+	return ConstructModel(fields)
+}
